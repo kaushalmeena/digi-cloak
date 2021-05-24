@@ -1,0 +1,12 @@
+@import "~@angular/material/theming.scss";
+
+// Define the light theme.
+$app-primary-palette: mat-palette($mat-indigo);
+$app-accent-palette: mat-palette($mat-pink, A200, A100, A400);
+$app-theme: mat-light-theme($app-primary-palette, $app-accent-palette);
+
+// Include material core styles.
+@include mat-core();
+
+// Include material theme styles.
+@include angular-material-theme($app-theme);
