@@ -1,7 +1,6 @@
-@import "../../../theme.scss";
-
 footer {
+  border-top: 1px solid #dee2e6;
+  background-color: white;
   padding: 20px;
   text-align: center;
-  background-color: mat-color($app-primary-palette, 50);
 }

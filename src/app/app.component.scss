@@ -1,4 +1,12 @@
 main {
-  margin: 10px auto;
+  box-sizing: border-box;
+  margin: 0px auto;
+  padding: 20px 16px;
   width: 75%;
+}
+
+@media (max-width: 720px) {
+  main {
+    width: 100%;
+  }
 }
