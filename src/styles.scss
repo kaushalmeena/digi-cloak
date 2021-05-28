@@ -1,3 +1,5 @@
+@use './themes.scss';
+
 html,
 body {
   height: 100%;
@@ -5,18 +7,12 @@ body {
 
 body {
   margin: 0px;
-  background-color: #f5f8fa;
-  color: #182026;
+  background-color: var(--body-background-color);
+  color: var(--body-color);
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 a {
   text-decoration: none;
-}
-
-.dark-mode {
-  body {
-    background-color: #30404d;
-    color: #f5f8fa;
-  }
+  color: inherit;
 }
