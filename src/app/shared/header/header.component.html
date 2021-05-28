@@ -1,24 +1,40 @@
-<header class="header">
-  <div class="container">
-    <a routerLink="/" class="header-logo-button">
+<header>
+  <nav>
+    <a routerLink="/" class="nav-logo">
+      <svg aria-hidden="true" focusable="false" width="28" height="28" viewBox="0 0 448 512">
+        <path
+          d="M400 256H152V152.9c0-39.6 31.7-72.5 71.3-72.9 40-.4 72.7 32.1 72.7 72v16c0 13.3 10.7 24 24 24h32c13.3 0 24-10.7 24-24v-16C376 68 307.5-.3 223.5 0 139.5.3 72 69.5 72 153.5V256H48c-26.5 0-48 21.5-48 48v160c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V304c0-26.5-21.5-48-48-48zM264 408c0 22.1-17.9 40-40 40s-40-17.9-40-40v-48c0-22.1 17.9-40 40-40s40 17.9 40 40v48z" />
+      </svg>
       <span>Digi-Safe</span>
     </a>
-  </div>
+    <ul class="nav-link-container">
+      <li>
+        <a class="nav-link" routerLink="/lock">Lock</a>
+      </li>
+      <li>
+        <a class="nav-link" routerLink="/unlock">Unlock</a>
+      </li>
+      <li>
+        <a class="nav-link" routerLink="/faqs">FAQs</a>
+      </li>
+    </ul>
+    <div class="nav-button-container">
+      <button class="nav-button" aria-label="Toogle dark mode" (click)="toogleDarkMode()">
+        <svg aria-hidden="true" focusable="false" width="28" height="28" viewBox="0 0 24 24" *ngIf="!darkMode">
+          <path
+            d="M20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69zM12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6c3.31 0 6 2.69 6 6s-2.69 6-6 6z" />
+        </svg>
+        <svg aria-hidden="true" focusable="false" width="28" height="28" viewBox="0 0 24 24" *ngIf="darkMode">
+          <path
+            d="M20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69zM12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zm0-10c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4z" />
+        </svg>
+      </button>
+      <a class="nav-icon" aria-label="Gitub repository" href="https://github.com/kaushalmeena/digi-safe">
+        <svg aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 16 16">
+          <path
+            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
+        </svg>
+      </a>
+    </div>
+  </nav>
 </header>
-
-<!-- <mat-toolbar color="primary">
-  <a routerLink="/" class="header-logo-button" mat-button>
-    <mat-icon>lock</mat-icon>
-    <span>Digi-Safe</span>
-  </a>
-  <span class="header-spacer"></span>
-  <a routerLink="/lock" mat-button>
-    LOCK
-  </a>
-  <a routerLink="/unlock" mat-button>
-    UNLOCK
-  </a>
-  <a routerLink="/faqs" mat-button>
-    FAQs
-  </a>
-</mat-toolbar> -->
