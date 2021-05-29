@@ -2,8 +2,7 @@ header {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  box-shadow: 0 0 0 1px rgb(16 22 26 / 10%), 0 0 0 rgb(16 22 26 / 0%),
-    0 1px 1px rgb(16 22 26 / 20%);
+  box-shadow: 0 0 0 1px rgb(16 22 26 / 10%), 0 0 0 rgb(16 22 26 / 0%), 0 1px 1px rgb(16 22 26 / 20%);
   background-color: var(--header-background-color);
 }
 
@@ -21,14 +20,17 @@ nav {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+
   svg {
     padding-right: 8px;
-    fill: var(--body-color);
+    fill: var(--body-text-color);
   }
+
   span {
     font-size: 22px;
     font-weight: bold;
   }
+
   &:hover {
     opacity: 0.2;
   }
@@ -42,7 +44,8 @@ nav {
 .nav-link {
   font-size: 16px;
   padding: 0px 16px;
-  color: var(--link-color);
+  color: var(--link-text-color);
+
   &:hover {
     color: var(--link-hover-color);
   }
@@ -57,7 +60,8 @@ nav {
 
 .nav-icon {
   padding: 0px 8px;
-  fill: var(--link-color);
+  fill: var(--link-text-color);
+
   &:hover {
     fill: var(--link-hover-color);
   }
