@@ -16,7 +16,7 @@ nav {
   height: 60px;
 }
 
-.nav-logo {
+.logo {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -36,12 +36,12 @@ nav {
   }
 }
 
-.nav-link-container {
+.link-container {
   display: flex;
   list-style: none;
 }
 
-.nav-link {
+.link {
   font-size: 16px;
   padding: 0px 16px;
   color: var(--link-text-color);
@@ -51,14 +51,25 @@ nav {
   }
 }
 
-.nav-button-container {
+.link-active {
+  color: var(--link-hover-color);
+}
+
+.button-container {
   display: flex;
   flex: 1 1 auto;
   align-items: center;
   justify-content: flex-end;
 }
 
-.nav-icon {
+.icon-button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  @extend .icon-link;
+}
+
+.icon-link {
   padding: 0px 8px;
   fill: var(--link-text-color);
 
@@ -67,18 +78,12 @@ nav {
   }
 }
 
-.nav-button {
-  border: none;
-  background: none;
-  cursor: pointer;
-  @extend .nav-icon;
-}
-
 @media (max-width: 720px) {
   nav {
     width: 100%;
   }
-  .nav-link-container {
+
+  .link-container {
     display: none;
   }
 }
