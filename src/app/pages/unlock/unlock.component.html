@@ -1,1 +1,28 @@
-<p>unlock works!</p>
+<h1>Unlock</h1>
+<form class="form-container">
+  <div class="card">
+    <div class="card-image">
+      No preview available
+    </div>
+    <div class="form-control no-margin">
+      <label class="form-label" for="image">Encrypted Image</label>
+      <input name="image" type="file" id="image" class="form-input" />
+    </div>
+  </div>
+  <div class="form-control">
+    <label class="form-label" for="password">Password</label>
+    <input name="password" type="text" id="password" class="form-input" />
+  </div>
+  <div class="submit-container">
+    <button type="submit" class="button submit-button">Decrypt</button>
+  </div>
+</form>
+<div class="output-container">
+  <div class="form-control">
+    <label class="form-label" for="message">Descrypted Message</label>
+    <textarea name="message" rows="6" id="message" class="form-input"></textarea>
+  </div>
+  <div class="button-container">
+    <button class="button">Save</button>
+  </div>
+</div>

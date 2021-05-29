@@ -1,1 +1,34 @@
-<p>lock works!</p>
+<h1>Lock</h1>
+<form class="form-container">
+  <div class="form-control">
+    <label class="form-label" for="message">Message</label>
+    <textarea name="message" rows="6" id="message" class="form-input"></textarea>
+  </div>
+  <div class="card">
+    <div class="card-image">
+      No preview available
+    </div>
+    <div class="form-control no-margin">
+      <label class="form-label" for="image">Image</label>
+      <input name="image" type="file" id="image" class="form-input" />
+    </div>
+  </div>
+  <div class="form-control">
+    <label class="form-label" for="password">Password</label>
+    <input name="password" type="text" id="password" class="form-input" />
+  </div>
+  <div class="submit-container">
+    <button type="submit" class="button submit-button">Encrypt</button>
+  </div>
+</form>
+<div class="output-container">
+  <span class="output-label">Encrypted Image</span>
+  <div class="card">
+    <div class="card-image">
+      No preview available
+    </div>
+  </div>
+  <div class="button-container">
+    <button class="button">Save</button>
+  </div>
+</div>

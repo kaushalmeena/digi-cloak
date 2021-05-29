@@ -1,25 +1,27 @@
 body {
-  --body-background-color: #ebf1f5;
-  --body-text-color: #182026;
+  --text-color: #182026;
   --header-background-color: white;
-  --link-text-color: rgba(0, 0, 0, 0.55);
-  --link-hover-color: rgba(0, 0, 0, 0.9);
   --footer-background-color: white;
   --divider-border-color: #dee2e6;
-  --button-background-color: #f5f8fa;
-  --button-hover-color: #ebf1f5;
-  --button-active-color: #d8e1e8;
+  --link-text-color: rgba(0, 0, 0, 0.55);
+  --link-hover-color: rgba(0, 0, 0, 0.9);
+  --grey-color-1: #ced9e0;
+  --grey-color-2: #d8e1e8;
+  --grey-color-3: #e1e8ed;
+  --grey-color-4: #ebf1f5;
+  --grey-color-5: #f5f8fa;
 }
 
 body.dark-mode {
-  --body-background-color: #30404d;
-  --body-text-color: #f5f8fa;
+  --text-color: #f5f8fa;
   --header-background-color: #394b59;
-  --link-text-color: rgba(245, 248, 250, 0.55);
-  --link-hover-color: rgba(245, 248, 250, 0.9);
   --footer-background-color: #293742;
   --divider-border-color: rgba(16, 22, 26, 0.4);
-  --button-background-color: #394b59;
-  --button-hover-color: #30404d;
-  --button-active-color: #202b33;
+  --link-text-color: rgba(245, 248, 250, 0.55);
+  --link-hover-color: rgba(245, 248, 250, 0.9);
+  --grey-color-1: #182026;
+  --grey-color-2: #202b33;
+  --grey-color-3: #293742;
+  --grey-color-4: #30404d;
+  --grey-color-5: #394b59;
 }
