@@ -1,4 +1,4 @@
-@use './themes.scss';
+@use './colors.scss';
 
 html,
 body {
@@ -8,11 +8,36 @@ body {
 body {
   margin: 0px;
   background-color: var(--body-background-color);
-  color: var(--body-color);
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  color: var(--body-text-color);
+  font-family: "Helvetica Neue", sans-serif;
 }
 
 a {
   text-decoration: none;
   color: inherit;
+}
+
+.button {
+  display: inline-flex;
+  box-shadow: 0 0 0 1px rgb(16 22 26 / 40%);
+  align-items: center;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 18px;
+  justify-content: center;
+  padding: 5px 10px;
+  text-align: left;
+  vertical-align: middle;
+  min-height: 40px;
+  min-width: 100px;
+  background-color: var(--button-background-color);
+
+  &:hover {
+    background-color: var(--button-hover-color);
+  }
+
+  &:active {
+    background-color: var(--button-active-color);
+  }
 }
