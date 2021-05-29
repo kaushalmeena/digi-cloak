@@ -3,14 +3,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 60px;
+  margin-top: 20px;
   margin-bottom: 20px;
 }
 
 .heading {
   margin: 12px 0px;
   text-align: center;
-  font-size: 40px;
+  font-size: 46px;
 }
 
 .sub-heading {
@@ -39,4 +39,10 @@
   a + a {
     margin-left: 20px;
   }
+}
+
+.large-button {
+  font-size: 18px;
+  min-height: 50px;
+  min-width: 100px;
 }
