@@ -1,0 +1,3 @@
+export const DELIMITER_CHARACTER = String.fromCharCode(160);
+
+export const SMALLEST_IMAGE_SOURCE = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";

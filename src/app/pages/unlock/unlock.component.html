@@ -1,17 +1,17 @@
 <h1>Unlock</h1>
-<form class="form-container">
+<form class="form-container" (submit)="handleSubmit($event)">
   <div class="card">
     <div class="card-image">
-      No preview available
+      <img [src]="previewImageSource" alt="Preview-Image" />
     </div>
     <div class="form-control no-margin">
-      <label class="form-label" for="image">Encrypted Image</label>
-      <input name="image" type="file" id="image" class="form-input" />
+      <label class="form-label" for="image">Encoded Image</label>
+      <input name="image" type="file" id="image" class="form-input" required (change)="handlePreview($event)" />
     </div>
   </div>
   <div class="form-control">
     <label class="form-label" for="password">Password</label>
-    <input name="password" type="text" id="password" class="form-input" />
+    <input name="password" type="text" id="password" class="form-input" required />
   </div>
   <div class="submit-container">
     <button type="submit" class="button submit-button">Decrypt</button>
@@ -19,10 +19,10 @@
 </form>
 <div class="output-container">
   <div class="form-control">
-    <label class="form-label" for="message">Descrypted Message</label>
-    <textarea name="message" rows="6" id="message" class="form-input"></textarea>
+    <label class="form-label" for="message">Decrypted Message</label>
+    <textarea name="message" rows="6" id="message" class="form-input" [value]="decodedMessage"></textarea>
   </div>
   <div class="button-container">
-    <button class="button">Save</button>
+    <button class="button" (click)="handleCopy()">Save</button>
   </div>
 </div>
