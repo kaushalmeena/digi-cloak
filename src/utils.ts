@@ -1,4 +1,4 @@
-import { encrypt, decrypt } from "sjcl";
+import CryptoJS from "crypto-js";
 import { DELIMITER_CHARACTER } from "./constants";
 
 export const fetchDarkMode = (): boolean => {
@@ -78,7 +78,7 @@ export const getImageSource = (imageData: ImageData): string => {
 
   if (context) {
     context.putImageData(imageData, 0, 0);
-    result = canvas.toDataURL("image/png");
+    result = canvas.toDataURL();
   }
 
   return result;
@@ -92,12 +92,13 @@ export const getEncodedImageSource = (imageSource: string, message: string, pass
     return "Invalid image detected."
   }
 
-  const ciphertext = encrypt(password, message);
+  const ciphertext = CryptoJS.AES.encrypt(message, password).toString();
 
   const encryptedMessage = ciphertext + DELIMITER_CHARACTER;
 
-  let counter = 0;
   let binaryMessage = "";
+  let counter = 0;
+  let completed = false;
 
   for (let i = 0; i < encryptedMessage.length; i++) {
     binaryMessage += encryptedMessage[i].charCodeAt(0).toString(2).padStart(8, '0');
@@ -106,12 +107,15 @@ export const getEncodedImageSource = (imageSource: string, message: string, pass
   for (let i = 0; i < imageData.data.length; i += 4) {
     for (let offset = 0; offset < 3; offset++) {
       if (counter < binaryMessage.length) {
-        imageData.data[i + offset] += parseInt(binaryMessage[counter]);
-        counter++;
-      }
-      else {
+        imageData.data[i + offset] = (imageData.data[i + offset] & 254) + parseInt(binaryMessage[counter]);
+        counter += 1;
+      } else {
+        completed = true;
         break;
       }
+    }
+    if (completed) {
+      break;
     }
   }
 
@@ -128,11 +132,10 @@ export const getDecodedMessage = (imageSource: string, password: string): string
     return "Invalid image detected."
   }
 
-  const delimiterBits = DELIMITER_CHARACTER.charCodeAt(0).toString(2).padStart(8, '0');
-
-  let completed = false;
   let ciphertext = "";
   let tempBits = ""
+  let completed = false;
+  let tempChar = null;
 
   for (let i = 0; i < imageData.data.length; i += 4) {
     for (let offset = 0; offset < 3; offset++) {
@@ -142,11 +145,12 @@ export const getDecodedMessage = (imageSource: string, password: string): string
         tempBits += "1";
       }
       if (tempBits.length === 8) {
-        if (tempBits === delimiterBits) {
+        tempChar = String.fromCharCode(parseInt(tempBits, 2))
+        if (tempChar === DELIMITER_CHARACTER) {
           completed = true;
           break;
         }
-        ciphertext += String.fromCharCode(parseInt(tempBits, 2));
+        ciphertext += tempChar;
         tempBits = ""
       }
     }
@@ -155,7 +159,7 @@ export const getDecodedMessage = (imageSource: string, password: string): string
     }
   }
 
-  result = decrypt(password, ciphertext)
+  result = CryptoJS.AES.decrypt(ciphertext, password).toString(CryptoJS.enc.Utf8);
 
   return result;
 };
