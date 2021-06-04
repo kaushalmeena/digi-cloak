@@ -1,27 +1,41 @@
-# DigiSafe
+# Digi-Cloak
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.0.1.
+A web app that hide secrets in plainsight securely in images with help of AES encryption and LSB technique..
 
-## Development server
+## Requirements
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+To install and run this project you need:
 
-## Code scaffolding
+- [NodeJS](https://nodejs.org/ "NodeJS")
+- [git](https://git-scm.com/downloads "git") (only to clone this repository)
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Installation
 
-## Build
+To set up everything in your local machine, you need to follow these steps:
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+1. Clone this repo and then change directory to the `digi-cloak` folder:
 
-## Running unit tests
+```bash
+$ git clone https://github.com/kaushalmeena/digi-cloak.git
+$ cd digi-cloak
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+2. Install project dependencies using npm:
 
-## Running end-to-end tests
+```bash
+$ npm install
+```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+## Usage
 
-## Further help
+To run the project simply run:
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+```bash
+$ npm run start
+```
+
+Your app should now be running on [localhost:4200](http://localhost:4200/).
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

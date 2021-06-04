@@ -25,7 +25,7 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, './coverage/digi-safe'),
+      dir: require('path').join(__dirname, './coverage/digi-cloak'),
       subdir: '.',
       reporters: [
         { type: 'html' },

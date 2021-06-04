@@ -1,14 +1,17 @@
 {
-  "name": "digi-safe",
-  "version": "0.0.0",
+  "name": "digi-cloak",
+  "version": "1.0.0",
+  "description": "A web app that hide secrets in plainsight securely in images with help of AES encryption and LSB technique.",
+  "repository": "git@github.com:kaushalmeena/digi-cloak.git",
+  "author": "Kaushal Meena <kaushal.meena1996@gmail.com>",
+  "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --open",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
-  "private": true,
   "dependencies": {
     "@angular/common": "~12.0.1",
     "@angular/compiler": "~12.0.1",
