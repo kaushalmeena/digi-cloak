@@ -6,11 +6,11 @@ import { UnlockComponent } from './pages/unlock/unlock.component';
 import { FaqsComponent } from './pages/faqs/faqs.component';
 
 const routes: Routes = [
-  { path: 'home', component: HomeComponent },
+  { path: '', component: HomeComponent },
   { path: 'lock', component: LockComponent },
   { path: 'unlock', component: UnlockComponent },
   { path: 'faqs', component: FaqsComponent },
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({
