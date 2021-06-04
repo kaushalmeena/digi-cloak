@@ -1,7 +1,7 @@
 {
   "name": "digi-cloak",
   "version": "1.0.0",
-  "description": "A web app that hide secrets in plainsight securely in images with help of AES encryption and LSB technique.",
+  "description": "A web app that hide secrets in plain-sight securely in images with help of AES encryption and LSB technique.",
   "repository": "git@github.com:kaushalmeena/digi-cloak.git",
   "author": "Kaushal Meena <kaushal.meena1996@gmail.com>",
   "license": "MIT",
