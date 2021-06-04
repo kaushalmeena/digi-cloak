@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ViewChild, ElementRef } from '@angular/core';
-import { SMALLEST_IMAGE_SOURCE } from 'src/constants';
-import { readImage, saveImage, getEncodedImageSource } from 'src/utils';
+import { getEncodedImageSource, readImage, saveImage } from 'src/utils';
 
 @Component({
   selector: 'app-lock',
@@ -14,8 +12,8 @@ export class LockComponent implements OnInit {
   isOutputVisible: boolean
 
   constructor() {
-    this.previewImageSource = SMALLEST_IMAGE_SOURCE;
-    this.encodedImageSource = SMALLEST_IMAGE_SOURCE;
+    this.previewImageSource = "";
+    this.encodedImageSource = "";
     this.isOutputVisible = false;
   }
 

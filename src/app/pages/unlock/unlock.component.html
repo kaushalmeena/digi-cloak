@@ -2,11 +2,12 @@
 <form class="form-container" (submit)="handleSubmit($event)">
   <div class="card">
     <div class="card-image">
-      <img [src]="previewImageSource" alt="Preview-Image" />
+      <img [src]="previewImageSource" alt="Preview-Image" *ngIf="previewImageSource" />
     </div>
     <div class="form-control no-margin">
       <label class="form-label" for="image">Encoded Image</label>
-      <input name="image" type="file" id="image" class="form-input" required (change)="handlePreview($event)" />
+      <input name="image" type="file" accept="image/png, image/gif, image/jpeg" id="image" class="form-input" required
+        (change)="handlePreview($event)" />
     </div>
   </div>
   <div class="form-control">

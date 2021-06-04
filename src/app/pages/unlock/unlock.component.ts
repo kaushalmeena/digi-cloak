@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SMALLEST_IMAGE_SOURCE } from 'src/constants';
-import { readImage, copyData, getDecodedMessage } from 'src/utils';
+import { copyData, getDecodedMessage, readImage } from 'src/utils';
 
 @Component({
   selector: 'app-unlock',
@@ -13,7 +12,7 @@ export class UnlockComponent implements OnInit {
   isOutputVisible: boolean
 
   constructor() {
-    this.previewImageSource = SMALLEST_IMAGE_SOURCE;
+    this.previewImageSource = "";
     this.decodedMessage = "";
     this.isOutputVisible = false;
   }

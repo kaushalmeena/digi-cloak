@@ -151,7 +151,7 @@ export const getDecodedMessage = (imageSource: string, password: string): string
           break;
         }
         ciphertext += tempChar;
-        tempBits = ""
+        tempBits = "";
       }
     }
     if (completed) {
