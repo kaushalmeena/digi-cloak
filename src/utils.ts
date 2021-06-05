@@ -159,7 +159,11 @@ export const getDecodedMessage = (imageSource: string, password: string): string
     }
   }
 
-  result = CryptoJS.AES.decrypt(ciphertext, password).toString(CryptoJS.enc.Utf8);
+  if (completed) {
+    result = CryptoJS.AES.decrypt(ciphertext, password).toString(CryptoJS.enc.Utf8);
+  } else {
+    result = "Message not found in the image."
+  }
 
   return result;
 };
