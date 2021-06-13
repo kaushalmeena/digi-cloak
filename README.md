@@ -2,6 +2,8 @@
 
 A web app that hide secrets in plain-sight securely in images with help of AES encryption and LSB technique.
 
+Live version is deployed at [https://kaushalmeena.github.io/digi-cloak/](https://kaushalmeena.github.io/digi-cloak/)
+
 ## Requirements
 
 To install and run this project you need:
