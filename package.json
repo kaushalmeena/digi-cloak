@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A web app that hide secrets in plain-sight securely in images with help of AES encryption and LSB technique.",
   "repository": "git@github.com:kaushalmeena/digi-cloak.git",
+  "homepage": "https://kaushalmeena.github.io/digi-cloak/",
   "author": "Kaushal Meena <kaushal.meena1996@gmail.com>",
   "license": "MIT",
   "scripts": {
@@ -10,7 +11,9 @@
     "start": "ng serve --open",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "predeploy": "ng build --output-path dist --base-href /digi-cloak/",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@angular/common": "~12.0.1",
@@ -32,6 +35,7 @@
     "@types/crypto-js": "^4.0.1",
     "@types/jasmine": "~3.6.0",
     "@types/node": "^12.11.1",
+    "gh-pages": "^3.2.0",
     "jasmine-core": "~3.7.0",
     "karma": "~6.3.0",
     "karma-chrome-launcher": "~3.1.0",
