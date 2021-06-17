@@ -89,7 +89,7 @@ export const getEncodedImageSource = (imageSource: string, message: string, pass
 
   const imageData = getImageData(imageSource);
   if (!imageData) {
-    return "Invalid image detected."
+    return "Invalid image detected.";
   }
 
   const ciphertext = CryptoJS.AES.encrypt(message, password).toString();
@@ -133,9 +133,9 @@ export const getDecodedMessage = (imageSource: string, password: string): string
   }
 
   let ciphertext = "";
-  let tempBits = ""
-  let completed = false;
+  let tempBits = "";
   let tempChar = null;
+  let completed = false;
 
   for (let i = 0; i < imageData.data.length; i += 4) {
     for (let offset = 0; offset < 3; offset++) {
@@ -160,10 +160,14 @@ export const getDecodedMessage = (imageSource: string, password: string): string
   }
 
   if (completed) {
-    result = CryptoJS.AES.decrypt(ciphertext, password).toString(CryptoJS.enc.Utf8);
-  } else {
-    result = "Message not found in the image."
+    try {
+      result = CryptoJS.AES.decrypt(ciphertext, password).toString(CryptoJS.enc.Utf8);
+    } catch (error) {
+      console.error("=========== Decoding", error);
+    }
   }
+
+  result = result || "Message not found in the image.";
 
   return result;
 };
