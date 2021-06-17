@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { getEncodedImageSource, readImage, saveImage } from 'src/utils';
 
 @Component({
@@ -6,7 +6,7 @@ import { getEncodedImageSource, readImage, saveImage } from 'src/utils';
   templateUrl: './lock.component.html',
   styleUrls: ['./lock.component.scss']
 })
-export class LockComponent implements OnInit {
+export class LockComponent {
   previewImageSource: string
   encodedImageSource: string
   isOutputVisible: boolean
@@ -15,9 +15,6 @@ export class LockComponent implements OnInit {
     this.previewImageSource = "";
     this.encodedImageSource = "";
     this.isOutputVisible = false;
-  }
-
-  ngOnInit(): void {
   }
 
   handlePreview(event: Event) {
