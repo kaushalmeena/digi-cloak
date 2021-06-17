@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { copyData, getDecodedMessage, readImage } from 'src/utils';
 
 @Component({
@@ -6,7 +6,7 @@ import { copyData, getDecodedMessage, readImage } from 'src/utils';
   templateUrl: './unlock.component.html',
   styleUrls: ['./unlock.component.scss']
 })
-export class UnlockComponent implements OnInit {
+export class UnlockComponent {
   previewImageSource: string
   decodedMessage: string
   isOutputVisible: boolean
@@ -15,9 +15,6 @@ export class UnlockComponent implements OnInit {
     this.previewImageSource = "";
     this.decodedMessage = "";
     this.isOutputVisible = false;
-  }
-
-  ngOnInit(): void {
   }
 
   handlePreview(event: Event) {
