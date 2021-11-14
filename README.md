@@ -4,14 +4,18 @@ A web app that hide secrets in plain-sight securely in images with help of AES e
 
 Live version is deployed at [https://kaushalmeena.github.io/digi-cloak/](https://kaushalmeena.github.io/digi-cloak/)
 
-## Requirements
+## Local Development
+
+These instructions will get you a copy of the project up and running on your local machine for development purposes.
+
+### Requirements
 
 To install and run this project you need:
 
 - [NodeJS](https://nodejs.org/ "NodeJS")
 - [git](https://git-scm.com/downloads "git") (only to clone this repository)
 
-## Installation
+### Installation
 
 To set up everything in your local machine, you need to follow these steps:
 
@@ -28,7 +32,7 @@ $ cd digi-cloak
 $ npm install
 ```
 
-## Usage
+### Running
 
 To run the project simply run:
 
