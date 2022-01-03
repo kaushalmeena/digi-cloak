@@ -4,7 +4,7 @@ A web app that hide secrets in plain-sight securely in images with help of AES e
 
 Live version is deployed at [https://kaushalmeena.github.io/digi-cloak/](https://kaushalmeena.github.io/digi-cloak/)
 
-## Local Development
+## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development purposes.
 
