@@ -25,6 +25,14 @@ export const saveImage = (data: string): void => {
   a.click();
 };
 
+export const saveText = (text: string): void => {
+  const blob = new Blob([text], {type: 'text/plain'});
+  const a = document.createElement("a");
+  a.download = "output";
+  a.href = URL.createObjectURL(blob);
+  a.click();
+};
+
 export const copyData = (data: string): void => {
   const input = document.createElement("input");
   document.body.appendChild(input);
