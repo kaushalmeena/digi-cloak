@@ -12,7 +12,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 To install and run this project you need:
 
-- [NodeJS](https://nodejs.org/ "NodeJS")
+- [Yarn](https://classic.yarnpkg.com/en/docs/install "Yarn")
 - [git](https://git-scm.com/downloads "git") (only to clone this repository)
 
 ### Installation
@@ -29,7 +29,7 @@ $ cd digi-cloak
 2. Install project dependencies using npm:
 
 ```bash
-$ npm install
+$ yarn install
 ```
 
 ### Running
@@ -37,7 +37,7 @@ $ npm install
 To run the project simply run:
 
 ```bash
-$ npm run start
+$ yarn run start
 ```
 
 Your app should now be running on [localhost:4200](http://localhost:4200/).
