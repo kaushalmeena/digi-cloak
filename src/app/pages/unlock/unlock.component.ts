@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { copyData, getDecodedMessage, readImage } from 'src/utils';
+import { getDecodedMessage, readImage, saveText } from 'src/utils';
 
 @Component({
   selector: 'app-unlock',
@@ -36,7 +36,7 @@ export class UnlockComponent {
   }
 
   handleCopy() {
-    copyData(this.decodedMessage);
+    saveText(this.decodedMessage);
   }
 
 }
