@@ -1,52 +1,52 @@
-import CryptoJS from "crypto-js";
-import { DELIMITER_CHARACTER } from "./constants";
+import CryptoJS from 'crypto-js';
+import { DELIMITER_CHARACTER } from './constants';
 
 export const fetchDarkMode = (): boolean => {
   let mode = false;
-  const value = localStorage.getItem("darkMode");
+  const value = localStorage.getItem('darkMode');
   if (value) {
-    mode = value === "1";
+    mode = value === '1';
   } else {
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    const media = window.matchMedia('(prefers-color-scheme: dark)');
     mode = media.matches;
   }
   return mode;
 };
 
 export const storeDarkMode = (mode: boolean): void => {
-  const value = mode ? "1" : "0";
-  localStorage.setItem("darkMode", value);
+  const value = mode ? '1' : '0';
+  localStorage.setItem('darkMode', value);
 };
 
 export const saveImage = (data: string): void => {
-  const a = document.createElement("a");
-  a.download = "output";
+  const a = document.createElement('a');
+  a.download = 'output';
   a.href = data;
   a.click();
 };
 
 export const saveText = (text: string): void => {
-  const blob = new Blob([text], {type: 'text/plain'});
-  const a = document.createElement("a");
-  a.download = "output";
+  const blob = new Blob([text], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.download = 'output';
   a.href = URL.createObjectURL(blob);
   a.click();
 };
 
 export const copyData = (data: string): void => {
-  const input = document.createElement("input");
+  const input = document.createElement('input');
   document.body.appendChild(input);
   input.value = data;
   input.select();
-  document.execCommand("copy");
+  document.execCommand('copy');
   document.body.removeChild(input);
 };
 
-export const readImage = (file: File): Promise<string> =>
+export const getBase64ImageFromBlob = (blob: Blob): Promise<string> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
 
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(blob);
     reader.onload = function () {
       resolve(reader.result as string);
     };
@@ -55,11 +55,11 @@ export const readImage = (file: File): Promise<string> =>
     };
   });
 
-export const getImageData = (imageSource: string): ImageData | null => {
+export const getImageDataFromBase64Image = (base64Image: string): ImageData | null => {
   let result = null;
 
   const image = new Image();
-  image.src = imageSource;
+  image.src = base64Image;
 
   const canvas = document.createElement('canvas');
   canvas.width = image.width;
@@ -73,10 +73,10 @@ export const getImageData = (imageSource: string): ImageData | null => {
   }
 
   return result;
-}
+};
 
-export const getImageSource = (imageData: ImageData): string => {
-  let result = "";
+export const getBase64ImageFromImageData = (imageData: ImageData): string => {
+  let result = '';
 
   const canvas = document.createElement('canvas');
   canvas.width = imageData.width;
@@ -90,26 +90,33 @@ export const getImageSource = (imageData: ImageData): string => {
   }
 
   return result;
-}
+};
 
-export const getEncodedImageSource = (imageSource: string, message: string, password: string): string => {
-  let result = "";
+export const getEncodedBase64Image = (
+  base64Image: string,
+  message: string,
+  password: string
+): string => {
+  let result = '';
 
-  const imageData = getImageData(imageSource);
+  const imageData = getImageDataFromBase64Image(base64Image);
   if (!imageData) {
-    return "Invalid image detected.";
+    return 'Invalid image detected.';
   }
 
   const ciphertext = CryptoJS.AES.encrypt(message, password).toString();
 
   const encryptedMessage = ciphertext + DELIMITER_CHARACTER;
 
-  let binaryMessage = "";
+  let binaryMessage = '';
   let counter = 0;
   let completed = false;
 
   for (let i = 0; i < encryptedMessage.length; i++) {
-    binaryMessage += encryptedMessage[i].charCodeAt(0).toString(2).padStart(8, '0');
+    binaryMessage += encryptedMessage[i]
+      .charCodeAt(0)
+      .toString(2)
+      .padStart(8, '0');
   }
 
   for (let i = 0; i < imageData.data.length; i += 4) {
@@ -127,39 +134,42 @@ export const getEncodedImageSource = (imageSource: string, message: string, pass
     }
   }
 
-  result = getImageSource(imageData);
+  result = getBase64ImageFromImageData(imageData);
 
   return result;
 };
 
-export const getDecodedMessage = (imageSource: string, password: string): string => {
-  let result = ""
+export const getDecodedMessage = (
+  base64Image: string,
+  password: string
+): string => {
+  let result = '';
 
-  const imageData = getImageData(imageSource);
+  const imageData = getImageDataFromBase64Image(base64Image);
   if (!imageData) {
-    return "Invalid image detected."
+    return 'Invalid image detected.';
   }
 
-  let ciphertext = "";
-  let tempBits = "";
+  let ciphertext = '';
+  let tempBits = '';
   let tempChar = null;
   let completed = false;
 
   for (let i = 0; i < imageData.data.length; i += 4) {
     for (let offset = 0; offset < 3; offset++) {
       if (imageData.data[i + offset] % 2 === 0) {
-        tempBits += "0";
+        tempBits += '0';
       } else {
-        tempBits += "1";
+        tempBits += '1';
       }
       if (tempBits.length === 8) {
-        tempChar = String.fromCharCode(parseInt(tempBits, 2))
+        tempChar = String.fromCharCode(parseInt(tempBits, 2));
         if (tempChar === DELIMITER_CHARACTER) {
           completed = true;
           break;
         }
         ciphertext += tempChar;
-        tempBits = "";
+        tempBits = '';
       }
     }
     if (completed) {
@@ -171,11 +181,11 @@ export const getDecodedMessage = (imageSource: string, password: string): string
     try {
       result = CryptoJS.AES.decrypt(ciphertext, password).toString(CryptoJS.enc.Utf8);
     } catch (error) {
-      console.error("=========== Decoding", error);
+      console.error('=========== Decoding', error);
     }
   }
 
-  result = result || "Message not found in the image.";
+  result = result || 'Message not found in the image.';
 
   return result;
 };
