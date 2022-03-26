@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { getEncodedImageSource, readImage, saveImage } from 'src/utils';
+import { getEncodedBase64Image, getBase64ImageFromBlob, saveImage } from 'src/utils';
 
 @Component({
   selector: 'app-lock',
@@ -22,7 +22,7 @@ export class LockComponent {
     const files = target.files as FileList;
     const imageFile = files[0];
 
-    readImage(imageFile)
+    getBase64ImageFromBlob(imageFile)
       .then((src) => {
         this.previewImageSource = src;
       });
@@ -32,7 +32,7 @@ export class LockComponent {
     event.preventDefault();
     const message = event.target.elements.message.value;
     const password = event.target.elements.password.value;
-    this.encodedImageSource = getEncodedImageSource(this.previewImageSource, message, password);;
+    this.encodedImageSource = getEncodedBase64Image(this.previewImageSource, message, password);;
     this.isOutputVisible = true;
   }
 

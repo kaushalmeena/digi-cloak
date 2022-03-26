@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { getDecodedMessage, readImage, saveText } from 'src/utils';
+import { getDecodedMessage, getBase64ImageFromBlob, saveText } from 'src/utils';
 
 @Component({
   selector: 'app-unlock',
@@ -22,7 +22,7 @@ export class UnlockComponent {
     const files = target.files as FileList;
     const imageFile = files[0];
 
-    readImage(imageFile)
+    getBase64ImageFromBlob(imageFile)
       .then((src) => {
         this.previewImageSource = src;
       });
