@@ -1,10 +1,10 @@
 <h1>Unlock</h1>
 <form class="form-container" (submit)="handleSubmit($event)">
   <div class="card">
-    <div class="card-image">
+    <div class="card-media">
       <img [src]="previewImageSource" alt="Preview-Image" *ngIf="previewImageSource" />
     </div>
-    <div class="form-control no-margin">
+    <div class="form-control">
       <label class="form-label" for="image">Encoded Image</label>
       <input name="image" type="file" accept="image/png, image/gif, image/jpeg" id="image" class="form-input" required
         (change)="handlePreview($event)" />

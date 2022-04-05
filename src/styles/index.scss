@@ -1,0 +1,24 @@
+@use "themes.scss";
+@use "common.scss";
+
+html,
+body {
+  height: 100%;
+}
+ 
+body {
+  @extend .light-mode;
+  margin: 0px;
+  background-color: var(--grey-color-4);
+  color: var(--text-color);
+  font-family: "Helvetica Neue", sans-serif;
+}
+
+body.dark-mode {
+  @extend .dark-mode;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}

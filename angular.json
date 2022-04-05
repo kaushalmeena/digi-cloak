@@ -13,7 +13,7 @@
           "strict": true
         },
         "@schematics/angular:component": {
-          "style": "css"
+          "style": "scss"
         }
       },
       "root": "",
@@ -33,7 +33,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles/index.scss"
             ],
             "scripts": []
           },
@@ -100,7 +100,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles/index.scss"
             ],
             "scripts": []
           }

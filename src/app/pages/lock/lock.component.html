@@ -5,10 +5,10 @@
     <textarea name="message" rows="6" id="message" class="form-input" required></textarea>
   </div>
   <div class="card">
-    <div class="card-image">
+    <div class="card-media">
       <img [src]="previewImageSource" alt="Preview-Image" *ngIf="previewImageSource" />
     </div>
-    <div class="form-control no-margin">
+    <div class="form-control">
       <label class="form-label" for="image">Image</label>
       <input name="image" type="file" accept="image/png, image/gif, image/jpeg" id="image" class="form-input" required
         (change)="handlePreview($event)" />
@@ -25,7 +25,7 @@
 <div class="output-container" [hidden]="!isOutputVisible">
   <span class="output-label">Encoded Image</span>
   <div class="card">
-    <div class="card-image">
+    <div class="card-media">
       <img [src]="encodedImageSource" alt="Output-Image" *ngIf="encodedImageSource" />
     </div>
   </div>
