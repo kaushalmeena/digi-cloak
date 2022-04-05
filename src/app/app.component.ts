@@ -1,20 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import { fetchDarkMode } from 'src/utils';
+import { Component } from '@angular/core';
+import { DARK_MODE_CLASS } from './shared/constants';
+import { ThemeService } from './shared/services/theme.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
-  ngOnInit() {
-    this.initThemeClass();
-  }
-
-  initThemeClass() {
-    const value = fetchDarkMode();
-    if (value) {
-      document.body.classList.add("dark-mode");
-    }
+export class AppComponent {
+  constructor(private themeService: ThemeService) {
+    this.themeService
+      .getDarkMode()
+      .subscribe((mode) =>
+        mode
+          ? document.body.classList.add(DARK_MODE_CLASS)
+          : document.body.classList.remove(DARK_MODE_CLASS)
+      );
   }
 }

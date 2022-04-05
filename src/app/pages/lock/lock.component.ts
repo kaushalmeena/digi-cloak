@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { getEncodedBase64Image, getBase64ImageFromBlob, saveImage } from 'src/utils';
+import { getEncodedBase64Image, getBase64ImageFromBlob, saveImage } from 'app/shared/utils';
 
 @Component({
   selector: 'app-lock',

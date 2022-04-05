@@ -1,5 +1,5 @@
 import CryptoJS from 'crypto-js';
-import { DELIMITER_CHARACTER } from './constants';
+import { DELIMITER_CHARACTER } from '../constants';
 
 export const fetchDarkMode = (): boolean => {
   let mode = false;

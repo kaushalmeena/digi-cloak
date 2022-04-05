@@ -1,4 +1,4 @@
-body {
+.light-mode {
   --text-color: #182026;
   --header-background-color: white;
   --footer-background-color: white;
@@ -12,7 +12,7 @@ body {
   --grey-color-5: #f5f8fa;
 }
 
-body.dark-mode {
+.dark-mode {
   --text-color: #f5f8fa;
   --header-background-color: #394b59;
   --footer-background-color: #293742;

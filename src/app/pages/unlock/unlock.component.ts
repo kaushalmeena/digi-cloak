@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { getDecodedMessage, getBase64ImageFromBlob, saveText } from 'src/utils';
+import { getDecodedMessage, getBase64ImageFromBlob, saveText } from 'app/shared/utils';
 
 @Component({
   selector: 'app-unlock',
