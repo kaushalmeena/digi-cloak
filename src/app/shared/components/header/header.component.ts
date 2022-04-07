@@ -21,7 +21,7 @@ export class HeaderComponent {
     this.themeService.getDarkMode().subscribe((mode) => this.darkMode = mode)
   }
 
-  toogleDarkMode() {
-   this.themeService.toogleDarkMode();
+  toggleDarkMode() {
+   this.themeService.toggleDarkMode();
   }
 }
