@@ -2,7 +2,8 @@ header {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  box-shadow: 0 0 0 1px rgb(16 22 26 / 10%), 0 0 0 rgb(16 22 26 / 0%), 0 1px 1px rgb(16 22 26 / 20%);
+  box-shadow: 0 0 0 1px rgb(16 22 26 / 10%), 0 0 0 rgb(16 22 26 / 0%),
+    0 1px 1px rgb(16 22 26 / 20%);
   background-color: var(--header-background-color);
 }
 
@@ -27,9 +28,9 @@ nav {
   }
 
   span {
+    color: var(--text-color);
     font-size: 22px;
     font-weight: bold;
-    color: var(--text-color);
   }
 
   &:hover {
@@ -43,9 +44,9 @@ nav {
 }
 
 .link {
-  font-size: 16px;
   padding: 0px 16px;
   color: var(--link-text-color);
+  font-size: 16px;
 
   &:hover {
     color: var(--link-hover-color);
@@ -64,10 +65,10 @@ nav {
 }
 
 .icon-button {
+  @extend .icon-link;
   border: none;
   background: none;
   cursor: pointer;
-  @extend .icon-link;
 }
 
 .icon-link {
