@@ -7,15 +7,11 @@ import { getEncodedBase64Image, getBase64ImageFromBlob, saveImage } from 'app/sh
   styleUrls: ['./lock.component.scss']
 })
 export class LockComponent {
-  previewImageSource: string
-  encodedImageSource: string
-  isOutputVisible: boolean
+  previewImageSource = ""
+  encodedImageSource = ""
+  isOutputVisible = false
 
-  constructor() {
-    this.previewImageSource = "";
-    this.encodedImageSource = "";
-    this.isOutputVisible = false;
-  }
+  constructor() {}
 
   handlePreview(event: Event) {
     const target = event.target as HTMLInputElement;

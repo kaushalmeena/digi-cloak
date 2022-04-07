@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { getDecodedMessage, getBase64ImageFromBlob, saveText } from 'app/shared/utils';
+import { Component, ViewChild } from '@angular/core';
+import { SnackbarComponent } from 'app/shared/components/snackbar/snackbar.component';
+import { getDecodedMessage, getBase64ImageFromBlob, copyText } from 'app/shared/utils';
 
 @Component({
   selector: 'app-unlock',
@@ -7,15 +8,14 @@ import { getDecodedMessage, getBase64ImageFromBlob, saveText } from 'app/shared/
   styleUrls: ['./unlock.component.scss']
 })
 export class UnlockComponent {
-  previewImageSource: string
-  decodedMessage: string
-  isOutputVisible: boolean
+  previewImageSource = ""
+  decodedMessage = ""
+  isOutputVisible = false
 
-  constructor() {
-    this.previewImageSource = "";
-    this.decodedMessage = "";
-    this.isOutputVisible = false;
-  }
+  @ViewChild(SnackbarComponent)
+  snackbar!: SnackbarComponent;
+
+  constructor() {}
 
   handlePreview(event: Event) {
     const target = event.target as HTMLInputElement;
@@ -36,7 +36,9 @@ export class UnlockComponent {
   }
 
   handleCopy() {
-    saveText(this.decodedMessage);
+    copyText(this.decodedMessage)
+    .then(() => {
+      this.snackbar.show("Copied to clipboard");
+    });
   }
-
 }
