@@ -12,7 +12,7 @@ export class ThemeService {
     this.darkMode = new BehaviorSubject<boolean>(fetchDarkMode());
   }
 
-  toogleDarkMode() {
+  toggleDarkMode() {
     this.setDarkMode(!this.darkMode.getValue());
   }
 
