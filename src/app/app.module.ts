@@ -10,6 +10,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { LockComponent } from './pages/lock/lock.component';
 import { UnlockComponent } from './pages/unlock/unlock.component';
 import { HeaderComponent } from './shared/components/header/header.component';
+import { SnackbarComponent } from './shared/components/snackbar/snackbar.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { HeaderComponent } from './shared/components/header/header.component';
     LockComponent,
     UnlockComponent,
     FaqsComponent,
-    HeaderComponent
+    HeaderComponent,
+    SnackbarComponent
   ],
   imports: [
     BrowserModule,

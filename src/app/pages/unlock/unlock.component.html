@@ -21,9 +21,10 @@
 <div class="output-container">
   <div class="form-control">
     <label class="form-label" for="message">Decrypted Message</label>
-    <textarea name="message" rows="6" id="message" class="form-input" [value]="decodedMessage"></textarea>
+    <textarea readonly name="message" rows="6" id="message" class="form-input" [value]="decodedMessage"></textarea>
   </div>
   <div class="button-container">
-    <button class="button" (click)="handleCopy()">Save</button>
+    <button class="button" (click)="handleCopy()">Copy</button>
   </div>
 </div>
+<app-snackbar #snackbar></app-snackbar>
