@@ -7,7 +7,7 @@ body {
 }
 
 body {
-  @extend .light-mode;
+  @extend .light-theme;
   margin: 0px;
   background-color: var(--grey-color-4);
   color: var(--text-color);
@@ -15,7 +15,7 @@ body {
 }
 
 body.dark-mode {
-  @extend .dark-mode;
+  @extend .dark-theme;
 }
 
 a {
