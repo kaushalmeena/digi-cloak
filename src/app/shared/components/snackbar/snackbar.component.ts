@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { SNACKBAR_TIMEOUT } from 'app/shared/constants';
 import { snackBarAnimations } from './snackbar.animation';
 
 @Component({
@@ -18,7 +19,7 @@ export class SnackbarComponent {
     clearTimeout(this.timeout);
     this.message = message;
     this.visible = true;
-    this.timeout = window.setTimeout(() => this.hide(), 3000);
+    this.timeout = window.setTimeout(() => this.hide(), SNACKBAR_TIMEOUT);
   }
 
   hide() {
