@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { UnlockComponent } from './unlock.component';
+import { SnackbarComponent } from 'app/shared/components/snackbar/snackbar.component';
 
 describe('UnlockComponent', () => {
   let component: UnlockComponent;
@@ -8,7 +10,11 @@ describe('UnlockComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ UnlockComponent ]
+      imports: [ BrowserAnimationsModule ],
+      declarations: [ 
+        UnlockComponent, 
+        SnackbarComponent 
+      ]
     })
     .compileComponents();
   });

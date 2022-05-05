@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { SnackbarComponent } from './snackbar.component';
 
@@ -8,7 +9,8 @@ describe('SnackbarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SnackbarComponent ]
+      declarations: [ SnackbarComponent ],
+      imports: [ BrowserAnimationsModule ]
     })
     .compileComponents();
   });
