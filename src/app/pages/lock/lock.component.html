@@ -30,6 +30,6 @@
     </div>
   </div>
   <div class="button-container">
-    <button class="button" (click)="handleSave()">Save</button>
+    <button class="button" (click)="handleSave()" [disabled]="!isOutputVisible">Save</button>
   </div>
 </div>
