@@ -24,7 +24,7 @@
     <textarea readonly name="message" rows="6" id="message" class="form-input" [value]="decodedMessage"></textarea>
   </div>
   <div class="button-container">
-    <button class="button" (click)="handleCopy()">Copy</button>
+    <button class="button" (click)="handleCopy()" [disabled]="!decodedMessage">Copy</button>
   </div>
 </div>
 <app-snackbar #snackbar></app-snackbar>

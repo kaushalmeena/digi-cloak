@@ -45,16 +45,17 @@ nav {
 
 .link {
   padding: 0px 16px;
-  color: var(--link-text-color);
+  color: var(--link-color);
   font-size: 16px;
+  opacity: 0.55;
 
   &:hover {
-    color: var(--link-hover-color);
+    opacity: 0.9;
   }
 }
 
 .link-active {
-  color: var(--link-hover-color);
+  opacity: 0.9;
 }
 
 .button-container {
@@ -73,10 +74,11 @@ nav {
 
 .icon-link {
   padding: 0px 8px;
-  fill: var(--link-text-color);
+  fill: var(--text-color);
+  opacity: 0.55;
 
   &:hover {
-    fill: var(--link-hover-color);
+    opacity: 0.9;
   }
 }
 
