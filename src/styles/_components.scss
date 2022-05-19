@@ -4,7 +4,7 @@
   justify-content: center;
   border: none;
   border-radius: 3px;
-  box-shadow: 0 0 0 1px rgb(16 22 26 / 40%);
+  box-shadow: 0 0 0 1px #10161a66;
   background-color: var(--grey-color-5);
   cursor: pointer;
   padding: 0px 16px;
@@ -47,8 +47,8 @@
   outline: none;
   border: none;
   border-radius: 3px;
-  box-shadow: 0 0 0 0 rgb(19 124 189 / 0%), 0 0 0 0 rgb(19 124 189 / 0%),
-    inset 0 0 0 1px rgb(16 22 26 / 15%), inset 0 1px 1px rgb(16 22 26 / 20%);
+  box-shadow: 0 0 0 0 #137cbd00, 0 0 0 0 #137cbd00, inset 0 0 0 1px #10161a26,
+    inset 0 1px 1px #10161a33;
   background-color: var(--grey-color-3);
   padding: 0px 10px;
   min-height: 30px;
@@ -64,8 +64,7 @@
 .card {
   margin-bottom: 16px;
   border-radius: 3px;
-  box-shadow: 0 0 0 1px rgb(16 22 26 / 40%), 0 0 0 rgb(16 22 26 / 0%),
-    0 0 0 rgb(16 22 26 / 0%);
+  box-shadow: 0 0 0 1px #10161a66, 0 0 0 #10161a00, 0 0 0 #10161a00;
   background-color: var(--grey-color-4);
   padding: 20px;
 
