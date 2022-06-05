@@ -31,9 +31,10 @@ export class UnlockComponent {
     });
   }
 
-  handleSubmit(event: any) {
+  handleSubmit(event: Event) {
     event.preventDefault();
-    const password = event.target.elements.password.value;
+    const target = event.target as HTMLFormElement;
+    const password = target.password.value as string;
     this.decodedMessage = getDecodedMessage(this.previewImageSource, password);
     this.isOutputVisible = true;
   }

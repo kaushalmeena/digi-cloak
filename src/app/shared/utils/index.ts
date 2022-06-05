@@ -1,4 +1,5 @@
-import CryptoJS from 'crypto-js';
+import AES from 'crypto-js/aes';
+import Utf8 from 'crypto-js/enc-utf8';
 import { DELIMITER_CHARACTER } from '../constants';
 
 export const fetchDarkMode = (): boolean => {
@@ -93,7 +94,7 @@ export const getEncodedBase64Image = (
     return 'Invalid image detected.';
   }
 
-  const ciphertext = CryptoJS.AES.encrypt(message, password).toString();
+  const ciphertext = AES.encrypt(message, password).toString();
 
   const encryptedMessage = ciphertext + DELIMITER_CHARACTER;
 
@@ -111,8 +112,8 @@ export const getEncodedBase64Image = (
   for (let i = 0; i < imageData.data.length; i += 4) {
     for (let offset = 0; offset < 3; offset++) {
       if (counter < binaryMessage.length) {
-        imageData.data[i + offset] =
-          (imageData.data[i + offset] & 254) + parseInt(binaryMessage[counter]);
+        imageData.data[i + offset] &= 254;
+        imageData.data[i + offset] += parseInt(binaryMessage[counter]);
         counter += 1;
       } else {
         completed = true;
@@ -169,9 +170,7 @@ export const getDecodedMessage = (
 
   if (completed) {
     try {
-      result = CryptoJS.AES.decrypt(ciphertext, password).toString(
-        CryptoJS.enc.Utf8
-      );
+      result = AES.decrypt(ciphertext, password).toString(Utf8);
     } catch (error) {
       console.error('=========== Decoding', error);
     }

@@ -27,10 +27,11 @@ export class LockComponent {
     });
   }
 
-  handleSubmit(event: any) {
+  handleSubmit(event: Event) {
     event.preventDefault();
-    const message = event.target.elements.message.value;
-    const password = event.target.elements.password.value;
+    const target = event.target as HTMLFormElement;
+    const message = target.message.value as string;
+    const password = target.password.value as string;
     this.encodedImageSource = getEncodedBase64Image(
       this.previewImageSource,
       message,
