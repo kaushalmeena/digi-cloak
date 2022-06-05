@@ -3,7 +3,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { fetchDarkMode, storeDarkMode } from '../utils';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ThemeService {
   private darkMode: BehaviorSubject<boolean>;

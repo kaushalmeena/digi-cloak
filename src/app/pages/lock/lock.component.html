@@ -2,21 +2,44 @@
 <form class="form-container" (submit)="handleSubmit($event)">
   <div class="form-control">
     <label class="form-label" for="message">Message</label>
-    <textarea name="message" rows="6" id="message" class="form-input" required></textarea>
+    <textarea
+      name="message"
+      rows="6"
+      id="message"
+      class="form-input"
+      required
+    ></textarea>
   </div>
   <div class="card">
     <div class="card-media">
-      <img [src]="previewImageSource" alt="Preview-Image" *ngIf="previewImageSource" />
+      <img
+        [src]="previewImageSource"
+        alt="Preview-Image"
+        *ngIf="previewImageSource"
+      />
     </div>
     <div class="form-control">
       <label class="form-label" for="image">Image</label>
-      <input name="image" type="file" accept="image/png, image/gif, image/jpeg" id="image" class="form-input" required
-        (change)="handlePreview($event)" />
+      <input
+        name="image"
+        type="file"
+        accept="image/png, image/gif, image/jpeg"
+        id="image"
+        class="form-input"
+        required
+        (change)="handlePreview($event)"
+      />
     </div>
   </div>
   <div class="form-control">
     <label class="form-label" for="password">Password</label>
-    <input name="password" type="text" id="password" class="form-input" required />
+    <input
+      name="password"
+      type="text"
+      id="password"
+      class="form-input"
+      required
+    />
   </div>
   <div class="submit-container">
     <button type="submit" class="button submit-button">Encode</button>
@@ -26,10 +49,16 @@
   <span class="output-label">Encoded Image</span>
   <div class="card">
     <div class="card-media">
-      <img [src]="encodedImageSource" alt="Output-Image" *ngIf="encodedImageSource" />
+      <img
+        [src]="encodedImageSource"
+        alt="Output-Image"
+        *ngIf="encodedImageSource"
+      />
     </div>
   </div>
   <div class="button-container">
-    <button class="button" (click)="handleSave()" [disabled]="!isOutputVisible">Save</button>
+    <button class="button" (click)="handleSave()" [disabled]="!isOutputVisible">
+      Save
+    </button>
   </div>
 </div>

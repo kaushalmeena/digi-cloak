@@ -10,13 +10,9 @@ describe('UnlockComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ BrowserAnimationsModule ],
-      declarations: [ 
-        UnlockComponent, 
-        SnackbarComponent 
-      ]
-    })
-    .compileComponents();
+      imports: [BrowserAnimationsModule],
+      declarations: [UnlockComponent, SnackbarComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

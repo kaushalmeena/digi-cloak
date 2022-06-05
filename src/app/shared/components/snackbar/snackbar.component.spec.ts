@@ -9,10 +9,9 @@ describe('SnackbarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SnackbarComponent ],
-      imports: [ BrowserAnimationsModule ]
-    })
-    .compileComponents();
+      declarations: [SnackbarComponent],
+      imports: [BrowserAnimationsModule],
+    }).compileComponents();
   });
 
   beforeEach(() => {

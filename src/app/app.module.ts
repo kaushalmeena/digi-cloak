@@ -20,14 +20,10 @@ import { SnackbarComponent } from './shared/components/snackbar/snackbar.compone
     UnlockComponent,
     FaqsComponent,
     HeaderComponent,
-    SnackbarComponent
+    SnackbarComponent,
   ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    AppRoutingModule
-  ],
+  imports: [BrowserModule, BrowserAnimationsModule, AppRoutingModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

@@ -10,11 +10,11 @@ const routes: Routes = [
   { path: 'lock', component: LockComponent },
   { path: 'unlock', component: UnlockComponent },
   { path: 'faqs', component: FaqsComponent },
-  { path: '**', redirectTo: '' }
+  { path: '**', redirectTo: '' },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

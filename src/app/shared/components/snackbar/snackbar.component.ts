@@ -6,16 +6,16 @@ import { snackBarAnimations } from './snackbar.animation';
   selector: 'app-snackbar',
   templateUrl: './snackbar.component.html',
   styleUrls: ['./snackbar.component.scss'],
-  animations: [snackBarAnimations.snackBarState]
+  animations: [snackBarAnimations.snackBarState],
 })
 export class SnackbarComponent {
-  visible = false
-  message = ""
-  timeout: number | undefined
+  visible = false;
+  message = '';
+  timeout: number | undefined;
 
-  constructor() { }
+  constructor() {}
 
-  show(message:string) {
+  show(message: string) {
     clearTimeout(this.timeout);
     this.message = message;
     this.visible = true;

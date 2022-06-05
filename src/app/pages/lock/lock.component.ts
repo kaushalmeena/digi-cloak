@@ -1,15 +1,19 @@
 import { Component } from '@angular/core';
-import { getEncodedBase64Image, getBase64ImageFromBlob, saveImage } from 'app/shared/utils';
+import {
+  getEncodedBase64Image,
+  getBase64ImageFromBlob,
+  saveImage,
+} from 'app/shared/utils';
 
 @Component({
   selector: 'app-lock',
   templateUrl: './lock.component.html',
-  styleUrls: ['./lock.component.scss']
+  styleUrls: ['./lock.component.scss'],
 })
 export class LockComponent {
-  previewImageSource = ""
-  encodedImageSource = ""
-  isOutputVisible = false
+  previewImageSource = '';
+  encodedImageSource = '';
+  isOutputVisible = false;
 
   constructor() {}
 
@@ -18,17 +22,20 @@ export class LockComponent {
     const files = target.files as FileList;
     const imageFile = files[0];
 
-    getBase64ImageFromBlob(imageFile)
-      .then((src) => {
-        this.previewImageSource = src;
-      });
+    getBase64ImageFromBlob(imageFile).then((src) => {
+      this.previewImageSource = src;
+    });
   }
 
   handleSubmit(event: any) {
     event.preventDefault();
     const message = event.target.elements.message.value;
     const password = event.target.elements.password.value;
-    this.encodedImageSource = getEncodedBase64Image(this.previewImageSource, message, password);;
+    this.encodedImageSource = getEncodedBase64Image(
+      this.previewImageSource,
+      message,
+      password
+    );
     this.isOutputVisible = true;
   }
 
