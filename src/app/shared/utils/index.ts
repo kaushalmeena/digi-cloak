@@ -42,7 +42,9 @@ export const getBase64ImageFromBlob = (blob: Blob): Promise<string> =>
     };
   });
 
-export const getImageDataFromBase64Image = (base64Image: string): ImageData | null => {
+export const getImageDataFromBase64Image = (
+  base64Image: string
+): ImageData | null => {
   let result = null;
 
   const image = new Image();
@@ -109,7 +111,8 @@ export const getEncodedBase64Image = (
   for (let i = 0; i < imageData.data.length; i += 4) {
     for (let offset = 0; offset < 3; offset++) {
       if (counter < binaryMessage.length) {
-        imageData.data[i + offset] = (imageData.data[i + offset] & 254) + parseInt(binaryMessage[counter]);
+        imageData.data[i + offset] =
+          (imageData.data[i + offset] & 254) + parseInt(binaryMessage[counter]);
         counter += 1;
       } else {
         completed = true;
@@ -166,7 +169,9 @@ export const getDecodedMessage = (
 
   if (completed) {
     try {
-      result = CryptoJS.AES.decrypt(ciphertext, password).toString(CryptoJS.enc.Utf8);
+      result = CryptoJS.AES.decrypt(ciphertext, password).toString(
+        CryptoJS.enc.Utf8
+      );
     } catch (error) {
       console.error('=========== Decoding', error);
     }

@@ -1,27 +1,36 @@
 import { Component } from '@angular/core';
 import { ThemeService } from 'app/shared/services/theme.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent {
-  repoUrl = 'https://github.com/kaushalmeena/digi-cloak';
+  themeSubscription!: Subscription;
 
+  darkMode = false;
+  repoUrl = 'https://github.com/kaushalmeena/digi-cloak';
   navItems = [
     { link: '/lock', title: 'Lock' },
     { link: '/unlock', title: 'Unlock' },
-    { link: '/faqs', title: 'FAQs' }
+    { link: '/faqs', title: 'FAQs' },
   ];
 
-  darkMode = false
+  constructor(private themeService: ThemeService) {}
 
-  constructor(private themeService: ThemeService) {
-    this.themeService.getDarkMode().subscribe((mode) => this.darkMode = mode)
+  ngOnInit(): void {
+    this.themeSubscription = this.themeService
+      .getDarkMode()
+      .subscribe((mode) => (this.darkMode = mode));
+  }
+
+  ngOnDestroy(): void {
+    this.themeSubscription.unsubscribe();
   }
 
   toggleDarkMode() {
-   this.themeService.toggleDarkMode();
+    this.themeService.toggleDarkMode();
   }
 }

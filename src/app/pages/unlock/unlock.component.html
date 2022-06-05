@@ -2,17 +2,34 @@
 <form class="form-container" (submit)="handleSubmit($event)">
   <div class="card">
     <div class="card-media">
-      <img [src]="previewImageSource" alt="Preview-Image" *ngIf="previewImageSource" />
+      <img
+        [src]="previewImageSource"
+        alt="Preview-Image"
+        *ngIf="previewImageSource"
+      />
     </div>
     <div class="form-control">
       <label class="form-label" for="image">Encoded Image</label>
-      <input name="image" type="file" accept="image/png, image/gif, image/jpeg" id="image" class="form-input" required
-        (change)="handlePreview($event)" />
+      <input
+        name="image"
+        type="file"
+        accept="image/png, image/gif, image/jpeg"
+        id="image"
+        class="form-input"
+        required
+        (change)="handlePreview($event)"
+      />
     </div>
   </div>
   <div class="form-control">
     <label class="form-label" for="password">Password</label>
-    <input name="password" type="text" id="password" class="form-input" required />
+    <input
+      name="password"
+      type="text"
+      id="password"
+      class="form-input"
+      required
+    />
   </div>
   <div class="submit-container">
     <button type="submit" class="button submit-button">Decrypt</button>
@@ -21,10 +38,19 @@
 <div class="output-container">
   <div class="form-control">
     <label class="form-label" for="message">Decrypted Message</label>
-    <textarea readonly name="message" rows="6" id="message" class="form-input" [value]="decodedMessage"></textarea>
+    <textarea
+      readonly
+      name="message"
+      rows="6"
+      id="message"
+      class="form-input"
+      [value]="decodedMessage"
+    ></textarea>
   </div>
   <div class="button-container">
-    <button class="button" (click)="handleCopy()" [disabled]="!decodedMessage">Copy</button>
+    <button class="button" (click)="handleCopy()" [disabled]="!decodedMessage">
+      Copy
+    </button>
   </div>
 </div>
 <app-snackbar #snackbar></app-snackbar>
