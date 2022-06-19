@@ -7,11 +7,12 @@ body {
 }
 
 body {
-  @extend .light-theme;
-  margin: 0px;
+  margin: 0;
   background-color: var(--grey-color-4);
   color: var(--text-color);
   font-family: "Helvetica Neue", sans-serif;
+
+  @extend .light-theme;
 }
 
 body.dark-mode {
@@ -19,6 +20,6 @@ body.dark-mode {
 }
 
 a {
-  text-decoration: none;
   color: inherit;
+  text-decoration: none;
 }

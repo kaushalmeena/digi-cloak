@@ -1,16 +1,16 @@
 header {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  box-shadow: 0 0 0 1px #10161a1a, 0 0 0 #10161a00, 0 1px 1px #10161a33;
+  flex-wrap: wrap;
   background-color: var(--header-background-color);
+  box-shadow: 0 0 0 1px #10161a1a, 0 0 0 #10161a00, 0 1px 1px #10161a33;
 }
 
 nav {
-  box-sizing: border-box;
   display: flex;
   align-items: center;
-  margin: 0px auto;
+  box-sizing: border-box;
+  margin: 0 auto;
   padding: 0 15px;
   width: 75%;
   height: 60px;
@@ -18,8 +18,8 @@ nav {
 
 .logo {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
+  flex-wrap: wrap;
 
   svg {
     padding-right: 8px;
@@ -28,8 +28,8 @@ nav {
 
   span {
     color: var(--text-color);
-    font-size: 22px;
     font-weight: bold;
+    font-size: 22px;
   }
 
   &:hover {
@@ -43,7 +43,7 @@ nav {
 }
 
 .link {
-  padding: 0px 16px;
+  padding: 0 16px;
   color: var(--link-color);
   font-size: 16px;
   opacity: 0.55;
@@ -59,22 +59,23 @@ nav {
 
 .button-container {
   display: flex;
-  flex: 1 1 auto;
   align-items: center;
+  flex: 1 1 auto;
   justify-content: flex-end;
 }
 
 .icon-button {
-  @extend .icon-link;
   border: none;
   background: none;
   cursor: pointer;
+
+  @extend .icon-link;
 }
 
 .icon-link {
-  padding: 0px 8px;
-  fill: var(--text-color);
+  padding: 0 8px;
   opacity: 0.55;
+  fill: var(--text-color);
 
   &:hover {
     opacity: 0.9;
