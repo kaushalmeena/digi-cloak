@@ -1,33 +1,31 @@
 <h1>FAQs</h1>
 <h2>What is Digi-Cloak?</h2>
 <p>
-  Digi-Cloak is online web tool to hide secret text in images using cryptography
-  and steganography.
+  Digi-Cloak is an online web tool to hide a secret message in the image using
+  cryptography and steganography.
 </p>
 <h2>How does it work?</h2>
 <p>
-  Plain text is encrypted into cypher text using AES with a 256-bit key. This
-  key is derived from a password specified by you or generated using our secure
-  password generator in your browser. Encrypted cypher text is hidden in the
-  image using LSB (Least Significant Bit) technique in such a way that the image
-  is unaffected. The image is also provided by you or a sample image can be
-  used.
+  Message is encrypted into ciphertext using AES with a 256-bit key. This key is
+  derived from a password specified by you. Encrypted ciphertext is hidden in
+  the image using the LSB (Least Significant Bit) technique in such a way that
+  the image is unaffected. The image is also provided by you.
 </p>
 <h2>What information is retained?</h2>
-<p>No information is retained, all the process happens client-side only.</p>
-<h2>How secure is my content?</h2>
+<p>No information is retained, all processes happens at client-side only.</p>
+<h2>How secure is my message?</h2>
 <p>
-  Your plain text, password and image are never transmitted, all functionality
+  Your message, password and image are never transmitted, all process
   takes place client-side in your browser.
 </p>
-<h2>I misplaced my password, is my content recoverable?</h2>
+<h2>I misplaced my password, is my message recoverable?</h2>
 <p>
-  No, that is the point. Your plain text, password and image are never submitted
+  No, that is the point. Your message, password and image are never submitted
   beyond your browser. If the password or image is misplaced, the original
-  content is gone forever.
+  message is gone forever.
 </p>
-<h2>Is there a limit to the amount of content?</h2>
+<h2>Is there a limit to the length of message to be hidden?</h2>
 <p>
-  There is no limit to the amount, but the increasing length of plain text
-  decreases the quality of the output image.
+  Yes, message length should not greater that 4 times the number of pixels
+  (height x width) in specified image.
 </p>

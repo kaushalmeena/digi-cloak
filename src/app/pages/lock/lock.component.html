@@ -3,30 +3,30 @@
   <div class="form-control">
     <label class="form-label" for="message">Message</label>
     <textarea
-      name="message"
-      rows="6"
       id="message"
       class="form-input"
+      name="message"
+      rows="6"
       required
     ></textarea>
   </div>
   <div class="card">
     <div class="card-media">
       <img
-        [src]="previewImageSource"
         alt="Preview-Image"
+        [src]="previewImageSource"
         *ngIf="previewImageSource"
       />
     </div>
     <div class="form-control">
       <label class="form-label" for="image">Image</label>
       <input
+        required
+        id="image"
         name="image"
         type="file"
-        accept="image/png, image/gif, image/jpeg"
-        id="image"
+        accept="image/png, image/gif, image/jpeg, image/webp"
         class="form-input"
-        required
         (change)="handlePreview($event)"
       />
     </div>
@@ -34,11 +34,11 @@
   <div class="form-control">
     <label class="form-label" for="password">Password</label>
     <input
-      name="password"
-      type="text"
+      required
       id="password"
       class="form-input"
-      required
+      name="password"
+      type="password"
     />
   </div>
   <div class="submit-container">
@@ -50,8 +50,8 @@
   <div class="card">
     <div class="card-media">
       <img
-        [src]="encodedImageSource"
         alt="Output-Image"
+        [src]="encodedImageSource"
         *ngIf="encodedImageSource"
       />
     </div>
@@ -62,3 +62,4 @@
     </button>
   </div>
 </div>
+<app-snackbar #snackbar></app-snackbar>

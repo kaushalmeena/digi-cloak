@@ -3,20 +3,20 @@
   <div class="card">
     <div class="card-media">
       <img
-        [src]="previewImageSource"
         alt="Preview-Image"
+        [src]="previewImageSource"
         *ngIf="previewImageSource"
       />
     </div>
     <div class="form-control">
       <label class="form-label" for="image">Encoded Image</label>
       <input
+        required
+        id="image"
+        class="form-input"
         name="image"
         type="file"
         accept="image/png, image/gif, image/jpeg"
-        id="image"
-        class="form-input"
-        required
         (change)="handlePreview($event)"
       />
     </div>
@@ -24,11 +24,11 @@
   <div class="form-control">
     <label class="form-label" for="password">Password</label>
     <input
-      name="password"
-      type="text"
+      required
       id="password"
       class="form-input"
-      required
+      name="password"
+      type="password"
     />
   </div>
   <div class="submit-container">
@@ -40,10 +40,10 @@
     <label class="form-label" for="message">Decrypted Message</label>
     <textarea
       readonly
-      name="message"
-      rows="6"
       id="message"
       class="form-input"
+      name="message"
+      rows="6"
       [value]="decodedMessage"
     ></textarea>
   </div>

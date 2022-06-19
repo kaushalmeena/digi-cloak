@@ -26,22 +26,38 @@ export class UnlockComponent {
     const files = target.files as FileList;
     const imageFile = files[0];
 
-    getBase64ImageFromBlob(imageFile).then((src) => {
-      this.previewImageSource = src;
-    });
+    getBase64ImageFromBlob(imageFile)
+      .then((src) => {
+        this.previewImageSource = src;
+      })
+      .catch((err) => {
+        this.snackbar.show(err.message);
+      });
   }
 
   handleSubmit(event: Event) {
     event.preventDefault();
+
     const target = event.target as HTMLFormElement;
     const password = target.password.value as string;
-    this.decodedMessage = getDecodedMessage(this.previewImageSource, password);
-    this.isOutputVisible = true;
+
+    getDecodedMessage(this.previewImageSource, password)
+      .then((msg) => {
+        this.decodedMessage = msg;
+        this.isOutputVisible = true;
+      })
+      .catch((err) => {
+        this.snackbar.show(err.message);
+      });
   }
 
   handleCopy() {
-    copyText(this.decodedMessage).then(() => {
-      this.snackbar.show('Copied to clipboard');
-    });
+    copyText(this.decodedMessage)
+      .then(() => {
+        this.snackbar.show('Copied to clipboard');
+      })
+      .catch((err) => {
+        this.snackbar.show(err.message);
+      });
   }
 }

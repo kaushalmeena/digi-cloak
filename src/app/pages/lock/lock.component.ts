@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { SnackbarComponent } from 'app/shared/components/snackbar/snackbar.component';
 import {
   getEncodedBase64Image,
   getBase64ImageFromBlob,
@@ -15,6 +16,9 @@ export class LockComponent {
   encodedImageSource = '';
   isOutputVisible = false;
 
+  @ViewChild(SnackbarComponent)
+  snackbar!: SnackbarComponent;
+
   constructor() {}
 
   handlePreview(event: Event) {
@@ -22,22 +26,30 @@ export class LockComponent {
     const files = target.files as FileList;
     const imageFile = files[0];
 
-    getBase64ImageFromBlob(imageFile).then((src) => {
-      this.previewImageSource = src;
-    });
+    getBase64ImageFromBlob(imageFile)
+      .then((src) => {
+        this.previewImageSource = src;
+      })
+      .catch((err) => {
+        this.snackbar.show(err.message);
+      });
   }
 
   handleSubmit(event: Event) {
     event.preventDefault();
+
     const target = event.target as HTMLFormElement;
     const message = target.message.value as string;
     const password = target.password.value as string;
-    this.encodedImageSource = getEncodedBase64Image(
-      this.previewImageSource,
-      message,
-      password
-    );
-    this.isOutputVisible = true;
+
+    getEncodedBase64Image(this.previewImageSource, message, password)
+      .then((src) => {
+        this.encodedImageSource = src;
+        this.isOutputVisible = true;
+      })
+      .catch((err) => {
+        this.snackbar.show(err?.message);
+      });
   }
 
   handleSave() {
