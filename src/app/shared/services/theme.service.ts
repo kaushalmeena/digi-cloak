@@ -21,7 +21,7 @@ export class ThemeService {
     storeDarkMode(mode);
   }
 
-  getDarkMode(): Observable<boolean> {
+  getDarkMode() {
     return this.darkMode;
   }
 }
