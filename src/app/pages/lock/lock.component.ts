@@ -48,7 +48,7 @@ export class LockComponent {
         this.isOutputVisible = true;
       })
       .catch((err) => {
-        this.snackbar.show(err?.message);
+        this.snackbar.show(err.message);
       });
   }
 
