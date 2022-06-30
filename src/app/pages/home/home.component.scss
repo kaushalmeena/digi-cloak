@@ -32,17 +32,9 @@
 .button-container {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   justify-content: center;
   margin-top: 60px;
   margin-bottom: 20px;
-
-  a + a {
-    margin-left: 20px;
-  }
-}
-
-.button-large {
-  min-width: 100px;
-  min-height: 50px;
-  font-size: 18px;
+  gap: 20px;
 }

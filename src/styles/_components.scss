@@ -31,14 +31,25 @@
   }
 }
 
+.button-medium  {
+  min-width: 150px;
+  min-height: 50px;
+  font-size: 18px;
+}
+
+.button-large  {
+  min-width: 180px;
+  min-height: 60px;
+  font-size: 20px;
+}
+
 .form-control {
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
-  margin-bottom: 16px;
 }
 
-.form-label {
+.form-label, .card-label {
+  margin-top: 16px;
   margin-bottom: 10px;
   font-size: 16px;
 }
@@ -63,25 +74,27 @@
 }
 
 .card {
-  margin-bottom: 16px;
-  padding: 20px;
+  position: relative;
   border-radius: 3px;
   background-color: var(--grey-color-4);
   box-shadow: 0 0 0 1px #10161a66, 0 0 0 #10161a00, 0 0 0 #10161a00;
-
-  .form-control {
-    margin: 0;
-  }
 }
 
 .card-media {
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 210px;
 
   img {
-    padding-bottom: 10px;
     max-width: 100%;
-    height: 300px;
+    height: 210px;
+  }
+
+  svg {
+    height: 52px;
+    width: 52px;
+    opacity: 0.55;
+    fill: var(--text-color);
   }
 }

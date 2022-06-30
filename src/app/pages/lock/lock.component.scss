@@ -1,31 +1,26 @@
-.form-container {
-  position: relative;
+.main-container {
+ display: flex;
+ gap: 20px;
 }
 
-.submit-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 30px;
-  margin-bottom: 40px;
+.left-container {
+  flex-basis: 50%;
 }
 
-.submit-button {
-  min-width: 200px;
-  min-height: 60px;
-  font-size: 20px;
-}
-
-.output-container {
-  display: flex;
-  flex-direction: column;
-}
-
-.output-label {
-  margin-bottom: 10px;
-  font-size: 16px;
+.right-container {
+  flex-basis: 50%;
 }
 
 .button-container {
-  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 52px;
+  gap: 10px;
+}
+
+@media (max-width: 992px) {
+  .main-container {
+    flex-direction: column;
+  }
 }
