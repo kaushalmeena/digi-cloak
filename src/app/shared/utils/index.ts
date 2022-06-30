@@ -1,4 +1,5 @@
-import CryptoJS from 'crypto-js';
+import AES from 'crypto-js/aes';
+import encUtf8 from 'crypto-js/enc-utf8';
 import {
   BITS_PER_CHAR,
   MESSAGE_BORDER,
@@ -24,10 +25,10 @@ export const storeDarkMode = (mode: boolean): void => {
 };
 
 export const saveImage = (data: string): void => {
-  const a = document.createElement('a');
-  a.download = 'output';
-  a.href = data;
-  a.click();
+  const anchorEl = document.createElement('a');
+  anchorEl.download = 'output';
+  anchorEl.href = data;
+  anchorEl.click();
 };
 
 export const copyText = (text: string): Promise<void> => {
@@ -37,56 +38,54 @@ export const copyText = (text: string): Promise<void> => {
 export const getBase64ImageFromBlob = (blob: Blob): Promise<string> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
-
     reader.readAsDataURL(blob);
-
     reader.onload = (event) => resolve(event.target?.result as string);
     reader.onerror = (event) => reject(event.target?.error);
   });
 
-export const getImageDataFromBase64Image = (
-  base64Image: string
-): ImageData | null => {
-  let result = null;
+function getImageDataFromBase64Image(base64Image: string): ImageData | null {
+  let imageData = null;
 
-  const image = new Image();
-  image.src = base64Image;
+  const imageEl = new Image();
+  imageEl.src = base64Image;
 
-  const canvas = document.createElement('canvas');
-  canvas.width = image.width;
-  canvas.height = image.height;
+  const canvasEl = document.createElement('canvas');
 
-  const context = canvas.getContext('2d');
+  canvasEl.width = imageEl.width;
+  canvasEl.height = imageEl.height;
+
+  const context = canvasEl.getContext('2d');
 
   if (context) {
-    context.drawImage(image, 0, 0, canvas.width, canvas.height);
-    result = context.getImageData(0, 0, canvas.width, canvas.height);
+    context.drawImage(imageEl, 0, 0, canvasEl.width, canvasEl.height);
+    imageData = context.getImageData(0, 0, canvasEl.width, canvasEl.height);
   }
 
-  return result;
-};
+  return imageData;
+}
 
-export const getBase64ImageFromImageData = (imageData: ImageData): string => {
-  let result = '';
+function getFormattedMessage(message: string): string {
+  const length = message.length.toString();
+  return MESSAGE_FORMAT.replace('<L>', length).replace('<M>', message);
+}
 
-  const canvas = document.createElement('canvas');
-  canvas.width = imageData.width;
-  canvas.height = imageData.height;
+function getBase64ImageFromImageData(imageData: ImageData): string {
+  let base64Image = '';
 
-  const context = canvas.getContext('2d');
+  const canvasEl = document.createElement('canvas');
+
+  canvasEl.width = imageData.width;
+  canvasEl.height = imageData.height;
+
+  const context = canvasEl.getContext('2d');
 
   if (context) {
     context.putImageData(imageData, 0, 0);
-    result = canvas.toDataURL('image/png', '0.95');
+    base64Image = canvasEl.toDataURL('image/png', '0.95');
   }
 
-  return result;
-};
-
-export const getFormattedMessage = (message: string): string => {
-  const length = message.length.toString();
-  return MESSAGE_FORMAT.replace('<L>', length).replace('<M>', message);
-};
+  return base64Image;
+}
 
 export const getEncodedBase64Image = async (
   base64Image: string,
@@ -98,25 +97,34 @@ export const getEncodedBase64Image = async (
     throw new Error('Cannot generate image data from base64 image');
   }
 
-  const ciphertext = CryptoJS.AES.encrypt(message, password).toString();
+  const ciphertext = AES.encrypt(message, password).toString();
 
-  const encryptedMessage = getFormattedMessage(ciphertext);
-
-  if (encryptedMessage.length > imageData.data.length) {
-    throw new Error('Message length is too large to hide in image');
-  }
+  const formattedMessage = getFormattedMessage(ciphertext);
 
   let binaryMessage = '';
 
-  for (let i = 0; i < encryptedMessage.length; i += 1) {
-    binaryMessage += encryptedMessage[i]
+  for (let i = 0; i < formattedMessage.length; i += 1) {
+    binaryMessage += formattedMessage[i]
       .charCodeAt(0)
       .toString(2)
       .padStart(BITS_PER_CHAR, '0');
   }
 
-  for (let i = 0; i < binaryMessage.length; i += 1) {
-    imageData.data[i] = (imageData.data[i] & 254) + Number(binaryMessage[i]);
+  if (binaryMessage.length > 3 * imageData.height * imageData.width) {
+    throw new Error('Message length is too large to hide in image');
+  }
+
+  let k = 0;
+
+  for (let i = 0; i < imageData.data.length; i += 1) {
+    if (i % 4 === 3) {
+      imageData.data[i] = 255;
+      continue;
+    }
+    if (k < binaryMessage.length) {
+      imageData.data[i] = (imageData.data[i] & 254) + Number(binaryMessage[k]);
+      k += 1;
+    }
   }
 
   const result = getBase64ImageFromImageData(imageData);
@@ -127,18 +135,16 @@ export const getEncodedBase64Image = async (
   return result;
 };
 
-export const getDecodedTextFromImageData = (
-  range: [number, number],
+function* getDecodedTextGenerator(
   imageData: ImageData
-): string => {
-  let result = '';
-
+): Generator<string, void, unknown> {
   let tempBits = '';
   let tempChar = '';
 
-  const [startIndex, endIndex] = range;
-
-  for (let i = startIndex; i < endIndex; i += 1) {
+  for (let i = 0; i < imageData.data.length; i += 1) {
+    if (i % 4 === 3) {
+      continue;
+    }
     if (imageData.data[i] % 2 === 0) {
       tempBits += '0';
     } else {
@@ -146,65 +152,68 @@ export const getDecodedTextFromImageData = (
     }
     if (tempBits.length === BITS_PER_CHAR) {
       tempChar = String.fromCharCode(parseInt(tempBits, 2));
+      yield tempChar;
       tempBits = '';
-      result += tempChar;
     }
   }
+}
 
-  return result;
-};
+function getMessageHeader(iterator: Generator<string, void, unknown>): string {
+  let header = '';
 
-export const getMessageHeaderFromImageData = (imageData: ImageData): string =>
-  getDecodedTextFromImageData(
-    [0, MESSAGE_HEADER.length * BITS_PER_CHAR],
-    imageData
-  );
+  let result = null;
 
-export const getCiphertextRangeFromImageData = (
-  imageData: ImageData
-): [number, number] | null => {
-  let result = '';
+  do {
+    result = iterator.next();
+    header += result.value;
+  } while (!result.done && header.length < MESSAGE_HEADER.length);
 
-  let borderCount = 0;
+  return header;
+}
 
-  let tempBits = '';
-  let tempChar = '';
+function getMessageLength(iterator: Generator<string, void, unknown>): number {
+  let length = '';
+  let border = 0;
 
-  const startIndex = MESSAGE_HEADER.length * BITS_PER_CHAR;
-  const endIndex = imageData.data.length;
+  let result = null;
 
-  for (let i = startIndex; i < endIndex; i += 1) {
-    if (imageData.data[i] % 2 === 0) {
-      tempBits += '0';
-    } else {
-      tempBits += '1';
-    }
-    if (tempBits.length === BITS_PER_CHAR) {
-      tempChar = String.fromCharCode(parseInt(tempBits, 2));
-      tempBits = '';
-      if (tempChar === MESSAGE_BORDER) {
-        borderCount += 1;
-        if (borderCount === 1) {
-          continue;
-        }
-        if (borderCount === 2) {
-          const ciphertextLength = Number(result);
-          const ciphertextStartIndex = i + 1;
-          const ciphertextEndIndex =
-            ciphertextStartIndex + ciphertextLength * BITS_PER_CHAR;
-          return [ciphertextStartIndex, ciphertextEndIndex];
-        }
-        return null;
+  do {
+    result = iterator.next();
+
+    if (result.value === MESSAGE_BORDER) {
+      border += 1;
+      if (border === 1) {
+        continue;
       }
-      if (isNaN(Number(tempChar))) {
-        return null;
+      if (border === 2) {
+        return Number(length);
       }
-      result += tempChar;
     }
-  }
+    if (border === 0 || isNaN(Number(result.value))) {
+      return -1;
+    }
 
-  return null;
-};
+    length += result.value;
+  } while (!result.done);
+
+  return -1;
+}
+
+function getMessageContent(
+  contentLength: number,
+  iterator: Generator<string, void, unknown>
+): string {
+  let content = '';
+
+  let result = null;
+
+  do {
+    result = iterator.next();
+    content += result.value;
+  } while (!result.done && content.length < contentLength);
+
+  return content;
+}
 
 export const getDecodedMessage = async (
   base64Image: string,
@@ -215,19 +224,21 @@ export const getDecodedMessage = async (
     throw new Error('Cannot generate image data from base64 image');
   }
 
-  const header = getMessageHeaderFromImageData(imageData);
+  const iterator = getDecodedTextGenerator(imageData);
+
+  const header = getMessageHeader(iterator);
   if (header !== MESSAGE_HEADER) {
     throw new Error('Message not found in the image');
   }
 
-  const range = getCiphertextRangeFromImageData(imageData);
-  if (!range) {
+  const length = getMessageLength(iterator);
+  if (length === -1) {
     throw new Error('Message not found in the image');
   }
 
-  const ciphertext = getDecodedTextFromImageData(range, imageData);
+  const ciphertext = getMessageContent(length, iterator);
 
-  const result = CryptoJS.AES.decrypt(ciphertext, password).toString(CryptoJS.enc.Utf8);
+  const result = AES.decrypt(ciphertext, password).toString(encUtf8);
   if (!result) {
     throw new Error('Password is incorrect');
   }

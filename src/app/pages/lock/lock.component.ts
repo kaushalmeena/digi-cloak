@@ -24,15 +24,20 @@ export class LockComponent {
   handlePreview(event: Event) {
     const target = event.target as HTMLInputElement;
     const files = target.files as FileList;
-    const imageFile = files[0];
 
-    getBase64ImageFromBlob(imageFile)
-      .then((src) => {
-        this.previewImageSource = src;
-      })
-      .catch((err) => {
-        this.snackbar.show(err.message);
-      });
+    const imageFile = files.item(0);
+
+    if (imageFile) {
+      getBase64ImageFromBlob(imageFile)
+        .then((src) => {
+          this.previewImageSource = src;
+        })
+        .catch((err) => {
+          this.snackbar.show(err.message);
+        });
+    } else {
+      this.previewImageSource = '';
+    }
   }
 
   handleSubmit(event: Event) {
