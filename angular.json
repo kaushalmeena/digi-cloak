@@ -37,7 +37,8 @@
             ],
             "scripts": [],
             "allowedCommonJsDependencies": [
-              "crypto-js"
+              "crypto-js/aes",
+              "crypto-js/enc-utf8"
             ]
           },
           "configurations": {
