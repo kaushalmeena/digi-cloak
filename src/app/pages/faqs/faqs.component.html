@@ -5,18 +5,27 @@
   cryptography and steganography.
 </p>
 <h2>How does it work?</h2>
+<h4>For locking:</h4>
 <p>
-  Your message is encrypted into ciphertext using AES (Advanced Encryption Standard) with a key. This
-  key is derived from a password specified by you. The encrypted ciphertext is
-  hidden in the image provided by you using the LSB (Least Significant Bit)
-  technique in such a way that the image is unaffected.
+  You need to provide a message, password and image. Your message is encrypted
+  into unreadable ciphertext using AES (Advanced Encryption Standard) encryption
+  with the help of a password. Then ciphertext is hidden in the image using the
+  LSB (Least Significant Bit) steganography technique in such a way that the
+  image is unaffected.
+</p>
+<h4>For unlocking:</h4>
+<p>
+  You need to provide a password and image (in which the message is hidden). The
+  hidden ciphertext is extracted from the image using the LSB steganography
+  technique. Then ciphertext is decrypted into a readable message using an AES
+  decryption with the help of a password.
 </p>
 <h2>What information is retained?</h2>
-<p>No information is retained, all processes happens at browser only.</p>
+<p>No information is retained, all operations happen at browser only.</p>
 <h2>How secure is my message?</h2>
 <p>
-  Your message, password and image are never transmitted, all hiding/unhiding takes
-  place in your browser.
+  Your message, password and image are never transmitted, all hiding/unhiding
+  takes place in your browser.
 </p>
 <h2>I misplaced my password, is my message recoverable?</h2>
 <p>
@@ -26,6 +35,6 @@
 </p>
 <h2>Is there a limit to the length of message that can be hidden?</h2>
 <p>
-  Yes, message length should not greater that 3 times the number of pixels
-  (height x width) in specified image.
+  Yes, message length should not be greater than 3 times the number of pixels
+  (height x width) in the specified image.
 </p>
