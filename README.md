@@ -1,6 +1,6 @@
 # Digi-Cloak
 
-A web app that hide secrets in plain-sight securely in images with help of AES encryption and LSB technique.
+A web app that hides secrets in plain sight securely in images with the help of AES encryption and LSB steganography technique.
 
 Live version is deployed at [https://kaushalmeena.github.io/digi-cloak/](https://kaushalmeena.github.io/digi-cloak/)
 
