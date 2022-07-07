@@ -1,5 +1,5 @@
 <header>
-  <nav>
+  <div class="header-container">
     <a routerLink="/" class="logo">
       <svg width="28" height="28" viewBox="0 0 448 512">
         <path
@@ -8,13 +8,19 @@
       </svg>
       <span>Digi-Cloak</span>
     </a>
-    <ul class="link-container">
-      <li *ngFor="let item of navItems">
-        <a class="link" [routerLink]="item.link" routerLinkActive="link-active">
-          {{ item.title }}
-        </a>
-      </li>
-    </ul>
+    <nav>
+      <ul class="link-container">
+        <li *ngFor="let item of navItems">
+          <a
+            class="link"
+            [routerLink]="item.link"
+            routerLinkActive="link-active"
+          >
+            {{ item.title }}
+          </a>
+        </li>
+      </ul>
+    </nav>
     <div class="button-container">
       <button class="icon-button" (click)="toggleDarkMode()">
         <svg width="28" height="28" viewBox="0 0 24 24" *ngIf="darkMode">
@@ -36,5 +42,5 @@
         </svg>
       </a>
     </div>
-  </nav>
+  </div>
 </header>
