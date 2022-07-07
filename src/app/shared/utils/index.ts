@@ -31,9 +31,8 @@ export const saveImage = (data: string): void => {
   anchorEl.click();
 };
 
-export const copyText = (text: string): Promise<void> => {
-  return navigator.clipboard.writeText(text);
-};
+export const copyText = (text: string): Promise<void> =>
+  navigator.clipboard.writeText(text);
 
 export const getBase64ImageFromBlob = (blob: Blob): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -137,7 +136,7 @@ export const getEncodedBase64Image = async (
 
 function* getDecodedTextGenerator(
   imageData: ImageData
-): Generator<string, void, unknown> {
+): Generator<string, void, void> {
   let tempBits = '';
   let tempChar = '';
 
@@ -158,7 +157,7 @@ function* getDecodedTextGenerator(
   }
 }
 
-function getMessageHeader(iterator: Generator<string, void, unknown>): string {
+function getMessageHeader(iterator: Generator<string, void, void>): string {
   let header = '';
 
   let result = null;
@@ -171,7 +170,7 @@ function getMessageHeader(iterator: Generator<string, void, unknown>): string {
   return header;
 }
 
-function getMessageLength(iterator: Generator<string, void, unknown>): number {
+function getMessageLength(iterator: Generator<string, void, void>): number {
   let length = '';
   let border = 0;
 
@@ -201,7 +200,7 @@ function getMessageLength(iterator: Generator<string, void, unknown>): number {
 
 function getMessageContent(
   contentLength: number,
-  iterator: Generator<string, void, unknown>
+  iterator: Generator<string, void, void>
 ): string {
   let content = '';
 
