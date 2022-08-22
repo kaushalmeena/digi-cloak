@@ -113,16 +113,14 @@ export const getEncodedBase64Image = async (
     throw new Error('Message length is too large to hide in image');
   }
 
-  let k = 0;
-
-  for (let i = 0; i < imageData.data.length; i += 1) {
+  for (let i = 0, j = 0; i < imageData.data.length; i += 1) {
     if (i % 4 === 3) {
       imageData.data[i] = 255;
       continue;
     }
-    if (k < binaryMessage.length) {
-      imageData.data[i] = (imageData.data[i] & 254) + Number(binaryMessage[k]);
-      k += 1;
+    if (j < binaryMessage.length) {
+      imageData.data[i] = (imageData.data[i] & 254) + Number(binaryMessage[j]);
+      j += 1;
     }
   }
 
