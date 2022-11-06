@@ -1,16 +1,15 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ThemeService } from 'app/shared/services/theme.service';
-import { Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent implements OnInit, OnDestroy {
-  themeSubscription!: Subscription;
+export class HeaderComponent {
+  darkMode$: Observable<boolean>;
 
-  darkMode = false;
   repoUrl = 'https://github.com/kaushalmeena/digi-cloak';
   navItems = [
     { link: '/lock', title: 'Lock' },
@@ -18,16 +17,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     { link: '/faqs', title: 'FAQs' },
   ];
 
-  constructor(private themeService: ThemeService) {}
-
-  ngOnInit(): void {
-    this.themeSubscription = this.themeService
-      .getDarkMode()
-      .subscribe((mode) => (this.darkMode = mode));
-  }
-
-  ngOnDestroy(): void {
-    this.themeSubscription.unsubscribe();
+  constructor(private themeService: ThemeService) {
+    this.darkMode$ = this.themeService.getDarkMode();
   }
 
   toggleDarkMode() {
