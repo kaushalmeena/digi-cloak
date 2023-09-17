@@ -12,7 +12,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 To install and run this project you need:
 
-- [NodeJS](https://nodejs.org/ "NodeJS")
+- [Node.js](https://nodejs.org/ "Node.js")
 - [git](https://git-scm.com/downloads "git") (only to clone this repository)
 
 ### Installation
