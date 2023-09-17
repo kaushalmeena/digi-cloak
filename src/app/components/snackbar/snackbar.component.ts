@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SNACKBAR_TIMEOUT } from 'app/shared/constants';
+import { SNACKBAR_TIMEOUT } from 'src/app/constants';
 import { snackBarAnimations } from './snackbar.animation';
 
 @Component({

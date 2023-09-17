@@ -1,5 +1,4 @@
-import AES from 'crypto-js/aes';
-import encUtf8 from 'crypto-js/enc-utf8';
+import { AES, enc } from 'crypto-js';
 import {
   BITS_PER_CHAR,
   MESSAGE_BORDER,
@@ -232,7 +231,7 @@ export const getDecodedMessage = async (
 
   const ciphertext = getMessageContent(length, iterator);
 
-  const result = AES.decrypt(ciphertext, password).toString(encUtf8);
+  const result = AES.decrypt(ciphertext, password).toString(enc.Utf8);
   if (!result) {
     throw new Error('Password is incorrect');
   }
