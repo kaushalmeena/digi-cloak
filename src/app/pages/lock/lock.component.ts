@@ -1,10 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
-import { SnackbarComponent } from 'app/shared/components/snackbar/snackbar.component';
+import { SnackbarComponent } from 'src/app/components/snackbar/snackbar.component';
 import {
-  getEncodedBase64Image,
   getBase64ImageFromBlob,
+  getEncodedBase64Image,
   saveImage,
-} from 'app/shared/utils';
+} from 'src/app/utils';
 
 @Component({
   selector: 'app-lock',
@@ -44,8 +44,8 @@ export class LockComponent {
     event.preventDefault();
 
     const target = event.target as HTMLFormElement;
-    const message = target.message.value as string;
-    const password = target.password.value as string;
+    const message = target['message'].value as string;
+    const password = target['password'].value as string;
 
     getEncodedBase64Image(this.previewImageSource, message, password)
       .then((src) => {

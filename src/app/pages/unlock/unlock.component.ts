@@ -1,10 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
-import { SnackbarComponent } from 'app/shared/components/snackbar/snackbar.component';
-import {
-  getDecodedMessage,
-  getBase64ImageFromBlob,
-  copyText,
-} from 'app/shared/utils';
+import { SnackbarComponent } from 'src/app/components/snackbar/snackbar.component';
+import { copyText, getBase64ImageFromBlob, getDecodedMessage } from 'src/app/utils';
 
 @Component({
   selector: 'app-unlock',
@@ -44,7 +40,7 @@ export class UnlockComponent {
     event.preventDefault();
 
     const target = event.target as HTMLFormElement;
-    const password = target.password.value as string;
+    const password = target['password'].value as string;
 
     getDecodedMessage(this.previewImageSource, password)
       .then((msg) => {

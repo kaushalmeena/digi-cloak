@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
 import { DARK_MODE_CLASS } from '../constants';
 import { fetchDarkMode, storeDarkMode } from '../utils';
 
@@ -8,13 +7,17 @@ import { fetchDarkMode, storeDarkMode } from '../utils';
   providedIn: 'root',
 })
 export class ThemeService {
-  private darkMode: BehaviorSubject<boolean>;
+  private darkMode = new BehaviorSubject<boolean>(fetchDarkMode());
 
   constructor() {
-    this.darkMode = new BehaviorSubject(fetchDarkMode());
+    this.initDarkMode();
   }
 
-  private onNext(value: boolean) {
+  private initDarkMode() {
+    this.darkMode.subscribe((value) => this.setBodyClass(value));
+  }
+
+  private setBodyClass(value: boolean) {
     if (value) {
       document.body.classList.add(DARK_MODE_CLASS);
     } else {
@@ -24,7 +27,7 @@ export class ThemeService {
   }
 
   toggleDarkMode() {
-    this.setDarkMode(!this.darkMode.getValue());
+    this.setDarkMode(!this.darkMode.value);
   }
 
   setDarkMode(value: boolean) {
@@ -32,10 +35,6 @@ export class ThemeService {
   }
 
   getDarkMode() {
-    return this.darkMode.pipe(
-      tap({
-        next: this.onNext,
-      })
-    );
+    return this.darkMode.asObservable();
   }
 }
