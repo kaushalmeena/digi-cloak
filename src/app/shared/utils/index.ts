@@ -157,7 +157,6 @@ function* getDecodedTextGenerator(
 
 function getMessageHeader(iterator: Generator<string, void, void>): string {
   let header = '';
-
   let result = null;
 
   do {
@@ -171,7 +170,6 @@ function getMessageHeader(iterator: Generator<string, void, void>): string {
 function getMessageLength(iterator: Generator<string, void, void>): number {
   let length = '';
   let border = 0;
-
   let result = null;
 
   do {
@@ -189,7 +187,7 @@ function getMessageLength(iterator: Generator<string, void, void>): number {
     if (border === 0 || isNaN(Number(result.value))) {
       return -1;
     }
-
+    
     length += result.value;
   } while (!result.done);
 
@@ -201,7 +199,6 @@ function getMessageContent(
   iterator: Generator<string, void, void>
 ): string {
   let content = '';
-
   let result = null;
 
   do {
