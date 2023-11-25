@@ -65,10 +65,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "digi-cloak:build:production"
+              "buildTarget": "digi-cloak:build:production"
             },
             "development": {
-              "browserTarget": "digi-cloak:build:development"
+              "buildTarget": "digi-cloak:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -76,7 +76,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "digi-cloak:build"
+            "buildTarget": "digi-cloak:build"
           }
         },
         "test": {
