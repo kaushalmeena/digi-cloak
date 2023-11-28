@@ -7,10 +7,10 @@ import {
   AnimationTriggerMetadata,
 } from '@angular/animations';
 
-export const snackBarAnimations: {
-  readonly snackBarState: AnimationTriggerMetadata;
+export const snackbarAnimations: {
+  readonly snackbarState: AnimationTriggerMetadata;
 } = {
-  snackBarState: trigger('state', [
+  snackbarState: trigger('state', [
     state(
       'void, hidden',
       style({
