@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { SNACKBAR_TIMEOUT } from 'src/app/constants';
-import { snackBarAnimations } from './snackbar.animation';
+import { snackbarAnimations } from './snackbar.animation';
 
 @Component({
   selector: 'app-snackbar',
   templateUrl: './snackbar.component.html',
   styleUrls: ['./snackbar.component.scss'],
-  animations: [snackBarAnimations.snackBarState],
+  animations: [snackbarAnimations.snackbarState],
 })
 export class SnackbarComponent {
   visible = false;
