@@ -6,6 +6,6 @@ export const MESSAGE_FORMAT = `${MESSAGE_HEADER}${MESSAGE_BORDER}<L>${MESSAGE_BO
 
 export const BITS_PER_CHAR = 8;
 
-export const DARK_MODE_CLASS = 'dark-mode';
+export const DARK_MODE_CLASS = 'dark';
 
 export const SNACKBAR_TIMEOUT = 3000;

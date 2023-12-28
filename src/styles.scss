@@ -1,14 +1,4 @@
-html,
-body {
-  height: 100%;
-}
-
-body {
-  margin: 0;
-  background-color: var(--grey-color-4);
-  color: var(--text-color);
-  font-family: "Helvetica Neue", sans-serif;
-
+:root {
   --text-color: #182026;
   --header-background-color: white;
   --snackbar-background-color: #323232;
@@ -21,7 +11,7 @@ body {
   --grey-color-5: #f5f8fa;
 }
 
-body.dark-mode {
+.dark {
   --text-color: #f5f8fa;
   --header-background-color: #394b59;
   --snackbar-background-color: #fafafa;
@@ -32,6 +22,18 @@ body.dark-mode {
   --grey-color-3: #293742;
   --grey-color-4: #30404d;
   --grey-color-5: #394b59;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--grey-color-4);
+  color: var(--text-color);
+  font-family: "Helvetica Neue", sans-serif;
 }
 
 a {
