@@ -1,40 +1,54 @@
 <h1>FAQs</h1>
-<h2>What is Digi-Cloak?</h2>
-<p>
-  Digi-Cloak is an online web tool to hide a secret message in the image using
-  cryptography and steganography.
-</p>
-<h2>How does it work?</h2>
-<h4>For locking:</h4>
-<p>
-  You need to provide a message, password and image. Your message is encrypted
-  into unreadable ciphertext using AES (Advanced Encryption Standard) encryption
-  with the help of a password. Then ciphertext is hidden in the image using the
-  LSB (Least Significant Bit) steganography technique in such a way that the
-  image is unaffected.
-</p>
-<h4>For unlocking:</h4>
-<p>
-  You need to provide a password and image (in which the message is hidden). The
-  hidden ciphertext is extracted from the image using the LSB steganography
-  technique. Then ciphertext is decrypted into a readable message using an AES
-  decryption with the help of a password.
-</p>
-<h2>What information is retained?</h2>
-<p>No information is retained, all operations happen at browser only.</p>
-<h2>How secure is my message?</h2>
-<p>
-  Your message, password and image are never transmitted, all hiding/unhiding
-  takes place in your browser.
-</p>
-<h2>I misplaced my password, is my message recoverable?</h2>
-<p>
-  No, that is the point. Your message, password and image are never submitted
-  beyond your browser. If the password or image is misplaced, the original
-  message is gone forever.
-</p>
-<h2>Is there a limit to the length of message that can be hidden?</h2>
-<p>
-  Yes, message length should not be greater than 3 times the number of pixels
-  (height x width) in the specified image.
-</p>
+<details>
+  <summary>What is Digi-Cloak?</summary>
+  <p>
+    Digi-Cloak is an online web tool to hide a secret message in the image using
+    cryptography and steganography.
+  </p>
+</details>
+<details>
+  <summary>How does it work?</summary>
+  <h4>For locking:</h4>
+  <p>
+    You need to provide a message, password and image. Your message is encrypted
+    into unreadable ciphertext using AES (Advanced Encryption Standard)
+    encryption with the help of a password. Then ciphertext is hidden in the
+    image using the LSB (Least Significant Bit) steganography technique in such
+    a way that the image is unaffected.
+  </p>
+  <h4>For unlocking:</h4>
+  <p>
+    You need to provide a password and image (in which the message is hidden).
+    The hidden ciphertext is extracted from the image using the LSB
+    steganography technique. Then ciphertext is decrypted into a readable
+    message using an AES decryption with the help of a password.
+  </p>
+</details>
+<details>
+  <summary>What information is retained?</summary>
+  <p>No information is retained, all operations happen at browser only.</p>
+</details>
+<details>
+  <summary>How secure is my message?</summary>
+  <p>
+    Your message, password and image are never transmitted, all locking/unlocking
+    takes place in your browser.
+  </p>
+</details>
+<details>
+  <summary>I misplaced my password, is my message recoverable?</summary>
+  <p>
+    No, that is the point. Your message, password and image are never submitted
+    beyond your browser. If the password or image is misplaced, the original
+    message is gone forever.
+  </p>
+</details>
+<details>
+  <summary>
+    Is there a limit to the length of message that can be hidden?
+  </summary>
+  <p>
+    Yes, message length should not be greater than 3 times the number of pixels
+    (height x width) in the specified image.
+  </p>
+</details>
