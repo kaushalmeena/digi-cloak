@@ -19,7 +19,6 @@ header {
 .logo {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
 
   svg {
     padding-right: 8px;
@@ -30,6 +29,7 @@ header {
     color: var(--text-color);
     font-weight: bold;
     font-size: 22px;
+    white-space: nowrap;
   }
 
   &:hover {
@@ -84,6 +84,10 @@ header {
 
 @media (max-width: 720px) {
   nav {
+    width: 100%;
+  }
+
+  .header-container {
     width: 100%;
   }
 
