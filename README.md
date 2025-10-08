@@ -13,7 +13,7 @@ These instructions will get you a copy of the project up and running on your loc
 To install and run this project you need:
 
 - [Node.js](https://nodejs.org/ "Node.js")
-- [yarn](https://classic.yarnpkg.com/lang/en/docs/install/ "yarn") 
+- [yarn](https://classic.yarnpkg.com/lang/en/docs/install/ "yarn")
 - [git](https://git-scm.com/downloads "git") (only to clone this repository)
 
 ### Installation
@@ -38,7 +38,7 @@ yarn install
 To run the project simply run:
 
 ```bash
-yarn run start
+yarn run dev
 ```
 
 Your app should now be running on [localhost:4200](http://localhost:4200/).
