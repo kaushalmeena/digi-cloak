@@ -1,143 +1,78 @@
+@import "tailwindcss";
+
+/* Class-based dark mode: the Theme service toggles `.dark` on <body> */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Design tokens, shadcn/ui naming convention.
+ * Raw values flip with the theme; they are exposed to Tailwind below
+ * via @theme inline (bg-background, text-foreground, bg-card, ...).
+ */
 :root {
-  --text-color: #182026;
-  --header-background-color: white;
-  --snackbar-background-color: #323232;
-  --snackbar-text-color: #f5f8fa;
-  --disabled-color: #ced9e080;
-  --grey-color-1: #ced9e0;
-  --grey-color-2: #d8e1e8;
-  --grey-color-3: #e1e8ed;
-  --grey-color-4: #ebf1f5;
-  --grey-color-5: #f5f8fa;
+  --background: #ebf1f5;
+  --foreground: #182026;
+  --card: #ffffff;
+  --card-foreground: #182026;
+  --primary: #323232;
+  --primary-foreground: #f5f8fa;
+  --secondary: #f5f8fa;
+  --secondary-foreground: #182026;
+  --accent: #ebf1f5;
+  --accent-foreground: #182026;
+  --muted: #e1e8ed;
+  --muted-foreground: #182026;
+  --disabled: #ced9e080;
+  --border: #10161a66;
 }
 
 .dark {
-  --text-color: #f5f8fa;
-  --header-background-color: #394b59;
-  --snackbar-background-color: #fafafa;
-  --snackbar-text-color: #182026;
-  --disabled-color: #394b5980;
-  --grey-color-1: #182026;
-  --grey-color-2: #202b33;
-  --grey-color-3: #293742;
-  --grey-color-4: #30404d;
-  --grey-color-5: #394b59;
+  --background: #30404d;
+  --foreground: #f5f8fa;
+  --card: #394b59;
+  --card-foreground: #f5f8fa;
+  --primary: #fafafa;
+  --primary-foreground: #182026;
+  --secondary: #394b59;
+  --secondary-foreground: #f5f8fa;
+  --accent: #30404d;
+  --accent-foreground: #f5f8fa;
+  --muted: #293742;
+  --muted-foreground: #f5f8fa;
+  --disabled: #394b5980;
+  --border: #10161a66;
 }
 
-html,
-body {
-  height: 100%;
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-disabled: var(--disabled);
+  --color-border: var(--border);
 }
 
-body {
-  margin: 0;
-  background-color: var(--grey-color-4);
-  color: var(--text-color);
-  font-family: "Helvetica Neue", sans-serif;
-}
+@layer base {
+  html,
+  body {
+    height: 100%;
+  }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: "Helvetica Neue", sans-serif;
+  }
 
-.button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 16px;
-  min-width: 40px;
-  min-height: 40px;
-  border: none;
-  border-radius: 3px;
-  background-color: var(--grey-color-5);
-  box-shadow: 0 0 0 1px #10161a66;
-  color: var(--text-color);
-  vertical-align: middle;
-  text-align: left;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.button:hover {
-  background-color: var(--grey-color-4);
-}
-
-.button:active {
-  background-color: var(--grey-color-3);
-}
-
-.button:disabled {
-  outline: none;
-  background-color: var(--disabled-color);
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-
-.button-medium {
-  min-width: 150px;
-  min-height: 50px;
-  font-size: 18px;
-}
-
-.button-large {
-  min-width: 180px;
-  min-height: 60px;
-  font-size: 20px;
-}
-
-.form-control {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-label, .card-label {
-  margin-top: 16px;
-  margin-bottom: 10px;
-  font-size: 16px;
-}
-
-.form-input {
-  padding: 0 10px;
-  min-height: 30px;
-  outline: none;
-  border: none;
-  border-radius: 3px;
-  background-color: var(--grey-color-3);
-  box-shadow: 0 0 0 0 #137cbd00, 0 0 0 0 #137cbd00, inset 0 0 0 1px #10161a26,
-    inset 0 1px 1px #10161a33;
-  color: var(--text-color);
-  vertical-align: middle;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 30px;
-
-  appearance: none;
-  caret-color: var(--text-color);
-}
-
-.card {
-  position: relative;
-  border-radius: 3px;
-  background-color: var(--grey-color-4);
-  box-shadow: 0 0 0 1px #10161a66, 0 0 0 #10161a00, 0 0 0 #10161a00;
-}
-
-.card-media {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 210px;
-}
-
-.card-media img {
-  max-width: 100%;
-  height: 210px;
-}
-
-.card-media svg {
-  height: 52px;
-  width: 52px;
-  opacity: 0.55;
-  fill: var(--text-color);
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 }

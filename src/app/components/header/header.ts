@@ -7,7 +7,6 @@ import { Theme } from '../../services/theme';
   selector: 'app-header',
   imports: [RouterLink, RouterLinkActive],
   templateUrl: './header.html',
-  styleUrl: './header.css',
 })
 export class Header {
   private readonly theme = inject(Theme);

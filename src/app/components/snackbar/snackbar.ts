@@ -8,7 +8,6 @@ export const SNACKBAR_TIMEOUT = 3000;
   selector: 'app-snackbar',
   imports: [],
   templateUrl: './snackbar.html',
-  styleUrl: './snackbar.css',
   animations: [snackbarAnimations.snackbarState],
 })
 export class Snackbar {

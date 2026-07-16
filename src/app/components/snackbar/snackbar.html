@@ -1,7 +1,21 @@
-<div class="snackbar" [@state]="visible() ? 'visible' : 'hidden'">
+<div
+  class="snackbar fixed bottom-0 right-0 flex items-center justify-between m-5 py-2.5 px-3.5 min-w-[344px] max-w-[33vw] rounded bg-primary text-primary-foreground shadow-[0_3px_5px_-1px_#00000033,0_6px_10px_#00000024,0_1px_18px_#0000001f] origin-center"
+  [@state]="visible() ? 'visible' : 'hidden'"
+>
   {{ message() }}
-  <button class="close-button" (click)="hide()">
-    <svg width="24" height="24" viewBox="0 0 24 24" stroke-width="2">
+  <button
+    type="button"
+    class="close-button flex items-center justify-between pl-2 border-none bg-transparent cursor-pointer hover:opacity-[0.52]"
+    aria-label="Dismiss notification"
+    (click)="hide()"
+  >
+    <svg
+      class="stroke-primary-foreground"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      stroke-width="2"
+    >
       <line x1="18" y1="6" x2="6" y2="18" />
       <line x1="6" y1="6" x2="18" y2="18" />
     </svg>

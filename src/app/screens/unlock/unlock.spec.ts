@@ -1,39 +1,25 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 
+import {
+  createTestImage,
+  dataUrlToFile,
+  flush,
+  setInputFile,
+} from '../../testing/fixtures';
 import { getEncodedBase64Image } from '../../utils/stegano';
 import { Unlock } from './unlock';
 
-function createTestImage(size = 50): string {
-  const canvas = document.createElement('canvas');
-  canvas.width = size;
-  canvas.height = size;
-  const context = canvas.getContext('2d') as CanvasRenderingContext2D;
-  context.fillStyle = '#336699';
-  context.fillRect(0, 0, size, size);
-  return canvas.toDataURL('image/png');
-}
-
-function dataUrlToFile(dataUrl: string, name: string, type: string): File {
-  const base64 = dataUrl.split(',')[1];
-  const binary = atob(base64);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i += 1) {
-    bytes[i] = binary.charCodeAt(i);
-  }
-  return new File([bytes], name, { type });
-}
-
-function setInputFile(input: HTMLInputElement, file: File): void {
-  const dataTransfer = new DataTransfer();
-  dataTransfer.items.add(file);
-  input.files = dataTransfer.files;
-  input.dispatchEvent(new Event('change'));
-}
-
-async function flush(fixture: ComponentFixture<unknown>): Promise<void> {
-  await new Promise((resolve) => setTimeout(resolve, 50));
-  fixture.detectChanges();
+async function createEncodedImageFile(
+  message: string,
+  password: string
+): Promise<File> {
+  const encoded = await getEncodedBase64Image(
+    createTestImage(),
+    message,
+    password
+  );
+  return dataUrlToFile(encoded, 'encoded.png', 'image/png');
 }
 
 describe('Unlock', () => {
@@ -51,18 +37,26 @@ describe('Unlock', () => {
     fixture.detectChanges();
   });
 
+  async function loadEncodedImage(password: string): Promise<void> {
+    const file = await createEncodedImageFile('top secret', 'hunter2');
+    const input = element.querySelector<HTMLInputElement>('#image')!;
+    setInputFile(input, file);
+    await flush(fixture);
+
+    element.querySelector<HTMLInputElement>('#password')!.value = password;
+    const form = element.querySelector('form')!;
+    form.dispatchEvent(new Event('submit', { cancelable: true }));
+    await flush(fixture);
+  }
+
   it('should create', () => {
     expect(fixture.componentInstance).toBeTruthy();
   });
 
   it('shows a preview once an image file is chosen', async () => {
-    const encoded = await getEncodedBase64Image(
-      createTestImage(),
-      'top secret',
-      'hunter2'
-    );
+    const file = await createEncodedImageFile('top secret', 'hunter2');
     const input = element.querySelector<HTMLInputElement>('#image')!;
-    setInputFile(input, dataUrlToFile(encoded, 'encoded.png', 'image/png'));
+    setInputFile(input, file);
     await flush(fixture);
 
     const img = element.querySelector<HTMLImageElement>(
@@ -72,19 +66,7 @@ describe('Unlock', () => {
   });
 
   it('decodes a message hidden with the right password', async () => {
-    const encoded = await getEncodedBase64Image(
-      createTestImage(),
-      'top secret',
-      'hunter2'
-    );
-    const input = element.querySelector<HTMLInputElement>('#image')!;
-    setInputFile(input, dataUrlToFile(encoded, 'encoded.png', 'image/png'));
-    await flush(fixture);
-
-    element.querySelector<HTMLInputElement>('#password')!.value = 'hunter2';
-    const form = element.querySelector('form')!;
-    form.dispatchEvent(new Event('submit', { cancelable: true }));
-    await flush(fixture);
+    await loadEncodedImage('hunter2');
 
     const messageEl = element.querySelector<HTMLTextAreaElement>('#message')!;
     expect(messageEl.value).toBe('top secret');
@@ -96,19 +78,7 @@ describe('Unlock', () => {
   });
 
   it('shows an error in the snackbar for the wrong password', async () => {
-    const encoded = await getEncodedBase64Image(
-      createTestImage(),
-      'top secret',
-      'hunter2'
-    );
-    const input = element.querySelector<HTMLInputElement>('#image')!;
-    setInputFile(input, dataUrlToFile(encoded, 'encoded.png', 'image/png'));
-    await flush(fixture);
-
-    element.querySelector<HTMLInputElement>('#password')!.value = 'wrong';
-    const form = element.querySelector('form')!;
-    form.dispatchEvent(new Event('submit', { cancelable: true }));
-    await flush(fixture);
+    await loadEncodedImage('wrong');
 
     expect(element.querySelector('.snackbar')?.textContent).toContain(
       'Password is incorrect'
@@ -119,20 +89,7 @@ describe('Unlock', () => {
 
   it('copies the decoded message and notifies via the snackbar', async () => {
     spyOn(navigator.clipboard, 'writeText').and.resolveTo();
-
-    const encoded = await getEncodedBase64Image(
-      createTestImage(),
-      'top secret',
-      'hunter2'
-    );
-    const input = element.querySelector<HTMLInputElement>('#image')!;
-    setInputFile(input, dataUrlToFile(encoded, 'encoded.png', 'image/png'));
-    await flush(fixture);
-
-    element.querySelector<HTMLInputElement>('#password')!.value = 'hunter2';
-    const form = element.querySelector('form')!;
-    form.dispatchEvent(new Event('submit', { cancelable: true }));
-    await flush(fixture);
+    await loadEncodedImage('hunter2');
 
     const copyButton = element.querySelector<HTMLButtonElement>(
       '.button-container button[type="button"]'
@@ -150,20 +107,7 @@ describe('Unlock', () => {
     spyOn(navigator.clipboard, 'writeText').and.rejectWith(
       new Error('Clipboard unavailable')
     );
-
-    const encoded = await getEncodedBase64Image(
-      createTestImage(),
-      'top secret',
-      'hunter2'
-    );
-    const input = element.querySelector<HTMLInputElement>('#image')!;
-    setInputFile(input, dataUrlToFile(encoded, 'encoded.png', 'image/png'));
-    await flush(fixture);
-
-    element.querySelector<HTMLInputElement>('#password')!.value = 'hunter2';
-    const form = element.querySelector('form')!;
-    form.dispatchEvent(new Event('submit', { cancelable: true }));
-    await flush(fixture);
+    await loadEncodedImage('hunter2');
 
     const copyButton = element.querySelector<HTMLButtonElement>(
       '.button-container button[type="button"]'

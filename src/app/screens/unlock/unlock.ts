@@ -1,14 +1,14 @@
 import { Component, signal, viewChild } from '@angular/core';
 
+import { ImageCard } from '../../components/image-card/image-card';
 import { Snackbar } from '../../components/snackbar/snackbar';
 import { copyText, getBase64ImageFromBlob } from '../../utils/browser';
 import { getDecodedMessage } from '../../utils/stegano';
 
 @Component({
   selector: 'app-unlock',
-  imports: [Snackbar],
+  imports: [ImageCard, Snackbar],
   templateUrl: './unlock.html',
-  styleUrl: './unlock.css',
 })
 export class Unlock {
   protected readonly previewImageSource = signal('');

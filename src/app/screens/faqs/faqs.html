@@ -1,54 +1,43 @@
-<h1>FAQs</h1>
-<details>
-  <summary>What is Digi-Cloak?</summary>
-  <p>
-    Digi-Cloak is an online web tool to hide a secret message in the image using
-    cryptography and steganography.
-  </p>
-</details>
-<details>
-  <summary>How does it work?</summary>
-  <h4>For locking:</h4>
-  <p>
-    You need to provide a message, password and image. Your message is encrypted
-    into unreadable ciphertext using AES (Advanced Encryption Standard)
-    encryption with the help of a password. Then ciphertext is hidden in the
-    image using the LSB (Least Significant Bit) steganography technique in such
-    a way that the image is unaffected.
-  </p>
-  <h4>For unlocking:</h4>
-  <p>
-    You need to provide a password and image (in which the message is hidden).
-    The hidden ciphertext is extracted from the image using the LSB
-    steganography technique. Then ciphertext is decrypted into a readable
-    message using an AES decryption with the help of a password.
-  </p>
-</details>
-<details>
-  <summary>What information is retained?</summary>
-  <p>No information is retained, all operations happen at browser only.</p>
-</details>
-<details>
-  <summary>How secure is my message?</summary>
-  <p>
-    Your message, password and image are never transmitted, all locking/unlocking
-    takes place in your browser.
-  </p>
-</details>
-<details>
-  <summary>I misplaced my password, is my message recoverable?</summary>
-  <p>
-    No, that is the point. Your message, password and image are never submitted
-    beyond your browser. If the password or image is misplaced, the original
-    message is gone forever.
-  </p>
-</details>
-<details>
-  <summary>
-    Is there a limit to the length of message that can be hidden?
-  </summary>
-  <p>
-    Yes, message length should not be greater than 3 times the number of pixels
-    (height x width) in the specified image.
-  </p>
-</details>
+<h1 class="text-[32px] font-bold my-5">FAQs</h1>
+@for (faq of faqs; track faq.question; let i = $index) {
+  <section class="faq my-2.5 text-lg" [class.expanded]="isExpanded(i)">
+    <h2 class="m-0">
+      <button
+        type="button"
+        class="faq-toggle flex items-center justify-between gap-2 py-2 w-full border-none bg-transparent text-inherit text-left text-2xl font-bold cursor-pointer"
+        [id]="'faq-question-' + i"
+        [attr.aria-controls]="'faq-answer-' + i"
+        [attr.aria-expanded]="isExpanded(i)"
+        (click)="toggle(i)"
+      >
+        {{ faq.question }}
+        <svg
+          class="shrink-0 fill-current transition-transform duration-300 motion-reduce:transition-none"
+          [class.rotate-180]="isExpanded(i)"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z" />
+        </svg>
+      </button>
+    </h2>
+    <div
+      class="faq-answer grid transition-[grid-template-rows,opacity] duration-300 ease-in-out motion-reduce:transition-none"
+      [class]="isExpanded(i) ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'"
+      [id]="'faq-answer-' + i"
+      role="region"
+      [attr.aria-labelledby]="'faq-question-' + i"
+    >
+      <div class="overflow-hidden min-h-0">
+        @for (block of faq.answer; track block.text) {
+          @if (block.heading) {
+            <h4 class="font-bold my-4">{{ block.heading }}</h4>
+          }
+          <p class="my-2">{{ block.text }}</p>
+        }
+      </div>
+    </div>
+  </section>
+}

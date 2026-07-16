@@ -8,10 +8,11 @@ import { Header } from './components/header/header';
   imports: [RouterOutlet, Header],
   template: `
     <app-header />
-    <main>
+    <main
+      class="box-border mx-auto px-4 pt-[30px] pb-[60px] min-h-[calc(100vh-60px)] w-3/4 max-[720px]:w-full"
+    >
       <router-outlet />
     </main>
   `,
-  styleUrl: './app.css',
 })
 export class App {}

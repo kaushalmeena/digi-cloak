@@ -1,35 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 
+import {
+  createTestImageFile,
+  flush,
+  setInputFile,
+} from '../../testing/fixtures';
 import { getDecodedMessage } from '../../utils/stegano';
 import { Lock } from './lock';
-
-async function createTestImageFile(): Promise<File> {
-  const canvas = document.createElement('canvas');
-  canvas.width = 50;
-  canvas.height = 50;
-  const context = canvas.getContext('2d') as CanvasRenderingContext2D;
-  context.fillStyle = '#336699';
-  context.fillRect(0, 0, 50, 50);
-  const blob = await new Promise<Blob>((resolve) =>
-    canvas.toBlob((b) => resolve(b as Blob), 'image/png')
-  );
-  return new File([blob], 'test.png', { type: 'image/png' });
-}
-
-function setInputFile(input: HTMLInputElement, file: File | null): void {
-  const dataTransfer = new DataTransfer();
-  if (file) {
-    dataTransfer.items.add(file);
-  }
-  input.files = dataTransfer.files;
-  input.dispatchEvent(new Event('change'));
-}
-
-async function flush(fixture: ComponentFixture<unknown>): Promise<void> {
-  await new Promise((resolve) => setTimeout(resolve, 50));
-  fixture.detectChanges();
-}
 
 describe('Lock', () => {
   let fixture: ComponentFixture<Lock>;
@@ -52,7 +30,7 @@ describe('Lock', () => {
 
   it('shows a preview once an image file is chosen', async () => {
     const input = element.querySelector<HTMLInputElement>('#image')!;
-    setInputFile(input, await createTestImageFile());
+    setInputFile(input, createTestImageFile());
     await flush(fixture);
 
     const img = element.querySelector<HTMLImageElement>(
@@ -63,7 +41,7 @@ describe('Lock', () => {
 
   it('clears the preview when the file selection is removed', async () => {
     const input = element.querySelector<HTMLInputElement>('#image')!;
-    setInputFile(input, await createTestImageFile());
+    setInputFile(input, createTestImageFile());
     await flush(fixture);
     expect(
       element.querySelector('img[alt="Preview-Image"]')
@@ -76,7 +54,7 @@ describe('Lock', () => {
 
   it('encodes the message into the image on submit', async () => {
     const input = element.querySelector<HTMLInputElement>('#image')!;
-    setInputFile(input, await createTestImageFile());
+    setInputFile(input, createTestImageFile());
     await flush(fixture);
 
     element.querySelector<HTMLTextAreaElement>('#message')!.value =
@@ -126,7 +104,7 @@ describe('Lock', () => {
     const clickSpy = spyOn(HTMLAnchorElement.prototype, 'click');
 
     const input = element.querySelector<HTMLInputElement>('#image')!;
-    setInputFile(input, await createTestImageFile());
+    setInputFile(input, createTestImageFile());
     await flush(fixture);
 
     element.querySelector<HTMLTextAreaElement>('#message')!.value =

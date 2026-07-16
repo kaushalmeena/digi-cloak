@@ -1,14 +1,5 @@
+import { createTestImage } from '../testing/fixtures';
 import { getDecodedMessage, getEncodedBase64Image } from './stegano';
-
-function createTestImage(size = 50): string {
-  const canvas = document.createElement('canvas');
-  canvas.width = size;
-  canvas.height = size;
-  const context = canvas.getContext('2d') as CanvasRenderingContext2D;
-  context.fillStyle = '#336699';
-  context.fillRect(0, 0, size, size);
-  return canvas.toDataURL('image/png');
-}
 
 describe('steganography utils', () => {
   it('round-trips a hidden message through an image', async () => {

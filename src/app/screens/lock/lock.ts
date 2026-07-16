@@ -1,14 +1,14 @@
 import { Component, signal, viewChild } from '@angular/core';
 
+import { ImageCard } from '../../components/image-card/image-card';
 import { Snackbar } from '../../components/snackbar/snackbar';
 import { getBase64ImageFromBlob, saveImage } from '../../utils/browser';
 import { getEncodedBase64Image } from '../../utils/stegano';
 
 @Component({
   selector: 'app-lock',
-  imports: [Snackbar],
+  imports: [ImageCard, Snackbar],
   templateUrl: './lock.html',
-  styleUrl: './lock.css',
 })
 export class Lock {
   protected readonly previewImageSource = signal('');
