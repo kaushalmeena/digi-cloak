@@ -12,8 +12,8 @@ These instructions will get you a copy of the project up and running on your loc
 
 To install and run this project you need:
 
-- [Node.js](https://nodejs.org/ "Node.js")
-- [yarn](https://classic.yarnpkg.com/lang/en/docs/install/ "yarn")
+- [Node.js](https://nodejs.org/ "Node.js") `^22.22.3 || ^24.15.0 || >=26.0.0` (an `.nvmrc` is included — run `nvm use` if you use [nvm](https://github.com/nvm-sh/nvm "nvm"))
+- [pnpm](https://pnpm.io/installation "pnpm")
 - [git](https://git-scm.com/downloads "git") (only to clone this repository)
 
 ### Installation
@@ -27,10 +27,10 @@ git clone https://github.com/kaushalmeena/digi-cloak.git
 cd digi-cloak
 ```
 
-2. Install project dependencies using npm:
+2. Install project dependencies using pnpm:
 
 ```bash
-yarn install
+pnpm install
 ```
 
 ### Running
@@ -38,10 +38,28 @@ yarn install
 To run the project simply run:
 
 ```bash
-yarn run dev
+pnpm dev
 ```
 
 Your app should now be running on [localhost:4200](http://localhost:4200/).
+
+### Testing
+
+To run the unit tests:
+
+```bash
+pnpm test
+```
+
+### Building
+
+To create a production build:
+
+```bash
+pnpm build
+```
+
+The build output is written to the `dist` folder.
 
 ## License
 

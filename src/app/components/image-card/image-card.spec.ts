@@ -1,14 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ImageCard } from './image-card';
 
 @Component({
   imports: [ImageCard],
-  template: `<app-image-card label="Test Label" [source]="source" alt="Test-Image" />`,
+  template: `<app-image-card label="Test Label" [source]="source()" alt="Test-Image" />`,
 })
 class Host {
-  source = '';
+  readonly source = signal('');
 }
 
 describe('ImageCard', () => {
@@ -39,7 +39,7 @@ describe('ImageCard', () => {
   });
 
   it('shows the image once a source is set', () => {
-    host.source = 'data:image/png;base64,abc123';
+    host.source.set('data:image/png;base64,abc123');
     fixture.detectChanges();
 
     const img = element.querySelector<HTMLImageElement>('.card-media img');
