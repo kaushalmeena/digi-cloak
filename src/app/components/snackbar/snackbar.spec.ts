@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideAnimations } from '@angular/platform-browser/animations';
 
 import { SNACKBAR_TIMEOUT, Snackbar } from './snackbar';
 
@@ -10,7 +9,6 @@ describe('Snackbar', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [Snackbar],
-      providers: [provideAnimations()],
     }).compileComponents();
   });
 

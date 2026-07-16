@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 
 import {
   createTestImage,
@@ -29,7 +28,6 @@ describe('Unlock', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [Unlock],
-      providers: [provideNoopAnimations()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(Unlock);

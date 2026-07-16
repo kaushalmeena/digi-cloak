@@ -1,14 +1,11 @@
 import { Component, signal } from '@angular/core';
 
-import { snackbarAnimations } from './snackbar.animation';
-
 export const SNACKBAR_TIMEOUT = 3000;
 
 @Component({
   selector: 'app-snackbar',
   imports: [],
   templateUrl: './snackbar.html',
-  animations: [snackbarAnimations.snackbarState],
 })
 export class Snackbar {
   readonly visible = signal(false);

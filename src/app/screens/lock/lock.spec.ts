@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 
 import {
   createTestImageFile,
@@ -16,7 +15,6 @@ describe('Lock', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [Lock],
-      providers: [provideNoopAnimations()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(Lock);

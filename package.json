@@ -19,7 +19,6 @@
     "deploy": "ng deploy --base-href=/digi-cloak/"
   },
   "dependencies": {
-    "@angular/animations": "^22.0.7",
     "@angular/common": "^22.0.7",
     "@angular/compiler": "^22.0.7",
     "@angular/core": "^22.0.7",
