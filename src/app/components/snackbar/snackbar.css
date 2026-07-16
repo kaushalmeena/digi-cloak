@@ -1,0 +1,35 @@
+.snackbar {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px;
+  padding: 10px 14px;
+  min-width: 344px;
+  max-width: 33vw;
+  border-radius: 4px;
+  background-color: var(--snackbar-background-color);
+  box-shadow: 0 3px 5px -1px #00000033, 0 6px 10px #00000024, 0 1px 18px #0000001f;
+  color: var(--snackbar-text-color);
+  transform-origin: center;
+}
+
+.close-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 8px;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.close-button svg {
+  stroke: var(--snackbar-text-color);
+}
+
+.close-button:hover {
+  opacity: 0.52;
+}
