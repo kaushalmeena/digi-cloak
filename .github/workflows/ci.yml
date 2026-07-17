@@ -16,11 +16,14 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm lint
-      - run: pnpm test -- --watch=false --browsers=ChromeHeadless
-      - run: pnpm build
+      - run: pnpm exec ng lint
+      # Chrome's sandbox needs unprivileged user namespaces, which recent
+      # Ubuntu runner images restrict via AppArmor; relax it for headless tests.
+      - run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0 || true
+      - run: pnpm exec ng test --watch=false --browsers=ChromeHeadless
+      - run: pnpm exec ng build
       - run: pnpm exec playwright install --with-deps chromium
-      - run: pnpm e2e
+      - run: pnpm exec playwright test
 
   deploy:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -36,7 +39,7 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm build -- --base-href=/digi-cloak/
+      - run: pnpm exec ng build --base-href=/digi-cloak/
       - run: cp dist/browser/index.html dist/browser/404.html
       - uses: peaceiris/actions-gh-pages@v4
         with:
