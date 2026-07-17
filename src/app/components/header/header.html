@@ -4,12 +4,16 @@
   <div
     class="flex items-center box-border mx-auto px-[15px] w-3/4 h-[60px] max-[720px]:w-full"
   >
-    <a routerLink="/" class="logo flex items-center hover:opacity-20">
+    <a
+      routerLink="/"
+      class="logo flex items-center hover:opacity-20 focus-visible:outline-2 focus-visible:outline-offset-2"
+    >
       <svg
         class="pr-2 fill-card-foreground"
         width="28"
         height="28"
         viewBox="0 0 448 512"
+        aria-hidden="true"
       >
         <path
           d="M400 256H152V152.9c0-39.6 31.7-72.5 71.3-72.9 40-.4 72.7 32.1 72.7 72v16c0 13.3 10.7 24 24 24h32c13.3 0 24-10.7 24-24v-16C376 68 307.5-.3 223.5 0 139.5.3 72 69.5 72 153.5V256H48c-26.5 0-48 21.5-48 48v160c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V304c0-26.5-21.5-48-48-48zM264 408c0 22.1-17.9 40-40 40s-40-17.9-40-40v-48c0-22.1 17.9-40 40-40s40 17.9 40 40v48z"
@@ -19,12 +23,12 @@
         >Digi-Cloak</span
       >
     </a>
-    <nav class="max-[720px]:w-full">
-      <ul class="flex list-none max-[720px]:hidden">
-        @for (item of navItems; track item) {
+    <nav class="max-[720px]:hidden" aria-label="Main">
+      <ul class="flex list-none">
+        @for (item of navItems; track item.link) {
           <li>
             <a
-              class="link px-4 text-base opacity-55 hover:opacity-90"
+              class="link px-4 text-base opacity-55 hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2"
               [routerLink]="item.link"
               routerLinkActive="opacity-90"
               >
@@ -37,17 +41,21 @@
     <div class="flex items-center flex-auto justify-end">
       <button
         type="button"
-        class="icon-button border-none bg-transparent cursor-pointer px-2 opacity-55 fill-card-foreground hover:opacity-90"
+        class="icon-button border-none bg-transparent cursor-pointer px-2 opacity-55 fill-card-foreground hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2"
+        [attr.aria-label]="
+          darkMode() ? 'Switch to light theme' : 'Switch to dark theme'
+        "
+        [title]="darkMode() ? 'Switch to light theme' : 'Switch to dark theme'"
         (click)="toggleDarkMode()"
       >
         @if (darkMode()) {
-          <svg width="28" height="28" viewBox="0 0 24 24">
+          <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true">
             <path
               d="M20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69zM12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6c3.31 0 6 2.69 6 6s-2.69 6-6 6z"
               />
           </svg>
         } @else {
-          <svg width="28" height="28" viewBox="0 0 24 24">
+          <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true">
             <path
               d="M20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69zM12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zm0-10c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4z"
               />
@@ -55,16 +63,55 @@
         }
       </button>
       <a
-        class="px-2 opacity-55 fill-card-foreground hover:opacity-90"
+        class="px-2 opacity-55 fill-card-foreground hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2"
         [href]="repoUrl"
         aria-label="View source on GitHub"
       >
-        <svg width="24" height="24" viewBox="0 0 16 16">
+        <svg width="24" height="24" viewBox="0 0 16 16" aria-hidden="true">
           <path
             d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
             />
         </svg>
       </a>
+      <button
+        type="button"
+        class="menu-button min-[721px]:hidden border-none bg-transparent cursor-pointer px-2 opacity-55 stroke-card-foreground hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2"
+        aria-label="Toggle navigation menu"
+        aria-controls="mobile-nav"
+        [attr.aria-expanded]="menuOpen()"
+        (click)="toggleMenu()"
+      >
+        @if (menuOpen()) {
+          <svg width="28" height="28" viewBox="0 0 24 24" stroke-width="2" fill="none" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        } @else {
+          <svg width="28" height="28" viewBox="0 0 24 24" stroke-width="2" fill="none" aria-hidden="true">
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        }
+      </button>
     </div>
   </div>
+  @if (menuOpen()) {
+    <nav id="mobile-nav" class="w-full min-[721px]:hidden" aria-label="Main">
+      <ul class="flex flex-col list-none pb-2">
+        @for (item of navItems; track item.link) {
+          <li>
+            <a
+              class="link block px-4 py-3 text-base opacity-55 hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2"
+              [routerLink]="item.link"
+              routerLinkActive="opacity-90"
+              (click)="closeMenu()"
+              >
+              {{ item.title }}
+            </a>
+          </li>
+        }
+      </ul>
+    </nav>
+  }
 </header>

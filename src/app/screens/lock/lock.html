@@ -5,45 +5,86 @@
       <label class="mt-4 mb-2.5 text-base" for="message">Message</label>
       <textarea
         id="message"
-        class="px-2.5 min-h-[30px] rounded-[3px] bg-muted text-foreground caret-foreground text-sm leading-[30px] appearance-none outline-none shadow-[inset_0_0_0_1px_#10161a26,inset_0_1px_1px_#10161a33]"
+        class="px-2.5 min-h-[30px] rounded-[3px] bg-muted text-foreground caret-foreground text-sm leading-[30px] appearance-none outline-none shadow-[inset_0_0_0_1px_#10161a26,inset_0_1px_1px_#10161a33] focus-visible:outline-2 focus-visible:outline-offset-2"
         name="message"
         rows="7"
         required
+        (input)="handleMessageInput($event)"
       ></textarea>
+      @if (capacity(); as cap) {
+        <div class="capacity-meter mt-2 text-xs">
+          <div class="h-1 rounded bg-muted overflow-hidden mb-1">
+            <div
+              class="h-full rounded transition-[width] duration-300"
+              [class]="fits() ? 'bg-success' : 'bg-destructive'"
+              [style.width.%]="usedPercent()"
+            ></div>
+          </div>
+          <span class="opacity-70"
+            >{{ messageBytes() }} / ~{{ cap }} characters</span
+          >
+          @if (!fits()) {
+            <span class="text-destructive font-medium">
+              — message too large for this image</span
+            >
+          }
+        </div>
+      }
     </div>
     <div class="flex flex-col">
       <label class="mt-4 mb-2.5 text-base" for="image">Image</label>
-      <input
-        required
-        id="image"
-        name="image"
-        type="file"
+      <app-dropzone
+        inputId="image"
         accept="image/png, image/gif, image/jpeg, image/webp"
-        class="px-2.5 min-h-[30px] rounded-[3px] bg-muted text-foreground text-sm leading-[30px] outline-none shadow-[inset_0_0_0_1px_#10161a26,inset_0_1px_1px_#10161a33]"
-        (change)="handlePreview($event)"
+        (fileChange)="handleFile($event)"
       />
     </div>
     <div class="flex flex-col">
       <label class="mt-4 mb-2.5 text-base" for="password">Password</label>
-      <input
-        required
-        id="password"
-        class="px-2.5 min-h-[30px] rounded-[3px] bg-muted text-foreground caret-foreground text-sm leading-[30px] appearance-none outline-none shadow-[inset_0_0_0_1px_#10161a26,inset_0_1px_1px_#10161a33]"
-        name="password"
-        type="password"
-      />
+      <app-password inputId="password" [withStrength]="true" />
     </div>
-    <div class="button-container flex items-center justify-center mt-[52px] gap-2.5">
+    <p class="mt-4 text-xs opacity-70">
+      The encoded image is saved as PNG. Re-compressing or converting it (for
+      example to JPEG) will destroy the hidden message.
+    </p>
+    <div
+      class="button-container flex items-center justify-center mt-[36px] gap-2.5"
+    >
       <button
         type="submit"
-        class="inline-flex items-center justify-center px-4 min-w-[150px] min-h-[50px] rounded-[3px] bg-secondary text-secondary-foreground ring-1 ring-border text-left text-lg cursor-pointer hover:bg-accent active:bg-muted"
+        class="inline-flex items-center justify-center px-4 min-w-[150px] min-h-[50px] rounded-[3px] bg-primary text-primary-foreground text-lg cursor-pointer hover:opacity-90 disabled:opacity-55 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2"
+        [disabled]="busy() || !fits()"
       >
-        Lock
+        @if (busy()) {
+          <svg
+            class="animate-spin mr-2 h-5 w-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            />
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4z"
+            />
+          </svg>
+          Locking…
+        } @else {
+          Lock
+        }
       </button>
       <button
         type="button"
-        class="inline-flex items-center justify-center px-4 min-w-[150px] min-h-[50px] rounded-[3px] bg-secondary text-secondary-foreground ring-1 ring-border text-left text-lg cursor-pointer hover:bg-accent active:bg-muted disabled:bg-disabled disabled:opacity-55 disabled:cursor-not-allowed disabled:outline-none"
-        [disabled]="!encodedImageSource()"
+        class="inline-flex items-center justify-center px-4 min-w-[150px] min-h-[50px] rounded-[3px] bg-secondary text-secondary-foreground ring-1 ring-border text-lg cursor-pointer hover:bg-accent active:bg-muted disabled:bg-disabled disabled:opacity-55 disabled:cursor-not-allowed disabled:outline-none focus-visible:outline-2 focus-visible:outline-offset-2"
+        [disabled]="!encodedImageSource() || busy()"
         (click)="handleSave()"
       >
         Save
@@ -51,16 +92,22 @@
     </div>
   </form>
   <div class="basis-1/2">
-    <app-image-card
+    <app-figure
       label="Preview Image"
       alt="Preview-Image"
       [source]="previewImageSource()"
     />
-    <app-image-card
+    <app-figure
       label="Encoded Image"
       alt="Output-Image"
       [source]="encodedImageSource()"
     />
+    @if (encodedImageSource()) {
+      <app-compare
+        [before]="previewImageSource()"
+        [after]="encodedImageSource()"
+      />
+    }
   </div>
 </div>
 <app-snackbar />

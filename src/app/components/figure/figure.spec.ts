@@ -1,17 +1,17 @@
 import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ImageCard } from './image-card';
+import { Figure } from './figure';
 
 @Component({
-  imports: [ImageCard],
-  template: `<app-image-card label="Test Label" [source]="source()" alt="Test-Image" />`,
+  imports: [Figure],
+  template: `<app-figure label="Test Label" [source]="source()" alt="Test-Image" />`,
 })
 class Host {
   readonly source = signal('');
 }
 
-describe('ImageCard', () => {
+describe('Figure', () => {
   let fixture: ComponentFixture<Host>;
   let host: Host;
   let element: HTMLElement;

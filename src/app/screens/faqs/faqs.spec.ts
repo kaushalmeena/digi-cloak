@@ -26,7 +26,7 @@ describe('Faqs', () => {
 
   it('renders all FAQ entries collapsed by default', () => {
     const entries = element.querySelectorAll('.faq');
-    expect(entries.length).toBe(6);
+    expect(entries.length).toBe(7);
 
     const toggles = element.querySelectorAll('.faq-toggle');
     toggles.forEach((toggle) => {

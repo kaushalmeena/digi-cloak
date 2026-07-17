@@ -3,45 +3,62 @@
   <form class="basis-1/2" (submit)="handleSubmit($event)">
     <div class="flex flex-col">
       <label class="mt-4 mb-2.5 text-base" for="image">Encoded Image</label>
-      <input
-        required
-        id="image"
-        class="px-2.5 min-h-[30px] rounded-[3px] bg-muted text-foreground text-sm leading-[30px] outline-none shadow-[inset_0_0_0_1px_#10161a26,inset_0_1px_1px_#10161a33]"
-        name="image"
-        type="file"
+      <app-dropzone
+        inputId="image"
         accept="image/png, image/gif, image/jpeg"
-        (change)="handlePreview($event)"
+        (fileChange)="handleFile($event)"
       />
     </div>
     <div class="flex flex-col">
       <label class="mt-4 mb-2.5 text-base" for="password">Password</label>
-      <input
-        required
-        id="password"
-        class="px-2.5 min-h-[30px] rounded-[3px] bg-muted text-foreground caret-foreground text-sm leading-[30px] appearance-none outline-none shadow-[inset_0_0_0_1px_#10161a26,inset_0_1px_1px_#10161a33]"
-        name="password"
-        type="password"
-      />
+      <app-password inputId="password" />
     </div>
-    <div class="button-container flex items-center justify-center mt-[52px] gap-2.5">
+    <div
+      class="button-container flex items-center justify-center mt-[36px] gap-2.5"
+    >
       <button
         type="submit"
-        class="inline-flex items-center justify-center px-4 min-w-[150px] min-h-[50px] rounded-[3px] bg-secondary text-secondary-foreground ring-1 ring-border text-left text-lg cursor-pointer hover:bg-accent active:bg-muted"
+        class="inline-flex items-center justify-center px-4 min-w-[150px] min-h-[50px] rounded-[3px] bg-primary text-primary-foreground text-lg cursor-pointer hover:opacity-90 disabled:opacity-55 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2"
+        [disabled]="busy()"
       >
-        Unlock
+        @if (busy()) {
+          <svg
+            class="animate-spin mr-2 h-5 w-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            />
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4z"
+            />
+          </svg>
+          Unlocking…
+        } @else {
+          Unlock
+        }
       </button>
       <button
         type="button"
-        class="inline-flex items-center justify-center px-4 min-w-[150px] min-h-[50px] rounded-[3px] bg-secondary text-secondary-foreground ring-1 ring-border text-left text-lg cursor-pointer hover:bg-accent active:bg-muted disabled:bg-disabled disabled:opacity-55 disabled:cursor-not-allowed disabled:outline-none"
+        class="inline-flex items-center justify-center px-4 min-w-[150px] min-h-[50px] rounded-[3px] bg-secondary text-secondary-foreground ring-1 ring-border text-lg cursor-pointer hover:bg-accent active:bg-muted disabled:bg-disabled disabled:opacity-55 disabled:cursor-not-allowed disabled:outline-none focus-visible:outline-2 focus-visible:outline-offset-2"
         (click)="handleCopy()"
-        [disabled]="!decodedMessage()"
+        [disabled]="!decodedMessage() || busy()"
       >
         Copy
       </button>
     </div>
   </form>
   <div class="basis-1/2">
-    <app-image-card
+    <app-figure
       label="Preview Image"
       alt="Preview-Image"
       [source]="previewImageSource()"

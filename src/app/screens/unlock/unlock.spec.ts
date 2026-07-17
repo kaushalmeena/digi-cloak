@@ -3,8 +3,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   createTestImage,
   dataUrlToFile,
-  flush,
   setInputFile,
+  waitFor,
 } from '../../testing/fixtures';
 import { getEncodedBase64Image } from '../../utils/stegano';
 import { Unlock } from './unlock';
@@ -39,35 +39,30 @@ describe('Unlock', () => {
     const file = await createEncodedImageFile('top secret', 'hunter2');
     const input = element.querySelector<HTMLInputElement>('#image')!;
     setInputFile(input, file);
-    await flush(fixture);
+    await waitFor(fixture, () =>
+      element.querySelector('img[alt="Preview-Image"]')
+    );
 
     element.querySelector<HTMLInputElement>('#password')!.value = password;
-    const form = element.querySelector('form')!;
-    form.dispatchEvent(new Event('submit', { cancelable: true }));
-    await flush(fixture);
+    element
+      .querySelector('form')!
+      .dispatchEvent(new Event('submit', { cancelable: true }));
   }
 
   it('should create', () => {
     expect(fixture.componentInstance).toBeTruthy();
   });
 
-  it('shows a preview once an image file is chosen', async () => {
-    const file = await createEncodedImageFile('top secret', 'hunter2');
-    const input = element.querySelector<HTMLInputElement>('#image')!;
-    setInputFile(input, file);
-    await flush(fixture);
-
-    const img = element.querySelector<HTMLImageElement>(
-      'img[alt="Preview-Image"]'
-    );
-    expect(img?.src).toMatch(/^data:image\/png;base64,/);
-  });
-
   it('decodes a message hidden with the right password', async () => {
     await loadEncodedImage('hunter2');
+    await waitFor(
+      fixture,
+      () => element.querySelector<HTMLTextAreaElement>('#message')!.value
+    );
 
-    const messageEl = element.querySelector<HTMLTextAreaElement>('#message')!;
-    expect(messageEl.value).toBe('top secret');
+    expect(
+      element.querySelector<HTMLTextAreaElement>('#message')!.value
+    ).toBe('top secret');
 
     const copyButton = element.querySelector<HTMLButtonElement>(
       '.button-container button[type="button"]'
@@ -77,23 +72,30 @@ describe('Unlock', () => {
 
   it('shows an error in the snackbar for the wrong password', async () => {
     await loadEncodedImage('wrong');
+    await waitFor(fixture, () => element.querySelector('.snackbar'));
 
     expect(element.querySelector('.snackbar')?.textContent).toContain(
       'Password is incorrect'
     );
-    const messageEl = element.querySelector<HTMLTextAreaElement>('#message')!;
-    expect(messageEl.value).toBe('');
+    expect(
+      element.querySelector<HTMLTextAreaElement>('#message')!.value
+    ).toBe('');
   });
 
   it('copies the decoded message and notifies via the snackbar', async () => {
     spyOn(navigator.clipboard, 'writeText').and.resolveTo();
     await loadEncodedImage('hunter2');
+    await waitFor(
+      fixture,
+      () => element.querySelector<HTMLTextAreaElement>('#message')!.value
+    );
 
-    const copyButton = element.querySelector<HTMLButtonElement>(
-      '.button-container button[type="button"]'
-    )!;
-    copyButton.click();
-    await flush(fixture);
+    element
+      .querySelector<HTMLButtonElement>(
+        '.button-container button[type="button"]'
+      )!
+      .click();
+    await waitFor(fixture, () => element.querySelector('.snackbar'));
 
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith('top secret');
     expect(element.querySelector('.snackbar')?.textContent).toContain(
@@ -106,12 +108,17 @@ describe('Unlock', () => {
       new Error('Clipboard unavailable')
     );
     await loadEncodedImage('hunter2');
+    await waitFor(
+      fixture,
+      () => element.querySelector<HTMLTextAreaElement>('#message')!.value
+    );
 
-    const copyButton = element.querySelector<HTMLButtonElement>(
-      '.button-container button[type="button"]'
-    )!;
-    copyButton.click();
-    await flush(fixture);
+    element
+      .querySelector<HTMLButtonElement>(
+        '.button-container button[type="button"]'
+      )!
+      .click();
+    await waitFor(fixture, () => element.querySelector('.snackbar'));
 
     expect(element.querySelector('.snackbar')?.textContent).toContain(
       'Clipboard unavailable'

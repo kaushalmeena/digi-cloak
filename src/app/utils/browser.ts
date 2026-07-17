@@ -1,6 +1,6 @@
-export const saveImage = (data: string): void => {
+export const saveImage = (data: string, filename = 'output.png'): void => {
   const anchorEl = document.createElement('a');
-  anchorEl.download = 'output';
+  anchorEl.download = filename;
   anchorEl.href = data;
   anchorEl.click();
 };

@@ -1,7 +1,7 @@
 import { Component, input } from '@angular/core';
 
 @Component({
-  selector: 'app-image-card',
+  selector: 'app-figure',
   template: `
     <div class="card-label mt-4 mb-2.5 text-base">{{ label() }}</div>
     <div class="card relative rounded-[3px] bg-background ring-1 ring-border">
@@ -27,7 +27,7 @@ import { Component, input } from '@angular/core';
     </div>
   `,
 })
-export class ImageCard {
+export class Figure {
   readonly label = input.required<string>();
   readonly source = input('');
   readonly alt = input('Image');

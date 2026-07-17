@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import {
   createTestImageFile,
-  flush,
   setInputFile,
+  waitFor,
 } from '../../testing/fixtures';
 import { getDecodedMessage } from '../../utils/stegano';
 import { Lock } from './lock';
@@ -22,95 +22,97 @@ describe('Lock', () => {
     fixture.detectChanges();
   });
 
+  async function chooseImage(): Promise<void> {
+    const input = element.querySelector<HTMLInputElement>('#image')!;
+    setInputFile(input, createTestImageFile());
+    await waitFor(fixture, () =>
+      element.querySelector('img[alt="Preview-Image"]')
+    );
+  }
+
+  function submit(message: string, password: string): void {
+    element.querySelector<HTMLTextAreaElement>('#message')!.value = message;
+    element.querySelector<HTMLInputElement>('#password')!.value = password;
+    element
+      .querySelector('form')!
+      .dispatchEvent(new Event('submit', { cancelable: true }));
+  }
+
   it('should create', () => {
     expect(fixture.componentInstance).toBeTruthy();
   });
 
-  it('shows a preview once an image file is chosen', async () => {
-    const input = element.querySelector<HTMLInputElement>('#image')!;
-    setInputFile(input, createTestImageFile());
-    await flush(fixture);
+  it('shows a preview and the capacity meter once an image file is chosen', async () => {
+    await chooseImage();
 
     const img = element.querySelector<HTMLImageElement>(
       'img[alt="Preview-Image"]'
     );
     expect(img?.src).toMatch(/^data:image\/png;base64,/);
+
+    await waitFor(fixture, () => element.querySelector('.capacity-meter'));
+    expect(element.querySelector('.capacity-meter')?.textContent).toContain(
+      'characters'
+    );
   });
 
   it('clears the preview when the file selection is removed', async () => {
-    const input = element.querySelector<HTMLInputElement>('#image')!;
-    setInputFile(input, createTestImageFile());
-    await flush(fixture);
-    expect(
-      element.querySelector('img[alt="Preview-Image"]')
-    ).not.toBeNull();
+    await chooseImage();
 
+    const input = element.querySelector<HTMLInputElement>('#image')!;
     setInputFile(input, null);
     fixture.detectChanges();
     expect(element.querySelector('img[alt="Preview-Image"]')).toBeNull();
   });
 
   it('encodes the message into the image on submit', async () => {
-    const input = element.querySelector<HTMLInputElement>('#image')!;
-    setInputFile(input, createTestImageFile());
-    await flush(fixture);
-
-    element.querySelector<HTMLTextAreaElement>('#message')!.value =
-      'top secret';
-    element.querySelector<HTMLInputElement>('#password')!.value = 'hunter2';
-
-    const form = element.querySelector('form')!;
-    form.dispatchEvent(new Event('submit', { cancelable: true }));
-    await flush(fixture);
+    await chooseImage();
+    submit('top secret', 'hunter2');
+    await waitFor(fixture, () =>
+      element.querySelector('img[alt="Output-Image"]')
+    );
 
     const outputImg = element.querySelector<HTMLImageElement>(
       'img[alt="Output-Image"]'
-    );
-    expect(outputImg?.src).toMatch(/^data:image\/png;base64,/);
+    )!;
+    expect(outputImg.src).toMatch(/^data:image\/png;base64,/);
 
     const saveButton = element.querySelector<HTMLButtonElement>(
       '.button-container button[type="button"]'
     )!;
     expect(saveButton.disabled).toBeFalse();
 
-    const decoded = await getDecodedMessage(outputImg!.src, 'hunter2');
+    const decoded = await getDecodedMessage(outputImg.src, 'hunter2');
     expect(decoded).toBe('top secret');
   });
 
-  it('shows an error in the snackbar when the chosen file is not a valid image', async () => {
-    const input = element.querySelector<HTMLInputElement>('#image')!;
-    const textFile = new File(['not an image'], 'notes.txt', {
-      type: 'text/plain',
-    });
-    setInputFile(input, textFile);
-    await flush(fixture);
+  it('shows the comparison slider once encoded', async () => {
+    await chooseImage();
+    submit('top secret', 'hunter2');
+    await waitFor(fixture, () => element.querySelector('app-compare'));
 
-    element.querySelector<HTMLTextAreaElement>('#message')!.value =
-      'top secret';
-    element.querySelector<HTMLInputElement>('#password')!.value = 'hunter2';
+    expect(
+      element.querySelector('app-compare img[alt="Encoded image"]')
+    ).not.toBeNull();
+  });
 
-    const form = element.querySelector('form')!;
-    form.dispatchEvent(new Event('submit', { cancelable: true }));
-    await flush(fixture);
+  it('shows an error in the snackbar when no image is chosen', async () => {
+    submit('top secret', 'hunter2');
+    await waitFor(fixture, () => element.querySelector('.snackbar'));
 
     expect(element.querySelector('.snackbar')?.textContent).toContain(
-      'Cannot load base64 image'
+      'Please choose an image first'
     );
   });
 
-  it('triggers a download when Save is clicked after encoding', async () => {
+  it('triggers a download with a digicloak filename when Save is clicked', async () => {
     const clickSpy = spyOn(HTMLAnchorElement.prototype, 'click');
 
-    const input = element.querySelector<HTMLInputElement>('#image')!;
-    setInputFile(input, createTestImageFile());
-    await flush(fixture);
-
-    element.querySelector<HTMLTextAreaElement>('#message')!.value =
-      'top secret';
-    element.querySelector<HTMLInputElement>('#password')!.value = 'hunter2';
-    const form = element.querySelector('form')!;
-    form.dispatchEvent(new Event('submit', { cancelable: true }));
-    await flush(fixture);
+    await chooseImage();
+    submit('top secret', 'hunter2');
+    await waitFor(fixture, () =>
+      element.querySelector('img[alt="Output-Image"]')
+    );
 
     const saveButton = element.querySelector<HTMLButtonElement>(
       '.button-container button[type="button"]'
@@ -118,5 +120,7 @@ describe('Lock', () => {
     saveButton.click();
 
     expect(clickSpy).toHaveBeenCalled();
+    const anchor = clickSpy.calls.mostRecent().object as HTMLAnchorElement;
+    expect(anchor.download).toBe('digicloak-test.png');
   });
 });

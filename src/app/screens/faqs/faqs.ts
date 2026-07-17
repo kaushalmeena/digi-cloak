@@ -64,6 +64,14 @@ const FAQ_ENTRIES: FaqEntry[] = [
       },
     ],
   },
+  {
+    question: 'Why is the encoded image always a PNG?',
+    answer: [
+      {
+        text: 'The message is hidden in the least significant bits of individual pixels, so the image must be stored losslessly. PNG preserves every pixel exactly. Converting or re-compressing the encoded image (for example to JPEG, or through a chat app that recompresses pictures) changes pixel values and destroys the hidden message.',
+      },
+    ],
+  },
 ];
 
 @Component({

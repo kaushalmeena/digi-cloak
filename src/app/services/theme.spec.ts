@@ -6,7 +6,7 @@ const DARK_MODE_CLASS = 'dark';
 
 class FakeMediaQueryList {
   matches: boolean;
-  private listeners: Array<(event: MediaQueryListEvent) => void> = [];
+  private listeners: ((event: MediaQueryListEvent) => void)[] = [];
 
   constructor(matches: boolean) {
     this.matches = matches;

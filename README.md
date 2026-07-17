@@ -51,6 +51,19 @@ To run the unit tests:
 pnpm test
 ```
 
+To run the end-to-end tests (Playwright):
+
+```bash
+pnpm exec playwright install chromium   # first time only
+pnpm e2e
+```
+
+To lint the project:
+
+```bash
+pnpm lint
+```
+
 ### Building
 
 To create a production build:

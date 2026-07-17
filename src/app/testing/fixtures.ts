@@ -44,3 +44,20 @@ export async function flush(fixture: ComponentFixture<unknown>): Promise<void> {
   await new Promise((resolve) => setTimeout(resolve, 50));
   fixture.detectChanges();
 }
+
+/** Polls until `predicate` is truthy, running change detection between polls. */
+export async function waitFor(
+  fixture: ComponentFixture<unknown>,
+  predicate: () => unknown,
+  timeoutMs = 8000
+): Promise<void> {
+  const start = Date.now();
+  fixture.detectChanges();
+  while (!predicate()) {
+    if (Date.now() - start > timeoutMs) {
+      throw new Error('waitFor timed out');
+    }
+    await new Promise((resolve) => setTimeout(resolve, 25));
+    fixture.detectChanges();
+  }
+}

@@ -23,6 +23,8 @@
   --muted-foreground: #182026;
   --disabled: #ced9e080;
   --border: #10161a66;
+  --destructive: #d64545;
+  --success: #3f9142;
 }
 
 .dark {
@@ -40,6 +42,8 @@
   --muted-foreground: #f5f8fa;
   --disabled: #394b5980;
   --border: #10161a66;
+  --destructive: #e57878;
+  --success: #5cb85f;
 }
 
 @theme {
@@ -79,6 +83,8 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-disabled: var(--disabled);
   --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-success: var(--success);
 }
 
 @layer base {
