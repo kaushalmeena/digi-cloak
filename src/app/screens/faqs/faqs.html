@@ -1,4 +1,3 @@
-<h1 class="text-[32px] font-bold my-5">FAQs</h1>
 @for (faq of faqs; track faq.question; let i = $index) {
   <section class="faq my-2.5 text-lg" [class.expanded]="isExpanded(i)">
     <h2 class="m-0">
@@ -24,7 +23,7 @@
       </button>
     </h2>
     <div
-      class="faq-answer grid transition-[grid-template-rows,opacity] duration-300 ease-in-out motion-reduce:transition-none"
+      class="grid transition-[grid-template-rows,opacity] duration-300 ease-in-out motion-reduce:transition-none"
       [class]="isExpanded(i) ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'"
       [id]="'faq-answer-' + i"
       role="region"

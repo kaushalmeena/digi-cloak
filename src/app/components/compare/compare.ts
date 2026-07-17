@@ -3,11 +3,8 @@ import { Component, input, signal } from '@angular/core';
 @Component({
   selector: 'app-compare',
   template: `
-    <div class="card-label mt-4 mb-2.5 text-base">
-      Compare (original ↔ encoded)
-    </div>
     <div
-      class="relative h-[210px] rounded-[3px] bg-background ring-1 ring-border overflow-hidden"
+      class="relative w-full h-[min(75vh,700px)] overflow-hidden rounded-[3px] bg-background select-none"
     >
       <img
         class="absolute inset-0 w-full h-full object-contain"
@@ -21,20 +18,38 @@ import { Component, input, signal } from '@angular/core';
         [style.clip-path]="'inset(0 0 0 ' + position() + '%)'"
       />
       <div
-        class="absolute top-0 bottom-0 w-0.5 bg-foreground/60"
+        class="absolute top-0 bottom-0 w-px bg-foreground/70 pointer-events-none"
         [style.left.%]="position()"
         aria-hidden="true"
-      ></div>
+      >
+        <div
+          class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center h-10 w-10 rounded-full bg-primary text-primary-foreground shadow-[0_2px_6px_#00000066]"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 7l-5 5 5 5V7zm8 0v10l5-5-5-5z" />
+          </svg>
+        </div>
+      </div>
+      <span
+        class="absolute bottom-0 left-0 px-3 py-1.5 bg-primary/80 text-primary-foreground text-sm pointer-events-none"
+        aria-hidden="true"
+        >Original</span
+      >
+      <span
+        class="absolute bottom-0 right-0 px-3 py-1.5 bg-primary/80 text-primary-foreground text-sm pointer-events-none"
+        aria-hidden="true"
+        >Encoded</span
+      >
+      <input
+        type="range"
+        class="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize"
+        min="0"
+        max="100"
+        [value]="position()"
+        aria-label="Reveal encoded image"
+        (input)="onSlide($event)"
+      />
     </div>
-    <input
-      type="range"
-      class="w-full mt-2 accent-current cursor-ew-resize"
-      min="0"
-      max="100"
-      [value]="position()"
-      aria-label="Reveal encoded image"
-      (input)="onSlide($event)"
-    />
   `,
 })
 export class Compare {

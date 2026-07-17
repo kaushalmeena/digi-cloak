@@ -52,7 +52,7 @@ describe('Lock', () => {
 
     await waitFor(fixture, () => element.querySelector('.capacity-meter'));
     expect(element.querySelector('.capacity-meter')?.textContent).toContain(
-      'characters'
+      '/ ~'
     );
   });
 
@@ -78,7 +78,7 @@ describe('Lock', () => {
     expect(outputImg.src).toMatch(/^data:image\/png;base64,/);
 
     const saveButton = element.querySelector<HTMLButtonElement>(
-      '.button-container button[type="button"]'
+      '.save-button'
     )!;
     expect(saveButton.disabled).toBeFalse();
 
@@ -86,13 +86,22 @@ describe('Lock', () => {
     expect(decoded).toBe('top secret');
   });
 
-  it('shows the comparison slider once encoded', async () => {
+  it('opens the comparison modal once encoded', async () => {
     await chooseImage();
     submit('top secret', 'hunter2');
-    await waitFor(fixture, () => element.querySelector('app-compare'));
+    await waitFor(
+      fixture,
+      () =>
+        !element.querySelector<HTMLButtonElement>('.compare-button')!.disabled
+    );
 
+    element.querySelector<HTMLButtonElement>('.compare-button')!.click();
+    fixture.detectChanges();
+
+    const dialog = element.querySelector<HTMLDialogElement>('dialog')!;
+    expect(dialog.open).toBeTrue();
     expect(
-      element.querySelector('app-compare img[alt="Encoded image"]')
+      dialog.querySelector('app-compare img[alt="Encoded image"]')
     ).not.toBeNull();
   });
 
@@ -115,7 +124,7 @@ describe('Lock', () => {
     );
 
     const saveButton = element.querySelector<HTMLButtonElement>(
-      '.button-container button[type="button"]'
+      '.save-button'
     )!;
     saveButton.click();
 

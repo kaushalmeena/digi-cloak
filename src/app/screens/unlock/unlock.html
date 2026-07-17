@@ -1,4 +1,3 @@
-<h1 class="text-[32px] font-bold my-5">Unlock</h1>
 <div class="flex gap-5 max-[992px]:flex-col">
   <form class="basis-1/2" (submit)="handleSubmit($event)">
     <div class="flex flex-col">
@@ -8,48 +7,26 @@
         accept="image/png, image/gif, image/jpeg"
         (fileChange)="handleFile($event)"
       />
-    </div>
-    <div class="flex flex-col">
-      <label class="mt-4 mb-2.5 text-base" for="password">Password</label>
-      <app-password inputId="password" />
+      <app-password inputId="password" label="Password" />
     </div>
     <div
-      class="button-container flex items-center justify-center mt-[36px] gap-2.5"
+      class="flex flex-wrap items-center justify-center mt-[36px] gap-2.5"
     >
       <button
         type="submit"
-        class="inline-flex items-center justify-center px-4 min-w-[150px] min-h-[50px] rounded-[3px] bg-primary text-primary-foreground text-lg cursor-pointer hover:opacity-90 disabled:opacity-55 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2"
+        class="max-md:w-full inline-flex items-center justify-center px-4 min-w-[150px] min-h-[50px] rounded-[3px] bg-primary text-primary-foreground text-lg cursor-pointer transition duration-300 hover:opacity-90 disabled:opacity-55 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2"
         [disabled]="busy()"
+        [attr.aria-busy]="busy()"
       >
         @if (busy()) {
-          <svg
-            class="animate-spin mr-2 h-5 w-5"
-            viewBox="0 0 24 24"
-            fill="none"
-            aria-hidden="true"
-          >
-            <circle
-              class="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              stroke-width="4"
-            />
-            <path
-              class="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4z"
-            />
-          </svg>
-          Unlocking…
+          <app-loader [size]="22" />
         } @else {
           Unlock
         }
       </button>
       <button
         type="button"
-        class="inline-flex items-center justify-center px-4 min-w-[150px] min-h-[50px] rounded-[3px] bg-secondary text-secondary-foreground ring-1 ring-border text-lg cursor-pointer hover:bg-accent active:bg-muted disabled:bg-disabled disabled:opacity-55 disabled:cursor-not-allowed disabled:outline-none focus-visible:outline-2 focus-visible:outline-offset-2"
+        class="copy-button max-md:w-full inline-flex items-center justify-center px-4 min-w-[150px] min-h-[50px] rounded-[3px] bg-secondary text-secondary-foreground ring-1 ring-border text-lg cursor-pointer transition duration-300 hover:bg-accent active:bg-muted disabled:bg-disabled disabled:opacity-55 disabled:cursor-not-allowed disabled:outline-none focus-visible:outline-2 focus-visible:outline-offset-2"
         (click)="handleCopy()"
         [disabled]="!decodedMessage() || busy()"
       >

@@ -1,7 +1,15 @@
-import { Component, computed, inject, signal, viewChild } from '@angular/core';
+import {
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  signal,
+  viewChild,
+} from '@angular/core';
 
 import { Dropzone } from '../../components/dropzone/dropzone';
 import { Figure } from '../../components/figure/figure';
+import { Loader } from '../../components/loader/loader';
 import { Compare } from '../../components/compare/compare';
 import { Password } from '../../components/password/password';
 import { Snackbar } from '../../components/snackbar/snackbar';
@@ -26,7 +34,7 @@ function readImageSize(src: string): Promise<ImageSize> {
 
 @Component({
   selector: 'app-lock',
-  imports: [Dropzone, Figure, Compare, Password, Snackbar],
+  imports: [Compare, Dropzone, Figure, Loader, Password, Snackbar],
   templateUrl: './lock.html',
 })
 export class Lock {
@@ -51,15 +59,40 @@ export class Lock {
       : true;
   });
 
-  protected readonly usedPercent = computed(() => {
-    const capacity = this.capacity();
-    if (!capacity) {
-      return 0;
-    }
-    return Math.min(100, Math.round((this.messageBytes() / capacity) * 100));
-  });
-
   private readonly snackbar = viewChild.required(Snackbar);
+  private readonly compareDialog =
+    viewChild.required<ElementRef<HTMLDialogElement>>('compareDialog');
+
+  protected readonly compareClosing = signal(false);
+
+  protected openCompare(): void {
+    this.compareDialog().nativeElement.showModal();
+  }
+
+  protected closeCompare(): void {
+    if (this.compareClosing()) {
+      return;
+    }
+    // Native <dialog>.close() is instant; play the exit animation first.
+    this.compareClosing.set(true);
+    window.setTimeout(() => {
+      this.compareDialog().nativeElement.close();
+      this.compareClosing.set(false);
+    }, 150);
+  }
+
+  protected onDialogCancel(event: Event): void {
+    event.preventDefault();
+    this.closeCompare();
+  }
+
+  protected onDialogClick(event: MouseEvent): void {
+    // Native <dialog>: a click on the backdrop targets the dialog element
+    // itself, while clicks on content target descendants.
+    if (event.target === this.compareDialog().nativeElement) {
+      this.closeCompare();
+    }
+  }
 
   protected handleFile(file: File | null): void {
     this.encodedImageSource.set('');

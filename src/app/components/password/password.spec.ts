@@ -13,6 +13,7 @@ describe('Password', () => {
 
     fixture = TestBed.createComponent(Password);
     fixture.componentRef.setInput('inputId', 'password');
+    fixture.componentRef.setInput('label', 'Password');
     fixture.componentRef.setInput('withStrength', withStrength);
     element = fixture.nativeElement;
     fixture.detectChanges();

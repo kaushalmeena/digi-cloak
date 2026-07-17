@@ -2,8 +2,7 @@ import { Component, computed, input, signal } from '@angular/core';
 
 interface Strength {
   label: string;
-  width: string;
-  color: string;
+  colorClass: string;
 }
 
 function scorePassword(value: string): number {
@@ -22,6 +21,7 @@ function scorePassword(value: string): number {
 })
 export class Password {
   readonly inputId = input.required<string>();
+  readonly label = input.required<string>();
   readonly withStrength = input(false);
 
   protected readonly revealed = signal(false);
@@ -33,12 +33,12 @@ export class Password {
     }
     const score = scorePassword(this.value());
     if (score <= 2) {
-      return { label: 'Weak', width: '33%', color: 'bg-destructive' };
+      return { label: 'Weak', colorClass: 'text-destructive' };
     }
     if (score <= 3) {
-      return { label: 'Fair', width: '66%', color: 'bg-foreground/60' };
+      return { label: 'Fair', colorClass: 'opacity-70' };
     }
-    return { label: 'Strong', width: '100%', color: 'bg-success' };
+    return { label: 'Strong', colorClass: 'text-success' };
   });
 
   protected toggleRevealed(): void {

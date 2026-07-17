@@ -64,9 +64,7 @@ describe('Unlock', () => {
       element.querySelector<HTMLTextAreaElement>('#message')!.value
     ).toBe('top secret');
 
-    const copyButton = element.querySelector<HTMLButtonElement>(
-      '.button-container button[type="button"]'
-    )!;
+    const copyButton = element.querySelector<HTMLButtonElement>('.copy-button')!;
     expect(copyButton.disabled).toBeFalse();
   });
 
@@ -90,11 +88,7 @@ describe('Unlock', () => {
       () => element.querySelector<HTMLTextAreaElement>('#message')!.value
     );
 
-    element
-      .querySelector<HTMLButtonElement>(
-        '.button-container button[type="button"]'
-      )!
-      .click();
+    element.querySelector<HTMLButtonElement>('.copy-button')!.click();
     await waitFor(fixture, () => element.querySelector('.snackbar'));
 
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith('top secret');
@@ -113,11 +107,7 @@ describe('Unlock', () => {
       () => element.querySelector<HTMLTextAreaElement>('#message')!.value
     );
 
-    element
-      .querySelector<HTMLButtonElement>(
-        '.button-container button[type="button"]'
-      )!
-      .click();
+    element.querySelector<HTMLButtonElement>('.copy-button')!.click();
     await waitFor(fixture, () => element.querySelector('.snackbar'));
 
     expect(element.querySelector('.snackbar')?.textContent).toContain(

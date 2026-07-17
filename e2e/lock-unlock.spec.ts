@@ -32,9 +32,7 @@ test('locks a message into an image and unlocks it again', async ({
   await download.saveAs(encodedPath);
 
   await page.getByRole('link', { name: 'Unlock' }).click();
-  await expect(
-    page.getByRole('heading', { name: 'Unlock', level: 1 })
-  ).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Unlock' })).toBeVisible();
   await page.setInputFiles('#image', encodedPath);
   await expect(page.locator('img[alt="Preview-Image"]')).toBeVisible();
   await page.fill('#password', PASSWORD);
@@ -66,9 +64,7 @@ test('shows an error for a wrong password', async ({ page }) => {
   await (await downloadPromise).saveAs(encodedPath);
 
   await page.getByRole('link', { name: 'Unlock' }).click();
-  await expect(
-    page.getByRole('heading', { name: 'Unlock', level: 1 })
-  ).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Unlock' })).toBeVisible();
   await page.setInputFiles('#image', encodedPath);
   await expect(page.locator('img[alt="Preview-Image"]')).toBeVisible();
   await page.fill('#password', 'not the password');

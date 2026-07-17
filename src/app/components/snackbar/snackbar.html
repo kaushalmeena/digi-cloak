@@ -1,20 +1,16 @@
 @if (visible()) {
   <div
     class="snackbar fixed bottom-0 right-0 flex items-center justify-between m-5 py-2.5 px-3.5 w-[calc(100vw-40px)] sm:w-auto sm:min-w-[344px] sm:max-w-md rounded border-l-4 bg-primary text-primary-foreground shadow-[0_3px_5px_-1px_#00000033,0_6px_10px_#00000024,0_1px_18px_#0000001f] origin-center"
-    [class]="
-      kind() === 'error'
-        ? 'border-destructive'
-        : kind() === 'success'
-          ? 'border-success'
-          : 'border-transparent'
-    "
+    [class.border-destructive]="kind() === 'error'"
+    [class.border-success]="kind() === 'success'"
+    [class.border-transparent]="kind() === 'info'"
     animate.enter="animate-snackbar-in motion-reduce:animate-none"
-    animate.leave="animate-snackbar-out"
+    animate.leave="animate-snackbar-out motion-reduce:animate-none"
   >
     {{ message() }}
     <button
       type="button"
-      class="close-button flex items-center justify-between pl-2 border-none bg-transparent cursor-pointer hover:opacity-[0.52] focus-visible:outline-2 focus-visible:outline-offset-2"
+      class="close-button flex items-center justify-between pl-2 border-none bg-transparent cursor-pointer transition-opacity duration-300 hover:opacity-[0.52] focus-visible:outline-2 focus-visible:outline-offset-2"
       aria-label="Dismiss notification"
       (click)="hide()"
     >

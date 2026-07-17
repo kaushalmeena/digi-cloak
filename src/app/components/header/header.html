@@ -6,7 +6,7 @@
   >
     <a
       routerLink="/"
-      class="logo flex items-center hover:opacity-20 focus-visible:outline-2 focus-visible:outline-offset-2"
+      class="flex items-center transition-opacity duration-300 hover:opacity-20 focus-visible:outline-2 focus-visible:outline-offset-2"
     >
       <svg
         class="pr-2 fill-card-foreground"
@@ -23,12 +23,12 @@
         >Digi-Cloak</span
       >
     </a>
-    <nav class="max-[720px]:hidden" aria-label="Main">
+    <nav class="max-[720px]:hidden ml-3" aria-label="Main">
       <ul class="flex list-none">
         @for (item of navItems; track item.link) {
           <li>
             <a
-              class="link px-4 text-base opacity-55 hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2"
+              class="link px-4 text-base opacity-55 transition-opacity duration-300 hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2"
               [routerLink]="item.link"
               routerLinkActive="opacity-90"
               >
@@ -41,7 +41,7 @@
     <div class="flex items-center flex-auto justify-end">
       <button
         type="button"
-        class="icon-button border-none bg-transparent cursor-pointer px-2 opacity-55 fill-card-foreground hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2"
+        class="icon-button border-none bg-transparent cursor-pointer px-2 opacity-55 fill-card-foreground transition-opacity duration-300 hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2"
         [attr.aria-label]="
           darkMode() ? 'Switch to light theme' : 'Switch to dark theme'
         "
@@ -63,7 +63,7 @@
         }
       </button>
       <a
-        class="px-2 opacity-55 fill-card-foreground hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2"
+        class="px-2 opacity-55 fill-card-foreground transition-opacity duration-300 hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2"
         [href]="repoUrl"
         aria-label="View source on GitHub"
       >
@@ -75,7 +75,7 @@
       </a>
       <button
         type="button"
-        class="menu-button min-[721px]:hidden border-none bg-transparent cursor-pointer px-2 opacity-55 stroke-card-foreground hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2"
+        class="min-[721px]:hidden border-none bg-transparent cursor-pointer px-2 opacity-55 stroke-card-foreground transition-opacity duration-300 hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2"
         aria-label="Toggle navigation menu"
         aria-controls="mobile-nav"
         [attr.aria-expanded]="menuOpen()"
@@ -97,12 +97,18 @@
     </div>
   </div>
   @if (menuOpen()) {
-    <nav id="mobile-nav" class="w-full min-[721px]:hidden" aria-label="Main">
+    <nav
+      id="mobile-nav"
+      class="w-full min-[721px]:hidden overflow-hidden"
+      aria-label="Main"
+      animate.enter="animate-menu-in motion-reduce:animate-none"
+      animate.leave="animate-menu-out motion-reduce:animate-none"
+    >
       <ul class="flex flex-col list-none pb-2">
         @for (item of navItems; track item.link) {
           <li>
             <a
-              class="link block px-4 py-3 text-base opacity-55 hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2"
+              class="link block px-4 py-3 text-base opacity-55 transition-opacity duration-300 hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2"
               [routerLink]="item.link"
               routerLinkActive="opacity-90"
               (click)="closeMenu()"
