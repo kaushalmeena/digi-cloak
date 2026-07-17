@@ -31,7 +31,7 @@
     <div class="mt-[36px] flex flex-wrap items-center justify-center gap-2.5">
       <button
         type="submit"
-        class="inline-flex min-h-[50px] min-w-[150px] cursor-pointer items-center justify-center rounded-[3px] bg-primary px-4 text-lg text-primary-foreground transition duration-300 hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-55 max-md:w-full"
+        class="inline-flex min-h-[50px] min-w-[150px] cursor-pointer items-center justify-center rounded-[3px] bg-primary px-4 text-lg text-primary-foreground transition-[opacity,scale] duration-300 hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 enabled:active:scale-[98%] disabled:cursor-not-allowed disabled:opacity-55 max-md:w-full"
         [disabled]="busy() || !fits()"
         [attr.aria-busy]="busy()"
       >
@@ -44,7 +44,7 @@
       <button
         type="button"
         data-testid="save-button"
-        class="inline-flex min-h-[50px] min-w-[150px] cursor-pointer items-center justify-center rounded-[3px] bg-secondary px-4 text-lg text-secondary-foreground ring-1 ring-border transition duration-300 hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 active:bg-muted disabled:cursor-not-allowed disabled:bg-disabled disabled:opacity-55 disabled:outline-none max-md:w-full"
+        class="inline-flex min-h-[50px] min-w-[150px] cursor-pointer items-center justify-center rounded-[3px] bg-secondary px-4 text-lg text-secondary-foreground ring-1 ring-border transition-[opacity,scale] duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 enabled:hover:opacity-70 enabled:active:scale-[98%] disabled:cursor-not-allowed disabled:opacity-55 disabled:outline-none max-md:w-full"
         [disabled]="!encodedImageSource() || busy()"
         (click)="handleSave()"
       >
@@ -53,7 +53,7 @@
       <button
         type="button"
         data-testid="compare-button"
-        class="inline-flex min-h-[50px] min-w-[150px] cursor-pointer items-center justify-center rounded-[3px] bg-secondary px-4 text-lg text-secondary-foreground ring-1 ring-border transition duration-300 hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 active:bg-muted disabled:cursor-not-allowed disabled:bg-disabled disabled:opacity-55 disabled:outline-none max-md:w-full"
+        class="inline-flex min-h-[50px] min-w-[150px] cursor-pointer items-center justify-center rounded-[3px] bg-secondary px-4 text-lg text-secondary-foreground ring-1 ring-border transition-[opacity,scale] duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 enabled:hover:opacity-70 enabled:active:scale-[98%] disabled:cursor-not-allowed disabled:opacity-55 disabled:outline-none max-md:w-full"
         [disabled]="!encodedImageSource() || busy()"
         (click)="openCompare()"
       >
