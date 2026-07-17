@@ -1,17 +1,13 @@
 <div class="flex gap-5 max-[992px]:flex-col">
   <form class="basis-1/2" (submit)="handleSubmit($event)">
-    <div class="flex flex-col">
-      <label class="mt-4 mb-2.5 text-base" for="image">Encoded Image</label>
-      <app-dropzone
-        inputId="image"
-        accept="image/png, image/gif, image/jpeg"
-        (fileChange)="handleFile($event)"
-      />
-      <app-password inputId="password" label="Password" />
-    </div>
-    <div
-      class="flex flex-wrap items-center justify-center mt-[36px] gap-2.5"
-    >
+    <app-dropzone
+      inputId="image"
+      label="Encoded Image"
+      accept="image/png, image/gif, image/jpeg"
+      (fileChange)="handleFile($event)"
+    />
+    <app-password inputId="password" label="Password" />
+    <div class="flex flex-wrap items-center justify-center mt-[36px] gap-2.5">
       <button
         type="submit"
         class="max-md:w-full inline-flex items-center justify-center px-4 min-w-[150px] min-h-[50px] rounded-[3px] bg-primary text-primary-foreground text-lg cursor-pointer transition duration-300 hover:opacity-90 disabled:opacity-55 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2"
@@ -26,7 +22,8 @@
       </button>
       <button
         type="button"
-        class="copy-button max-md:w-full inline-flex items-center justify-center px-4 min-w-[150px] min-h-[50px] rounded-[3px] bg-secondary text-secondary-foreground ring-1 ring-border text-lg cursor-pointer transition duration-300 hover:bg-accent active:bg-muted disabled:bg-disabled disabled:opacity-55 disabled:cursor-not-allowed disabled:outline-none focus-visible:outline-2 focus-visible:outline-offset-2"
+        data-testid="copy-button"
+        class="max-md:w-full inline-flex items-center justify-center px-4 min-w-[150px] min-h-[50px] rounded-[3px] bg-secondary text-secondary-foreground ring-1 ring-border text-lg cursor-pointer transition duration-300 hover:bg-accent active:bg-muted disabled:bg-disabled disabled:opacity-55 disabled:cursor-not-allowed disabled:outline-none focus-visible:outline-2 focus-visible:outline-offset-2"
         (click)="handleCopy()"
         [disabled]="!decodedMessage() || busy()"
       >
@@ -40,17 +37,12 @@
       alt="Preview-Image"
       [source]="previewImageSource()"
     />
-    <div class="flex flex-col">
-      <label class="mt-4 mb-2.5 text-base" for="message">Decrypted Message</label>
-      <textarea
-        readonly
-        id="message"
-        class="px-2.5 min-h-[30px] rounded-[3px] bg-muted text-foreground caret-foreground text-sm leading-[30px] appearance-none outline-none shadow-[inset_0_0_0_1px_#10161a26,inset_0_1px_1px_#10161a33]"
-        name="message"
-        rows="7"
-        [value]="decodedMessage()"
-      ></textarea>
-    </div>
+    <app-textbox
+      inputId="message"
+      label="Decrypted Message"
+      [readonly]="true"
+      [value]="decodedMessage()"
+    />
   </div>
 </div>
 <app-snackbar />

@@ -1,44 +1,34 @@
 <div class="flex gap-5 max-[992px]:flex-col">
   <form class="basis-1/2" (submit)="handleSubmit($event)">
-    <div class="flex flex-col">
-      <div class="flex items-baseline justify-between mt-4 mb-2.5">
-        <label class="text-base" for="message">Message</label>
-        @if (capacity(); as cap) {
-          <span
-            class="capacity-meter text-xs transition-colors duration-300"
-            [class.opacity-70]="fits()"
-            [class.text-destructive]="!fits()"
-            [attr.title]="
-              fits()
-                ? 'Characters used / approximate image capacity'
-                : 'Message too large for this image'
-            "
-          >
-            {{ messageBytes() }} / ~{{ cap }}
-          </span>
-        }
-      </div>
-      <textarea
-        id="message"
-        class="px-2.5 min-h-[30px] rounded-[3px] bg-muted text-foreground caret-foreground text-sm leading-[30px] appearance-none outline-none shadow-[inset_0_0_0_1px_#10161a26,inset_0_1px_1px_#10161a33] focus-visible:outline-2 focus-visible:outline-offset-2"
-        name="message"
-        rows="7"
-        required
-        (input)="handleMessageInput($event)"
-      ></textarea>
-    </div>
-    <div class="flex flex-col">
-      <label class="mt-4 mb-2.5 text-base" for="image">Image</label>
-      <app-dropzone
-        inputId="image"
-        accept="image/png, image/gif, image/jpeg, image/webp"
-        (fileChange)="handleFile($event)"
-      />
-      <app-password inputId="password" label="Password" [withStrength]="true" />
-    </div>
-    <div
-      class="flex items-center flex-wrap justify-center mt-[36px] gap-2.5"
+    <app-dropzone
+      inputId="image"
+      label="Image"
+      accept="image/png, image/gif, image/jpeg, image/webp"
+      (fileChange)="handleFile($event)"
+    />
+    <app-password inputId="password" label="Password" [withStrength]="true" />
+    <app-textbox
+      inputId="message"
+      label="Message"
+      (valueChange)="handleMessageInput($event)"
     >
+      @if (capacity(); as cap) {
+        <span
+          data-testid="capacity-meter"
+          class="text-xs transition duration-300 starting:opacity-0 motion-reduce:transition-none"
+          [class.opacity-70]="fits()"
+          [class.text-destructive]="!fits()"
+          [attr.title]="
+            fits()
+              ? 'Characters used / approximate image capacity'
+              : 'Message too large for this image'
+          "
+        >
+          {{ messageBytes() }} / ~{{ cap }}
+        </span>
+      }
+    </app-textbox>
+    <div class="flex flex-wrap items-center justify-center mt-[36px] gap-2.5">
       <button
         type="submit"
         class="max-md:w-full inline-flex items-center justify-center px-4 min-w-[150px] min-h-[50px] rounded-[3px] bg-primary text-primary-foreground text-lg cursor-pointer transition duration-300 hover:opacity-90 disabled:opacity-55 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2"
@@ -53,7 +43,8 @@
       </button>
       <button
         type="button"
-        class="save-button max-md:w-full inline-flex items-center justify-center px-4 min-w-[150px] min-h-[50px] rounded-[3px] bg-secondary text-secondary-foreground ring-1 ring-border text-lg cursor-pointer transition duration-300 hover:bg-accent active:bg-muted disabled:bg-disabled disabled:opacity-55 disabled:cursor-not-allowed disabled:outline-none focus-visible:outline-2 focus-visible:outline-offset-2"
+        data-testid="save-button"
+        class="max-md:w-full inline-flex items-center justify-center px-4 min-w-[150px] min-h-[50px] rounded-[3px] bg-secondary text-secondary-foreground ring-1 ring-border text-lg cursor-pointer transition duration-300 hover:bg-accent active:bg-muted disabled:bg-disabled disabled:opacity-55 disabled:cursor-not-allowed disabled:outline-none focus-visible:outline-2 focus-visible:outline-offset-2"
         [disabled]="!encodedImageSource() || busy()"
         (click)="handleSave()"
       >
@@ -61,7 +52,8 @@
       </button>
       <button
         type="button"
-        class="compare-button max-md:w-full inline-flex items-center justify-center px-4 min-w-[150px] min-h-[50px] rounded-[3px] bg-secondary text-secondary-foreground ring-1 ring-border text-lg cursor-pointer transition duration-300 hover:bg-accent active:bg-muted disabled:bg-disabled disabled:opacity-55 disabled:cursor-not-allowed disabled:outline-none focus-visible:outline-2 focus-visible:outline-offset-2"
+        data-testid="compare-button"
+        class="max-md:w-full inline-flex items-center justify-center px-4 min-w-[150px] min-h-[50px] rounded-[3px] bg-secondary text-secondary-foreground ring-1 ring-border text-lg cursor-pointer transition duration-300 hover:bg-accent active:bg-muted disabled:bg-disabled disabled:opacity-55 disabled:cursor-not-allowed disabled:outline-none focus-visible:outline-2 focus-visible:outline-offset-2"
         [disabled]="!encodedImageSource() || busy()"
         (click)="openCompare()"
       >
@@ -90,10 +82,8 @@
 <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -->
 <dialog
   #compareDialog
-  class="m-auto p-0 w-[min(94vw,1100px)] bg-transparent overflow-visible motion-reduce:animate-none backdrop:bg-black/60"
-  [class]="compareClosing() ? 'animate-dialog-out' : 'open:animate-dialog-in'"
+  class="m-auto p-0 w-[min(94vw,1100px)] bg-transparent overflow-visible opacity-0 scale-95 translate-y-4 transition-[opacity,scale,translate,overlay,display] transition-discrete duration-300 ease-out open:opacity-100 open:scale-100 open:translate-y-0 starting:open:opacity-0 starting:open:scale-95 starting:open:translate-y-4 backdrop:bg-black/0 backdrop:transition-[background-color,overlay,display] backdrop:transition-discrete backdrop:duration-300 open:backdrop:bg-black/60 starting:open:backdrop:bg-black/0 motion-reduce:transition-none motion-reduce:backdrop:transition-none"
   aria-label="Compare original and encoded image"
-  (cancel)="onDialogCancel($event)"
   (click)="onDialogClick($event)"
 >
   <div class="relative">

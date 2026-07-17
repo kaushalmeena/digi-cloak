@@ -5,12 +5,13 @@ import { Figure } from '../../components/figure/figure';
 import { Loader } from '../../components/loader/loader';
 import { Password } from '../../components/password/password';
 import { Snackbar } from '../../components/snackbar/snackbar';
+import { Textbox } from '../../components/textbox/textbox';
 import { Stegano } from '../../services/stegano';
 import { copyText, getBase64ImageFromBlob } from '../../utils/browser';
 
 @Component({
   selector: 'app-unlock',
-  imports: [Dropzone, Figure, Loader, Password, Snackbar],
+  imports: [Dropzone, Figure, Loader, Password, Snackbar, Textbox],
   templateUrl: './unlock.html',
 })
 export class Unlock {

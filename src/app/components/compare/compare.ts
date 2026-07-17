@@ -31,12 +31,12 @@ import { Component, input, signal } from '@angular/core';
         </div>
       </div>
       <span
-        class="absolute bottom-0 left-0 px-3 py-1.5 bg-primary/80 text-primary-foreground text-sm pointer-events-none"
+        class="absolute bottom-0.5 left-0.5 px-3 py-1.5 bg-primary/80 text-primary-foreground text-sm pointer-events-none"
         aria-hidden="true"
         >Original</span
       >
       <span
-        class="absolute bottom-0 right-0 px-3 py-1.5 bg-primary/80 text-primary-foreground text-sm pointer-events-none"
+        class="absolute bottom-0.5 right-0.5 px-3 py-1.5 bg-primary/80 text-primary-foreground text-sm pointer-events-none"
         aria-hidden="true"
         >Encoded</span
       >

@@ -1,6 +1,10 @@
+<div class="flex items-baseline justify-between mt-4 mb-2.5">
+  <label class="text-base" [for]="inputId()">{{ label() }}</label>
+</div>
 <button
   type="button"
-  class="dropzone flex flex-col items-center justify-center gap-1 w-full min-h-[120px] px-4 py-3 rounded-[3px] bg-muted text-foreground cursor-pointer text-sm border-2 border-dashed transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2"
+  data-testid="dropzone"
+  class="flex flex-col items-center justify-center gap-1 w-full min-h-[120px] px-4 py-3 rounded-[3px] bg-muted text-foreground cursor-pointer text-sm border-2 border-dashed transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2"
   [class]="dragging() ? 'border-foreground/60' : 'border-border'"
   (click)="fileInput.click()"
   (dragover)="onDragOver($event)"
@@ -8,7 +12,10 @@
   (drop)="onDrop($event)"
 >
   @if (file()) {
-    <span class="file-info font-medium break-all">{{ fileInfo() }}</span>
+    <span
+      data-testid="file-info"
+      class="font-medium break-all transition-opacity duration-300 starting:opacity-0 motion-reduce:transition-none"
+    >{{ fileInfo() }}</span>
     <span class="opacity-55">Click, drop, or paste to replace</span>
   } @else {
     <svg

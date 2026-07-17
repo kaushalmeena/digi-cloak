@@ -3,11 +3,15 @@ import { Component, input } from '@angular/core';
 @Component({
   selector: 'app-figure',
   template: `
-    <div class="card-label mt-4 mb-2.5 text-base">{{ label() }}</div>
-    <div class="card relative rounded-[3px] bg-background ring-1 ring-border">
-      <div class="card-media flex items-center justify-center h-[210px]">
+    <div data-testid="figure-label" class="mt-4 mb-2.5 text-base">{{ label() }}</div>
+    <div class="relative rounded-[3px] bg-background ring-1 ring-border">
+      <div data-testid="figure-media" class="flex items-center justify-center h-[210px]">
         @if (source()) {
-          <img class="max-w-full h-[210px]" [alt]="alt()" [src]="source()" />
+          <img
+            class="max-w-full h-[210px] transition-opacity duration-300 starting:opacity-0 motion-reduce:transition-none"
+            [alt]="alt()"
+            [src]="source()"
+          />
         } @else {
           <svg
             class="h-[52px] w-[52px] opacity-55 fill-foreground"

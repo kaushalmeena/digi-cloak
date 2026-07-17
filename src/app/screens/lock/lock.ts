@@ -13,6 +13,7 @@ import { Loader } from '../../components/loader/loader';
 import { Compare } from '../../components/compare/compare';
 import { Password } from '../../components/password/password';
 import { Snackbar } from '../../components/snackbar/snackbar';
+import { Textbox } from '../../components/textbox/textbox';
 import { Stegano } from '../../services/stegano';
 import { getBase64ImageFromBlob, saveImage } from '../../utils/browser';
 import { estimateCapacityChars, messageFits } from '../../utils/stegano';
@@ -34,7 +35,7 @@ function readImageSize(src: string): Promise<ImageSize> {
 
 @Component({
   selector: 'app-lock',
-  imports: [Compare, Dropzone, Figure, Loader, Password, Snackbar],
+  imports: [Compare, Dropzone, Figure, Loader, Password, Snackbar, Textbox],
   templateUrl: './lock.html',
 })
 export class Lock {
@@ -63,27 +64,14 @@ export class Lock {
   private readonly compareDialog =
     viewChild.required<ElementRef<HTMLDialogElement>>('compareDialog');
 
-  protected readonly compareClosing = signal(false);
-
   protected openCompare(): void {
     this.compareDialog().nativeElement.showModal();
   }
 
+  // Enter/exit animation is pure CSS (@starting-style + allow-discrete
+  // transitions on the dialog), so closing needs no choreography here.
   protected closeCompare(): void {
-    if (this.compareClosing()) {
-      return;
-    }
-    // Native <dialog>.close() is instant; play the exit animation first.
-    this.compareClosing.set(true);
-    window.setTimeout(() => {
-      this.compareDialog().nativeElement.close();
-      this.compareClosing.set(false);
-    }, 150);
-  }
-
-  protected onDialogCancel(event: Event): void {
-    event.preventDefault();
-    this.closeCompare();
+    this.compareDialog().nativeElement.close();
   }
 
   protected onDialogClick(event: MouseEvent): void {
@@ -114,8 +102,7 @@ export class Lock {
       });
   }
 
-  protected handleMessageInput(event: Event): void {
-    const value = (event.target as HTMLTextAreaElement).value;
+  protected handleMessageInput(value: string): void {
     this.messageBytes.set(new TextEncoder().encode(value).length);
   }
 

@@ -50,8 +50,8 @@ describe('Lock', () => {
     );
     expect(img?.src).toMatch(/^data:image\/png;base64,/);
 
-    await waitFor(fixture, () => element.querySelector('.capacity-meter'));
-    expect(element.querySelector('.capacity-meter')?.textContent).toContain(
+    await waitFor(fixture, () => element.querySelector('[data-testid="capacity-meter"]'));
+    expect(element.querySelector('[data-testid="capacity-meter"]')?.textContent).toContain(
       '/ ~'
     );
   });
@@ -78,7 +78,7 @@ describe('Lock', () => {
     expect(outputImg.src).toMatch(/^data:image\/png;base64,/);
 
     const saveButton = element.querySelector<HTMLButtonElement>(
-      '.save-button'
+      '[data-testid="save-button"]'
     )!;
     expect(saveButton.disabled).toBeFalse();
 
@@ -92,10 +92,10 @@ describe('Lock', () => {
     await waitFor(
       fixture,
       () =>
-        !element.querySelector<HTMLButtonElement>('.compare-button')!.disabled
+        !element.querySelector<HTMLButtonElement>('[data-testid="compare-button"]')!.disabled
     );
 
-    element.querySelector<HTMLButtonElement>('.compare-button')!.click();
+    element.querySelector<HTMLButtonElement>('[data-testid="compare-button"]')!.click();
     fixture.detectChanges();
 
     const dialog = element.querySelector<HTMLDialogElement>('dialog')!;
@@ -107,9 +107,9 @@ describe('Lock', () => {
 
   it('shows an error in the snackbar when no image is chosen', async () => {
     submit('top secret', 'hunter2');
-    await waitFor(fixture, () => element.querySelector('.snackbar'));
+    await waitFor(fixture, () => element.querySelector('[data-testid="snackbar"]'));
 
-    expect(element.querySelector('.snackbar')?.textContent).toContain(
+    expect(element.querySelector('[data-testid="snackbar"]')?.textContent).toContain(
       'Please choose an image first'
     );
   });
@@ -124,7 +124,7 @@ describe('Lock', () => {
     );
 
     const saveButton = element.querySelector<HTMLButtonElement>(
-      '.save-button'
+      '[data-testid="save-button"]'
     )!;
     saveButton.click();
 

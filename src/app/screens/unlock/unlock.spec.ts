@@ -64,15 +64,15 @@ describe('Unlock', () => {
       element.querySelector<HTMLTextAreaElement>('#message')!.value
     ).toBe('top secret');
 
-    const copyButton = element.querySelector<HTMLButtonElement>('.copy-button')!;
+    const copyButton = element.querySelector<HTMLButtonElement>('[data-testid="copy-button"]')!;
     expect(copyButton.disabled).toBeFalse();
   });
 
   it('shows an error in the snackbar for the wrong password', async () => {
     await loadEncodedImage('wrong');
-    await waitFor(fixture, () => element.querySelector('.snackbar'));
+    await waitFor(fixture, () => element.querySelector('[data-testid="snackbar"]'));
 
-    expect(element.querySelector('.snackbar')?.textContent).toContain(
+    expect(element.querySelector('[data-testid="snackbar"]')?.textContent).toContain(
       'Password is incorrect'
     );
     expect(
@@ -88,11 +88,11 @@ describe('Unlock', () => {
       () => element.querySelector<HTMLTextAreaElement>('#message')!.value
     );
 
-    element.querySelector<HTMLButtonElement>('.copy-button')!.click();
-    await waitFor(fixture, () => element.querySelector('.snackbar'));
+    element.querySelector<HTMLButtonElement>('[data-testid="copy-button"]')!.click();
+    await waitFor(fixture, () => element.querySelector('[data-testid="snackbar"]'));
 
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith('top secret');
-    expect(element.querySelector('.snackbar')?.textContent).toContain(
+    expect(element.querySelector('[data-testid="snackbar"]')?.textContent).toContain(
       'Copied to clipboard'
     );
   });
@@ -107,10 +107,10 @@ describe('Unlock', () => {
       () => element.querySelector<HTMLTextAreaElement>('#message')!.value
     );
 
-    element.querySelector<HTMLButtonElement>('.copy-button')!.click();
-    await waitFor(fixture, () => element.querySelector('.snackbar'));
+    element.querySelector<HTMLButtonElement>('[data-testid="copy-button"]')!.click();
+    await waitFor(fixture, () => element.querySelector('[data-testid="snackbar"]'));
 
-    expect(element.querySelector('.snackbar')?.textContent).toContain(
+    expect(element.querySelector('[data-testid="snackbar"]')?.textContent).toContain(
       'Clipboard unavailable'
     );
   });

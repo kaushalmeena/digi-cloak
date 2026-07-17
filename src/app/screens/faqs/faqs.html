@@ -1,9 +1,14 @@
 @for (faq of faqs; track faq.question; let i = $index) {
-  <section class="faq my-2.5 text-lg" [class.expanded]="isExpanded(i)">
+  <section
+    data-testid="faq"
+    class="my-2.5 text-lg"
+    [attr.data-expanded]="isExpanded(i)"
+  >
     <h2 class="m-0">
       <button
         type="button"
-        class="faq-toggle flex items-center justify-between gap-2 py-2 w-full border-none bg-transparent text-inherit text-left text-2xl font-bold cursor-pointer"
+        data-testid="faq-toggle"
+        class="flex items-center justify-between gap-2 py-2 w-full border-none bg-transparent text-inherit text-left text-2xl font-bold cursor-pointer"
         [id]="'faq-question-' + i"
         [attr.aria-controls]="'faq-answer-' + i"
         [attr.aria-expanded]="isExpanded(i)"

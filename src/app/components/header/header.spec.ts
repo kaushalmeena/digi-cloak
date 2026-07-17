@@ -36,7 +36,7 @@ describe('Header', () => {
 
   it('renders a nav link for each nav item', () => {
     const links: HTMLAnchorElement[] = Array.from(
-      fixture.nativeElement.querySelectorAll('a.link')
+      fixture.nativeElement.querySelectorAll('a[data-testid="nav-link"]')
     );
     expect(links.map((link) => link.textContent?.trim())).toEqual([
       'Lock',
@@ -46,7 +46,7 @@ describe('Header', () => {
   });
 
   it('delegates toggleDarkMode to the Theme service', () => {
-    const button = fixture.nativeElement.querySelector('button.icon-button');
+    const button = fixture.nativeElement.querySelector('[data-testid="theme-toggle"]');
     button.click();
     expect(themeSpy.toggleDarkMode).toHaveBeenCalled();
   });
@@ -55,7 +55,8 @@ describe('Header', () => {
     darkMode.set(true);
     fixture.detectChanges();
     expect(
-      fixture.nativeElement.querySelectorAll('button.icon-button svg').length
+      fixture.nativeElement.querySelectorAll('[data-testid="theme-toggle"] svg')
+        .length
     ).toBe(1);
   });
 });

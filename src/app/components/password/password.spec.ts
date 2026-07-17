@@ -31,7 +31,7 @@ describe('Password', () => {
     const input = element.querySelector<HTMLInputElement>('#password')!;
     expect(input.type).toBe('password');
 
-    element.querySelector<HTMLButtonElement>('.reveal-button')!.click();
+    element.querySelector<HTMLButtonElement>('[data-testid="reveal-password"]')!.click();
     fixture.detectChanges();
     expect(input.type).toBe('text');
   });

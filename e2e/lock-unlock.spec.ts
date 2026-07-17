@@ -70,7 +70,7 @@ test('shows an error for a wrong password', async ({ page }) => {
   await page.fill('#password', 'not the password');
   await page.getByRole('button', { name: 'Unlock' }).click();
 
-  await expect(page.locator('.snackbar')).toContainText(
+  await expect(page.locator('[data-testid="snackbar"]')).toContainText(
     'Password is incorrect',
     { timeout: 30_000 }
   );

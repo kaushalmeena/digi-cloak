@@ -51,8 +51,6 @@
   --animate-snackbar-out: snackbar-out 200ms cubic-bezier(0.4, 0, 1, 1) forwards;
   --animate-menu-in: menu-in 200ms ease;
   --animate-menu-out: menu-out 150ms ease forwards;
-  --animate-dialog-in: dialog-in 200ms cubic-bezier(0, 0, 0.2, 1);
-  --animate-dialog-out: dialog-out 150ms cubic-bezier(0.4, 0, 1, 1) forwards;
 
   @keyframes snackbar-in {
     from {
@@ -92,24 +90,6 @@
     to {
       max-height: 0;
       transform: translateY(-8px);
-      opacity: 0;
-    }
-  }
-
-  @keyframes dialog-in {
-    from {
-      transform: scale(0.95);
-      opacity: 0;
-    }
-    to {
-      transform: none;
-      opacity: 1;
-    }
-  }
-
-  @keyframes dialog-out {
-    to {
-      transform: scale(0.95);
       opacity: 0;
     }
   }

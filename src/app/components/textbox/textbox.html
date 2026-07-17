@@ -1,0 +1,14 @@
+<div class="flex items-baseline justify-between mt-4 mb-2.5">
+  <label class="text-base" [for]="inputId()">{{ label() }}</label>
+  <ng-content />
+</div>
+<textarea
+  class="w-full px-2.5 min-h-[30px] rounded-[3px] bg-muted text-foreground caret-foreground text-sm leading-[30px] appearance-none outline-none shadow-[inset_0_0_0_1px_#10161a26,inset_0_1px_1px_#10161a33] focus-visible:outline-2 focus-visible:outline-offset-2"
+  [id]="inputId()"
+  [attr.name]="name()"
+  [rows]="rows()"
+  [readOnly]="readonly()"
+  [required]="!readonly()"
+  [value]="value()"
+  (input)="onInput($event)"
+></textarea>

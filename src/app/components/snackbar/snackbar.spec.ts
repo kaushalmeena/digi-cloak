@@ -73,7 +73,7 @@ describe('Snackbar', () => {
     component.show('Something happened');
     fixture.detectChanges();
 
-    const closeButton = fixture.nativeElement.querySelector('.close-button');
+    const closeButton = fixture.nativeElement.querySelector('[data-testid="snackbar-close"]');
     closeButton.click();
 
     expect(component.visible()).toBeFalse();

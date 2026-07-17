@@ -19,6 +19,7 @@ function formatSize(bytes: number): string {
 })
 export class Dropzone {
   readonly inputId = input.required<string>();
+  readonly label = input.required<string>();
   readonly accept = input('image/*');
   readonly fileChange = output<File | null>();
 

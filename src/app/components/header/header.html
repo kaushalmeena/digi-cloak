@@ -28,7 +28,8 @@
         @for (item of navItems; track item.link) {
           <li>
             <a
-              class="link px-4 text-base opacity-55 transition-opacity duration-300 hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2"
+              data-testid="nav-link"
+              class="px-4 text-base opacity-55 transition-opacity duration-300 hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2"
               [routerLink]="item.link"
               routerLinkActive="opacity-90"
               >
@@ -41,7 +42,8 @@
     <div class="flex items-center flex-auto justify-end">
       <button
         type="button"
-        class="icon-button border-none bg-transparent cursor-pointer px-2 opacity-55 fill-card-foreground transition-opacity duration-300 hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2"
+        data-testid="theme-toggle"
+        class="border-none bg-transparent cursor-pointer px-2 opacity-55 fill-card-foreground transition-opacity duration-300 hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2"
         [attr.aria-label]="
           darkMode() ? 'Switch to light theme' : 'Switch to dark theme'
         "
@@ -108,7 +110,8 @@
         @for (item of navItems; track item.link) {
           <li>
             <a
-              class="link block px-4 py-3 text-base opacity-55 transition-opacity duration-300 hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2"
+              data-testid="nav-link"
+              class="block px-4 py-3 text-base opacity-55 transition-opacity duration-300 hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2"
               [routerLink]="item.link"
               routerLinkActive="opacity-90"
               (click)="closeMenu()"

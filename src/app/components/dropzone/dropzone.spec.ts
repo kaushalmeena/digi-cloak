@@ -15,6 +15,7 @@ describe('Dropzone', () => {
 
     fixture = TestBed.createComponent(Dropzone);
     fixture.componentRef.setInput('inputId', 'image');
+    fixture.componentRef.setInput('label', 'Image');
     received = [];
     fixture.componentInstance.fileChange.subscribe((file) =>
       received.push(file)
@@ -24,7 +25,7 @@ describe('Dropzone', () => {
   });
 
   it('shows the browse hint by default', () => {
-    expect(element.querySelector('.dropzone')?.textContent).toContain(
+    expect(element.querySelector('[data-testid="dropzone"]')?.textContent).toContain(
       'click to browse'
     );
   });
@@ -36,7 +37,7 @@ describe('Dropzone', () => {
 
     expect(received.length).toBe(1);
     expect(received[0]?.name).toBe('test.png');
-    expect(element.querySelector('.file-info')?.textContent).toContain(
+    expect(element.querySelector('[data-testid="file-info"]')?.textContent).toContain(
       'test.png'
     );
   });
@@ -46,7 +47,7 @@ describe('Dropzone', () => {
     dataTransfer.items.add(createTestImageFile());
     const drop = new DragEvent('drop', { dataTransfer });
 
-    element.querySelector('.dropzone')!.dispatchEvent(drop);
+    element.querySelector('[data-testid="dropzone"]')!.dispatchEvent(drop);
     fixture.detectChanges();
 
     expect(received.length).toBe(1);
@@ -74,7 +75,7 @@ describe('Dropzone', () => {
     );
     const drop = new DragEvent('drop', { dataTransfer });
 
-    element.querySelector('.dropzone')!.dispatchEvent(drop);
+    element.querySelector('[data-testid="dropzone"]')!.dispatchEvent(drop);
     fixture.detectChanges();
 
     expect(received.length).toBe(0);

@@ -28,23 +28,23 @@ describe('Figure', () => {
   });
 
   it('renders the label', () => {
-    expect(element.querySelector('.card-label')?.textContent).toBe(
+    expect(element.querySelector('[data-testid="figure-label"]')?.textContent).toBe(
       'Test Label'
     );
   });
 
   it('shows a placeholder icon when there is no image source', () => {
-    expect(element.querySelector('.card-media svg')).not.toBeNull();
-    expect(element.querySelector('.card-media img')).toBeNull();
+    expect(element.querySelector('[data-testid="figure-media"] svg')).not.toBeNull();
+    expect(element.querySelector('[data-testid="figure-media"] img')).toBeNull();
   });
 
   it('shows the image once a source is set', () => {
     host.source.set('data:image/png;base64,abc123');
     fixture.detectChanges();
 
-    const img = element.querySelector<HTMLImageElement>('.card-media img');
+    const img = element.querySelector<HTMLImageElement>('[data-testid="figure-media"] img');
     expect(img).not.toBeNull();
     expect(img?.alt).toBe('Test-Image');
-    expect(element.querySelector('.card-media svg')).toBeNull();
+    expect(element.querySelector('[data-testid="figure-media"] svg')).toBeNull();
   });
 });
