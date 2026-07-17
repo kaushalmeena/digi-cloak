@@ -26,8 +26,7 @@ interface ImageSize {
 function readImageSize(src: string): Promise<ImageSize> {
   return new Promise((resolve, reject) => {
     const image = new Image();
-    image.onload = () =>
-      resolve({ width: image.width, height: image.height });
+    image.onload = () => resolve({ width: image.width, height: image.height });
     image.onerror = () => reject(new Error('Cannot load base64 image'));
     image.src = src;
   });

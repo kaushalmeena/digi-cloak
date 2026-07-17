@@ -9,7 +9,7 @@ import { Header } from './components/header/header';
   template: `
     <app-header />
     <main
-      class="box-border mx-auto px-4 pt-[30px] pb-[60px] min-h-[calc(100vh-60px)] w-3/4 max-[720px]:w-full"
+      class="mx-auto box-border min-h-[calc(100vh-60px)] w-3/4 px-4 pt-[30px] pb-[60px] max-[720px]:w-full"
     >
       <router-outlet />
     </main>

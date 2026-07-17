@@ -42,12 +42,15 @@ export class Stegano {
   }
 
   private createWorker(): Worker | null {
-    if (typeof Worker === 'undefined' || typeof OffscreenCanvas === 'undefined') {
+    if (
+      typeof Worker === 'undefined' ||
+      typeof OffscreenCanvas === 'undefined'
+    ) {
       return null;
     }
     const worker = new Worker(
       new URL('../workers/stegano.worker', import.meta.url),
-      { type: 'module' }
+      { type: 'module' },
     );
     worker.onmessage = ({ data }: MessageEvent<SteganoResponse>) => {
       const pending = this.pending.get(data.id);

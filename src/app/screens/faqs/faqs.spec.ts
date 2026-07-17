@@ -35,7 +35,9 @@ describe('Faqs', () => {
   });
 
   it('expands and collapses an entry when its question is clicked', () => {
-    const toggle = element.querySelector<HTMLButtonElement>('[data-testid="faq-toggle"]')!;
+    const toggle = element.querySelector<HTMLButtonElement>(
+      '[data-testid="faq-toggle"]',
+    )!;
     const entry = element.querySelector('[data-testid="faq"]')!;
 
     toggle.click();
@@ -50,19 +52,24 @@ describe('Faqs', () => {
   });
 
   it('allows multiple entries to be open at once', () => {
-    const toggles =
-      element.querySelectorAll<HTMLButtonElement>('[data-testid="faq-toggle"]');
+    const toggles = element.querySelectorAll<HTMLButtonElement>(
+      '[data-testid="faq-toggle"]',
+    );
 
     toggles[0].click();
     toggles[1].click();
     fixture.detectChanges();
 
-    const expanded = element.querySelectorAll('[data-testid="faq"][data-expanded="true"]');
+    const expanded = element.querySelectorAll(
+      '[data-testid="faq"][data-expanded="true"]',
+    );
     expect(expanded.length).toBe(2);
   });
 
   it('wires each toggle to its answer region for assistive technology', () => {
-    const toggles = element.querySelectorAll<HTMLButtonElement>('[data-testid="faq-toggle"]');
+    const toggles = element.querySelectorAll<HTMLButtonElement>(
+      '[data-testid="faq-toggle"]',
+    );
     toggles.forEach((toggle) => {
       const answerId = toggle.getAttribute('aria-controls')!;
       const answer = element.querySelector(`#${answerId}`);

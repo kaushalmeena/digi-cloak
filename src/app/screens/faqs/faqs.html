@@ -8,7 +8,7 @@
       <button
         type="button"
         data-testid="faq-toggle"
-        class="flex items-center justify-between gap-2 py-2 w-full border-none bg-transparent text-inherit text-left text-2xl font-bold cursor-pointer"
+        class="flex w-full cursor-pointer items-center justify-between gap-2 border-none bg-transparent py-2 text-left text-2xl font-bold text-inherit"
         [id]="'faq-question-' + i"
         [attr.aria-controls]="'faq-answer-' + i"
         [attr.aria-expanded]="isExpanded(i)"
@@ -29,15 +29,19 @@
     </h2>
     <div
       class="grid transition-[grid-template-rows,opacity] duration-300 ease-in-out motion-reduce:transition-none"
-      [class]="isExpanded(i) ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'"
+      [class]="
+        isExpanded(i)
+          ? 'grid-rows-[1fr] opacity-100'
+          : 'grid-rows-[0fr] opacity-0'
+      "
       [id]="'faq-answer-' + i"
       role="region"
       [attr.aria-labelledby]="'faq-question-' + i"
     >
-      <div class="overflow-hidden min-h-0">
+      <div class="min-h-0 overflow-hidden">
         @for (block of faq.answer; track block.text) {
           @if (block.heading) {
-            <h4 class="font-bold my-4">{{ block.heading }}</h4>
+            <h4 class="my-4 font-bold">{{ block.heading }}</h4>
           }
           <p class="my-2">{{ block.text }}</p>
         }

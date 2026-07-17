@@ -11,12 +11,12 @@ import { Unlock } from './unlock';
 
 async function createEncodedImageFile(
   message: string,
-  password: string
+  password: string,
 ): Promise<File> {
   const encoded = await getEncodedBase64Image(
     createTestImage(),
     message,
-    password
+    password,
   );
   return dataUrlToFile(encoded, 'encoded.png', 'image/png');
 }
@@ -40,7 +40,7 @@ describe('Unlock', () => {
     const input = element.querySelector<HTMLInputElement>('#image')!;
     setInputFile(input, file);
     await waitFor(fixture, () =>
-      element.querySelector('img[alt="Preview-Image"]')
+      element.querySelector('img[alt="Preview-Image"]'),
     );
 
     element.querySelector<HTMLInputElement>('#password')!.value = password;
@@ -57,27 +57,31 @@ describe('Unlock', () => {
     await loadEncodedImage('hunter2');
     await waitFor(
       fixture,
-      () => element.querySelector<HTMLTextAreaElement>('#message')!.value
+      () => element.querySelector<HTMLTextAreaElement>('#message')!.value,
     );
 
-    expect(
-      element.querySelector<HTMLTextAreaElement>('#message')!.value
-    ).toBe('top secret');
+    expect(element.querySelector<HTMLTextAreaElement>('#message')!.value).toBe(
+      'top secret',
+    );
 
-    const copyButton = element.querySelector<HTMLButtonElement>('[data-testid="copy-button"]')!;
+    const copyButton = element.querySelector<HTMLButtonElement>(
+      '[data-testid="copy-button"]',
+    )!;
     expect(copyButton.disabled).toBeFalse();
   });
 
   it('shows an error in the snackbar for the wrong password', async () => {
     await loadEncodedImage('wrong');
-    await waitFor(fixture, () => element.querySelector('[data-testid="snackbar"]'));
-
-    expect(element.querySelector('[data-testid="snackbar"]')?.textContent).toContain(
-      'Password is incorrect'
+    await waitFor(fixture, () =>
+      element.querySelector('[data-testid="snackbar"]'),
     );
+
     expect(
-      element.querySelector<HTMLTextAreaElement>('#message')!.value
-    ).toBe('');
+      element.querySelector('[data-testid="snackbar"]')?.textContent,
+    ).toContain('Password is incorrect');
+    expect(element.querySelector<HTMLTextAreaElement>('#message')!.value).toBe(
+      '',
+    );
   });
 
   it('copies the decoded message and notifies via the snackbar', async () => {
@@ -85,33 +89,41 @@ describe('Unlock', () => {
     await loadEncodedImage('hunter2');
     await waitFor(
       fixture,
-      () => element.querySelector<HTMLTextAreaElement>('#message')!.value
+      () => element.querySelector<HTMLTextAreaElement>('#message')!.value,
     );
 
-    element.querySelector<HTMLButtonElement>('[data-testid="copy-button"]')!.click();
-    await waitFor(fixture, () => element.querySelector('[data-testid="snackbar"]'));
+    element
+      .querySelector<HTMLButtonElement>('[data-testid="copy-button"]')!
+      .click();
+    await waitFor(fixture, () =>
+      element.querySelector('[data-testid="snackbar"]'),
+    );
 
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith('top secret');
-    expect(element.querySelector('[data-testid="snackbar"]')?.textContent).toContain(
-      'Copied to clipboard'
-    );
+    expect(
+      element.querySelector('[data-testid="snackbar"]')?.textContent,
+    ).toContain('Copied to clipboard');
   });
 
   it('shows an error in the snackbar when copying fails', async () => {
     spyOn(navigator.clipboard, 'writeText').and.rejectWith(
-      new Error('Clipboard unavailable')
+      new Error('Clipboard unavailable'),
     );
     await loadEncodedImage('hunter2');
     await waitFor(
       fixture,
-      () => element.querySelector<HTMLTextAreaElement>('#message')!.value
+      () => element.querySelector<HTMLTextAreaElement>('#message')!.value,
     );
 
-    element.querySelector<HTMLButtonElement>('[data-testid="copy-button"]')!.click();
-    await waitFor(fixture, () => element.querySelector('[data-testid="snackbar"]'));
-
-    expect(element.querySelector('[data-testid="snackbar"]')?.textContent).toContain(
-      'Clipboard unavailable'
+    element
+      .querySelector<HTMLButtonElement>('[data-testid="copy-button"]')!
+      .click();
+    await waitFor(fixture, () =>
+      element.querySelector('[data-testid="snackbar"]'),
     );
+
+    expect(
+      element.querySelector('[data-testid="snackbar"]')?.textContent,
+    ).toContain('Clipboard unavailable');
   });
 });

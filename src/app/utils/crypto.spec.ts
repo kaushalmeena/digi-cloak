@@ -10,9 +10,7 @@ describe('crypto utils', () => {
   it('round-trips a message through the v2 format', async () => {
     const payload = await encryptMessage('secret message', 'my-password');
     expect(payload).toMatch(/^v2\$/);
-    expect(await decryptMessage(payload, 'my-password')).toBe(
-      'secret message'
-    );
+    expect(await decryptMessage(payload, 'my-password')).toBe('secret message');
   });
 
   it('produces a fresh payload per encryption (random salt/iv)', async () => {
@@ -24,7 +22,7 @@ describe('crypto utils', () => {
   it('rejects a v2 payload with the wrong password', async () => {
     const payload = await encryptMessage('secret message', 'my-password');
     await expectAsync(
-      decryptMessage(payload, 'wrong-password')
+      decryptMessage(payload, 'wrong-password'),
     ).toBeRejectedWithError('Password is incorrect');
   });
 
@@ -36,7 +34,7 @@ describe('crypto utils', () => {
   it('rejects a legacy payload with the wrong password', async () => {
     const legacy = AES.encrypt('legacy message', 'my-password').toString();
     await expectAsync(
-      decryptMessage(legacy, 'wrong-password')
+      decryptMessage(legacy, 'wrong-password'),
     ).toBeRejectedWithError('Password is incorrect');
   });
 
@@ -44,7 +42,7 @@ describe('crypto utils', () => {
     const message = 'hello world';
     const payload = await encryptMessage(message, 'pw');
     expect(payload.length).toBe(
-      encryptedPayloadLength(new TextEncoder().encode(message).length)
+      encryptedPayloadLength(new TextEncoder().encode(message).length),
     );
   });
 });

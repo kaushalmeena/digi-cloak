@@ -26,7 +26,7 @@ describe('Lock', () => {
     const input = element.querySelector<HTMLInputElement>('#image')!;
     setInputFile(input, createTestImageFile());
     await waitFor(fixture, () =>
-      element.querySelector('img[alt="Preview-Image"]')
+      element.querySelector('img[alt="Preview-Image"]'),
     );
   }
 
@@ -46,14 +46,16 @@ describe('Lock', () => {
     await chooseImage();
 
     const img = element.querySelector<HTMLImageElement>(
-      'img[alt="Preview-Image"]'
+      'img[alt="Preview-Image"]',
     );
     expect(img?.src).toMatch(/^data:image\/png;base64,/);
 
-    await waitFor(fixture, () => element.querySelector('[data-testid="capacity-meter"]'));
-    expect(element.querySelector('[data-testid="capacity-meter"]')?.textContent).toContain(
-      '/ ~'
+    await waitFor(fixture, () =>
+      element.querySelector('[data-testid="capacity-meter"]'),
     );
+    expect(
+      element.querySelector('[data-testid="capacity-meter"]')?.textContent,
+    ).toContain('/ ~');
   });
 
   it('clears the preview when the file selection is removed', async () => {
@@ -69,16 +71,16 @@ describe('Lock', () => {
     await chooseImage();
     submit('top secret', 'hunter2');
     await waitFor(fixture, () =>
-      element.querySelector('img[alt="Output-Image"]')
+      element.querySelector('img[alt="Output-Image"]'),
     );
 
     const outputImg = element.querySelector<HTMLImageElement>(
-      'img[alt="Output-Image"]'
+      'img[alt="Output-Image"]',
     )!;
     expect(outputImg.src).toMatch(/^data:image\/png;base64,/);
 
     const saveButton = element.querySelector<HTMLButtonElement>(
-      '[data-testid="save-button"]'
+      '[data-testid="save-button"]',
     )!;
     expect(saveButton.disabled).toBeFalse();
 
@@ -92,26 +94,32 @@ describe('Lock', () => {
     await waitFor(
       fixture,
       () =>
-        !element.querySelector<HTMLButtonElement>('[data-testid="compare-button"]')!.disabled
+        !element.querySelector<HTMLButtonElement>(
+          '[data-testid="compare-button"]',
+        )!.disabled,
     );
 
-    element.querySelector<HTMLButtonElement>('[data-testid="compare-button"]')!.click();
+    element
+      .querySelector<HTMLButtonElement>('[data-testid="compare-button"]')!
+      .click();
     fixture.detectChanges();
 
     const dialog = element.querySelector<HTMLDialogElement>('dialog')!;
     expect(dialog.open).toBeTrue();
     expect(
-      dialog.querySelector('app-compare img[alt="Encoded image"]')
+      dialog.querySelector('app-compare img[alt="Encoded image"]'),
     ).not.toBeNull();
   });
 
   it('shows an error in the snackbar when no image is chosen', async () => {
     submit('top secret', 'hunter2');
-    await waitFor(fixture, () => element.querySelector('[data-testid="snackbar"]'));
-
-    expect(element.querySelector('[data-testid="snackbar"]')?.textContent).toContain(
-      'Please choose an image first'
+    await waitFor(fixture, () =>
+      element.querySelector('[data-testid="snackbar"]'),
     );
+
+    expect(
+      element.querySelector('[data-testid="snackbar"]')?.textContent,
+    ).toContain('Please choose an image first');
   });
 
   it('triggers a download with a digicloak filename when Save is clicked', async () => {
@@ -120,11 +128,11 @@ describe('Lock', () => {
     await chooseImage();
     submit('top secret', 'hunter2');
     await waitFor(fixture, () =>
-      element.querySelector('img[alt="Output-Image"]')
+      element.querySelector('img[alt="Output-Image"]'),
     );
 
     const saveButton = element.querySelector<HTMLButtonElement>(
-      '[data-testid="save-button"]'
+      '[data-testid="save-button"]',
     )!;
     saveButton.click();
 

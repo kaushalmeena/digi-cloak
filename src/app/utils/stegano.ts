@@ -29,7 +29,7 @@ function containerLength(payloadLength: number): number {
 export function messageFits(
   width: number,
   height: number,
-  messageBytes: number
+  messageBytes: number,
 ): boolean {
   const bits =
     containerLength(encryptedPayloadLength(messageBytes)) * BITS_PER_CHAR;
@@ -62,7 +62,7 @@ function getFormattedMessage(message: string): string {
 
 export function encodePayloadIntoImageData(
   imageData: ImageData,
-  payload: string
+  payload: string,
 ): void {
   const formattedMessage = getFormattedMessage(payload);
 
@@ -100,7 +100,7 @@ export function encodePayloadIntoImageData(
 }
 
 function* getDecodedTextGenerator(
-  imageData: ImageData
+  imageData: ImageData,
 ): Generator<string, void, void> {
   let tempBits = '';
 
@@ -163,7 +163,7 @@ function getMessageLength(iterator: Generator<string, void, void>): number {
 
 function getMessageContent(
   contentLength: number,
-  iterator: Generator<string, void, void>
+  iterator: Generator<string, void, void>,
 ): string {
   let content = '';
   let result: IteratorResult<string, void>;
@@ -206,7 +206,7 @@ function loadImage(base64Image: string): Promise<HTMLImageElement> {
 }
 
 async function getImageDataFromBase64Image(
-  base64Image: string
+  base64Image: string,
 ): Promise<ImageData> {
   const imageEl = await loadImage(base64Image);
 
@@ -240,7 +240,7 @@ function getBase64ImageFromImageData(imageData: ImageData): string {
 export const getEncodedBase64Image = async (
   base64Image: string,
   message: string,
-  password: string
+  password: string,
 ): Promise<string> => {
   const imageData = await getImageDataFromBase64Image(base64Image);
   const payload = await encryptMessage(message, password);
@@ -250,7 +250,7 @@ export const getEncodedBase64Image = async (
 
 export const getDecodedMessage = async (
   base64Image: string,
-  password: string
+  password: string,
 ): Promise<string> => {
   const imageData = await getImageDataFromBase64Image(base64Image);
   const payload = extractPayloadFromImageData(imageData);

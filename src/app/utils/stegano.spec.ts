@@ -7,7 +7,7 @@ describe('steganography utils', () => {
     const encoded = await getEncodedBase64Image(
       image,
       'secret message',
-      'my-password'
+      'my-password',
     );
     const decoded = await getDecodedMessage(encoded, 'my-password');
     expect(decoded).toBe('secret message');
@@ -18,17 +18,17 @@ describe('steganography utils', () => {
     const encoded = await getEncodedBase64Image(
       image,
       'secret message',
-      'my-password'
+      'my-password',
     );
     await expectAsync(
-      getDecodedMessage(encoded, 'wrong-password')
+      getDecodedMessage(encoded, 'wrong-password'),
     ).toBeRejectedWithError('Password is incorrect');
   });
 
   it('rejects decoding an image with no hidden message', async () => {
     const image = createTestImage();
     await expectAsync(
-      getDecodedMessage(image, 'my-password')
+      getDecodedMessage(image, 'my-password'),
     ).toBeRejectedWithError('Message not found in the image');
   });
 
@@ -36,7 +36,7 @@ describe('steganography utils', () => {
     const image = createTestImage(2);
     const hugeMessage = 'x'.repeat(1000);
     await expectAsync(
-      getEncodedBase64Image(image, hugeMessage, 'my-password')
+      getEncodedBase64Image(image, hugeMessage, 'my-password'),
     ).toBeRejectedWithError('Message length is too large to hide in image');
   });
 });

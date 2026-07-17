@@ -34,14 +34,14 @@ function fromBase64(value: string): Uint8Array {
 
 async function deriveKey(
   password: string,
-  salt: Uint8Array
+  salt: Uint8Array,
 ): Promise<CryptoKey> {
   const material = await crypto.subtle.importKey(
     'raw',
     new TextEncoder().encode(password),
     'PBKDF2',
     false,
-    ['deriveKey']
+    ['deriveKey'],
   );
   return crypto.subtle.deriveKey(
     {
@@ -53,13 +53,13 @@ async function deriveKey(
     material,
     { name: 'AES-GCM', length: 256 },
     false,
-    ['encrypt', 'decrypt']
+    ['encrypt', 'decrypt'],
   );
 }
 
 export async function encryptMessage(
   message: string,
-  password: string
+  password: string,
 ): Promise<string> {
   const salt = crypto.getRandomValues(new Uint8Array(SALT_BYTES));
   const iv = crypto.getRandomValues(new Uint8Array(IV_BYTES));
@@ -67,7 +67,7 @@ export async function encryptMessage(
   const ciphertext = await crypto.subtle.encrypt(
     { name: 'AES-GCM', iv: iv as BufferSource },
     key,
-    new TextEncoder().encode(message)
+    new TextEncoder().encode(message),
   );
   return [
     'v2',
@@ -79,7 +79,7 @@ export async function encryptMessage(
 
 export async function decryptMessage(
   payload: string,
-  password: string
+  password: string,
 ): Promise<string> {
   if (!payload.startsWith(V2_PREFIX)) {
     return decryptLegacyMessage(payload, password);
@@ -95,7 +95,7 @@ export async function decryptMessage(
     const plaintext = await crypto.subtle.decrypt(
       { name: 'AES-GCM', iv: fromBase64(iv) as BufferSource },
       key,
-      fromBase64(ciphertext) as BufferSource
+      fromBase64(ciphertext) as BufferSource,
     );
     return new TextDecoder().decode(plaintext);
   } catch {

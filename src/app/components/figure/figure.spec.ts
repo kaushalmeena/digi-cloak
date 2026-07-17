@@ -5,7 +5,11 @@ import { Figure } from './figure';
 
 @Component({
   imports: [Figure],
-  template: `<app-figure label="Test Label" [source]="source()" alt="Test-Image" />`,
+  template: `<app-figure
+    label="Test Label"
+    [source]="source()"
+    alt="Test-Image"
+  />`,
 })
 class Host {
   readonly source = signal('');
@@ -28,23 +32,33 @@ describe('Figure', () => {
   });
 
   it('renders the label', () => {
-    expect(element.querySelector('[data-testid="figure-label"]')?.textContent).toBe(
-      'Test Label'
-    );
+    expect(
+      element
+        .querySelector('[data-testid="figure-label"]')
+        ?.textContent?.trim(),
+    ).toBe('Test Label');
   });
 
   it('shows a placeholder icon when there is no image source', () => {
-    expect(element.querySelector('[data-testid="figure-media"] svg')).not.toBeNull();
-    expect(element.querySelector('[data-testid="figure-media"] img')).toBeNull();
+    expect(
+      element.querySelector('[data-testid="figure-media"] svg'),
+    ).not.toBeNull();
+    expect(
+      element.querySelector('[data-testid="figure-media"] img'),
+    ).toBeNull();
   });
 
   it('shows the image once a source is set', () => {
     host.source.set('data:image/png;base64,abc123');
     fixture.detectChanges();
 
-    const img = element.querySelector<HTMLImageElement>('[data-testid="figure-media"] img');
+    const img = element.querySelector<HTMLImageElement>(
+      '[data-testid="figure-media"] img',
+    );
     expect(img).not.toBeNull();
     expect(img?.alt).toBe('Test-Image');
-    expect(element.querySelector('[data-testid="figure-media"] svg')).toBeNull();
+    expect(
+      element.querySelector('[data-testid="figure-media"] svg'),
+    ).toBeNull();
   });
 });

@@ -13,7 +13,7 @@ export function createTestImage(size = 50): string {
 export function dataUrlToFile(
   dataUrl: string,
   name: string,
-  type: string
+  type: string,
 ): File {
   const base64 = dataUrl.split(',')[1];
   const binary = atob(base64);
@@ -28,10 +28,7 @@ export function createTestImageFile(): File {
   return dataUrlToFile(createTestImage(), 'test.png', 'image/png');
 }
 
-export function setInputFile(
-  input: HTMLInputElement,
-  file: File | null
-): void {
+export function setInputFile(input: HTMLInputElement, file: File | null): void {
   const dataTransfer = new DataTransfer();
   if (file) {
     dataTransfer.items.add(file);
@@ -49,7 +46,7 @@ export async function flush(fixture: ComponentFixture<unknown>): Promise<void> {
 export async function waitFor(
   fixture: ComponentFixture<unknown>,
   predicate: () => unknown,
-  timeoutMs = 8000
+  timeoutMs = 8000,
 ): Promise<void> {
   const start = Date.now();
   fixture.detectChanges();

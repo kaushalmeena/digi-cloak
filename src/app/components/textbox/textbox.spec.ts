@@ -31,7 +31,7 @@ describe('Textbox', () => {
     await create(false);
     const received: string[] = [];
     fixture.componentInstance.valueChange.subscribe((value) =>
-      received.push(value)
+      received.push(value),
     );
 
     const textarea = element.querySelector<HTMLTextAreaElement>('textarea')!;
@@ -58,8 +58,8 @@ describe('Textbox', () => {
     fixture.componentRef.setInput('value', 'decoded text');
     fixture.detectChanges();
 
-    expect(
-      element.querySelector<HTMLTextAreaElement>('textarea')!.value
-    ).toBe('decoded text');
+    expect(element.querySelector<HTMLTextAreaElement>('textarea')!.value).toBe(
+      'decoded text',
+    );
   });
 });

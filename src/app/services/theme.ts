@@ -20,7 +20,7 @@ function storeDarkMode(value: boolean): void {
 export class Theme implements OnDestroy {
   private readonly media = window.matchMedia('(prefers-color-scheme: dark)');
   private readonly darkModeSignal = signal(
-    fetchStoredDarkMode() ?? fetchSystemDarkMode()
+    fetchStoredDarkMode() ?? fetchSystemDarkMode(),
   );
 
   readonly darkMode = this.darkModeSignal.asReadonly();

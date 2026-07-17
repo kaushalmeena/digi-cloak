@@ -12,11 +12,17 @@ class FakeMediaQueryList {
     this.matches = matches;
   }
 
-  addEventListener(_type: string, listener: (event: MediaQueryListEvent) => void) {
+  addEventListener(
+    _type: string,
+    listener: (event: MediaQueryListEvent) => void,
+  ) {
     this.listeners.push(listener);
   }
 
-  removeEventListener(_type: string, listener: (event: MediaQueryListEvent) => void) {
+  removeEventListener(
+    _type: string,
+    listener: (event: MediaQueryListEvent) => void,
+  ) {
     this.listeners = this.listeners.filter((l) => l !== listener);
   }
 
@@ -33,7 +39,7 @@ describe('Theme', () => {
   function createService(systemPrefersDark: boolean): Theme {
     media = new FakeMediaQueryList(systemPrefersDark);
     spyOn(window, 'matchMedia').and.returnValue(
-      media as unknown as MediaQueryList
+      media as unknown as MediaQueryList,
     );
     return TestBed.inject(Theme);
   }

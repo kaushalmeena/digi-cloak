@@ -18,16 +18,16 @@ describe('Dropzone', () => {
     fixture.componentRef.setInput('label', 'Image');
     received = [];
     fixture.componentInstance.fileChange.subscribe((file) =>
-      received.push(file)
+      received.push(file),
     );
     element = fixture.nativeElement;
     fixture.detectChanges();
   });
 
   it('shows the browse hint by default', () => {
-    expect(element.querySelector('[data-testid="dropzone"]')?.textContent).toContain(
-      'click to browse'
-    );
+    expect(
+      element.querySelector('[data-testid="dropzone"]')?.textContent,
+    ).toContain('click to browse');
   });
 
   it('emits the file and shows its info when chosen via the input', () => {
@@ -37,9 +37,9 @@ describe('Dropzone', () => {
 
     expect(received.length).toBe(1);
     expect(received[0]?.name).toBe('test.png');
-    expect(element.querySelector('[data-testid="file-info"]')?.textContent).toContain(
-      'test.png'
-    );
+    expect(
+      element.querySelector('[data-testid="file-info"]')?.textContent,
+    ).toContain('test.png');
   });
 
   it('emits the file on drop', () => {
@@ -71,7 +71,7 @@ describe('Dropzone', () => {
   it('ignores non-image drops', () => {
     const dataTransfer = new DataTransfer();
     dataTransfer.items.add(
-      new File(['plain'], 'notes.txt', { type: 'text/plain' })
+      new File(['plain'], 'notes.txt', { type: 'text/plain' }),
     );
     const drop = new DragEvent('drop', { dataTransfer });
 

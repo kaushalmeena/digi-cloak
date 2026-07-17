@@ -1,10 +1,10 @@
-<div class="flex items-baseline justify-between mt-4 mb-2.5">
+<div class="mt-4 mb-2.5 flex items-baseline justify-between">
   <label class="text-base" [for]="inputId()">{{ label() }}</label>
 </div>
 <button
   type="button"
   data-testid="dropzone"
-  class="flex flex-col items-center justify-center gap-1 w-full min-h-[120px] px-4 py-3 rounded-[3px] bg-muted text-foreground cursor-pointer text-sm border-2 border-dashed transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2"
+  class="flex min-h-[120px] w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-[3px] border-2 border-dashed bg-muted px-4 py-3 text-sm text-foreground focus-visible:outline-2 focus-visible:outline-offset-2"
   [class]="dragging() ? 'border-foreground/60' : 'border-border'"
   (click)="fileInput.click()"
   (dragover)="onDragOver($event)"
@@ -14,12 +14,13 @@
   @if (file()) {
     <span
       data-testid="file-info"
-      class="font-medium break-all transition-opacity duration-300 starting:opacity-0 motion-reduce:transition-none"
-    >{{ fileInfo() }}</span>
+      class="font-medium break-all transition-opacity duration-300 motion-reduce:transition-none starting:opacity-0"
+      >{{ fileInfo() }}</span
+    >
     <span class="opacity-55">Click, drop, or paste to replace</span>
   } @else {
     <svg
-      class="h-8 w-8 opacity-55 fill-foreground"
+      class="h-8 w-8 fill-foreground opacity-55"
       viewBox="0 0 24 24"
       aria-hidden="true"
     >

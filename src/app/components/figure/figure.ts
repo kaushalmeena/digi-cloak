@@ -3,18 +3,23 @@ import { Component, input } from '@angular/core';
 @Component({
   selector: 'app-figure',
   template: `
-    <div data-testid="figure-label" class="mt-4 mb-2.5 text-base">{{ label() }}</div>
+    <div data-testid="figure-label" class="mt-4 mb-2.5 text-base">
+      {{ label() }}
+    </div>
     <div class="relative rounded-[3px] bg-background ring-1 ring-border">
-      <div data-testid="figure-media" class="flex items-center justify-center h-[210px]">
+      <div
+        data-testid="figure-media"
+        class="flex h-[210px] items-center justify-center"
+      >
         @if (source()) {
           <img
-            class="max-w-full h-[210px] transition-opacity duration-300 starting:opacity-0 motion-reduce:transition-none"
+            class="h-[210px] max-w-full transition-opacity duration-300 motion-reduce:transition-none starting:opacity-0"
             [alt]="alt()"
             [src]="source()"
           />
         } @else {
           <svg
-            class="h-[52px] w-[52px] opacity-55 fill-foreground"
+            class="h-[52px] w-[52px] fill-foreground opacity-55"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 512 512"
             aria-hidden="true"

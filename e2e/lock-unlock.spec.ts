@@ -5,9 +5,7 @@ import { createTestPng } from './test-png';
 const SECRET = 'e2e secret message';
 const PASSWORD = 'correct horse battery';
 
-test('locks a message into an image and unlocks it again', async ({
-  page,
-}) => {
+test('locks a message into an image and unlocks it again', async ({ page }) => {
   await page.goto('/#/lock');
 
   await page.fill('#message', SECRET);
@@ -72,6 +70,6 @@ test('shows an error for a wrong password', async ({ page }) => {
 
   await expect(page.locator('[data-testid="snackbar"]')).toContainText(
     'Password is incorrect',
-    { timeout: 30_000 }
+    { timeout: 30_000 },
   );
 });

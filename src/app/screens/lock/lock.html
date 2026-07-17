@@ -15,7 +15,7 @@
       @if (capacity(); as cap) {
         <span
           data-testid="capacity-meter"
-          class="text-xs transition duration-300 starting:opacity-0 motion-reduce:transition-none"
+          class="text-xs transition duration-300 motion-reduce:transition-none starting:opacity-0"
           [class.opacity-70]="fits()"
           [class.text-destructive]="!fits()"
           [attr.title]="
@@ -28,10 +28,10 @@
         </span>
       }
     </app-textbox>
-    <div class="flex flex-wrap items-center justify-center mt-[36px] gap-2.5">
+    <div class="mt-[36px] flex flex-wrap items-center justify-center gap-2.5">
       <button
         type="submit"
-        class="max-md:w-full inline-flex items-center justify-center px-4 min-w-[150px] min-h-[50px] rounded-[3px] bg-primary text-primary-foreground text-lg cursor-pointer transition duration-300 hover:opacity-90 disabled:opacity-55 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2"
+        class="inline-flex min-h-[50px] min-w-[150px] cursor-pointer items-center justify-center rounded-[3px] bg-primary px-4 text-lg text-primary-foreground transition duration-300 hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-55 max-md:w-full"
         [disabled]="busy() || !fits()"
         [attr.aria-busy]="busy()"
       >
@@ -44,7 +44,7 @@
       <button
         type="button"
         data-testid="save-button"
-        class="max-md:w-full inline-flex items-center justify-center px-4 min-w-[150px] min-h-[50px] rounded-[3px] bg-secondary text-secondary-foreground ring-1 ring-border text-lg cursor-pointer transition duration-300 hover:bg-accent active:bg-muted disabled:bg-disabled disabled:opacity-55 disabled:cursor-not-allowed disabled:outline-none focus-visible:outline-2 focus-visible:outline-offset-2"
+        class="inline-flex min-h-[50px] min-w-[150px] cursor-pointer items-center justify-center rounded-[3px] bg-secondary px-4 text-lg text-secondary-foreground ring-1 ring-border transition duration-300 hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 active:bg-muted disabled:cursor-not-allowed disabled:bg-disabled disabled:opacity-55 disabled:outline-none max-md:w-full"
         [disabled]="!encodedImageSource() || busy()"
         (click)="handleSave()"
       >
@@ -53,7 +53,7 @@
       <button
         type="button"
         data-testid="compare-button"
-        class="max-md:w-full inline-flex items-center justify-center px-4 min-w-[150px] min-h-[50px] rounded-[3px] bg-secondary text-secondary-foreground ring-1 ring-border text-lg cursor-pointer transition duration-300 hover:bg-accent active:bg-muted disabled:bg-disabled disabled:opacity-55 disabled:cursor-not-allowed disabled:outline-none focus-visible:outline-2 focus-visible:outline-offset-2"
+        class="inline-flex min-h-[50px] min-w-[150px] cursor-pointer items-center justify-center rounded-[3px] bg-secondary px-4 text-lg text-secondary-foreground ring-1 ring-border transition duration-300 hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 active:bg-muted disabled:cursor-not-allowed disabled:bg-disabled disabled:opacity-55 disabled:outline-none max-md:w-full"
         [disabled]="!encodedImageSource() || busy()"
         (click)="openCompare()"
       >
@@ -72,7 +72,7 @@
       alt="Output-Image"
       [source]="encodedImageSource()"
     />
-    <p class="mt-4 text-xs text-center opacity-70">
+    <p class="mt-4 text-center text-xs opacity-70">
       The encoded image is saved as PNG. Re-compressing or converting it (for
       example to JPEG) will destroy the hidden message.
     </p>
@@ -82,14 +82,14 @@
 <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -->
 <dialog
   #compareDialog
-  class="m-auto p-0 w-[min(94vw,1100px)] bg-transparent overflow-visible opacity-0 scale-95 translate-y-4 transition-[opacity,scale,translate,overlay,display] transition-discrete duration-300 ease-out open:opacity-100 open:scale-100 open:translate-y-0 starting:open:opacity-0 starting:open:scale-95 starting:open:translate-y-4 backdrop:bg-black/0 backdrop:transition-[background-color,overlay,display] backdrop:transition-discrete backdrop:duration-300 open:backdrop:bg-black/60 starting:open:backdrop:bg-black/0 motion-reduce:transition-none motion-reduce:backdrop:transition-none"
+  class="m-auto w-[min(94vw,1100px)] translate-y-4 scale-95 overflow-visible bg-transparent p-0 opacity-0 transition-[opacity,scale,translate,overlay,display] transition-discrete duration-300 ease-out backdrop:bg-black/0 backdrop:transition-[background-color,overlay,display] backdrop:transition-discrete backdrop:duration-300 open:translate-y-0 open:scale-100 open:opacity-100 open:backdrop:bg-black/60 motion-reduce:transition-none motion-reduce:backdrop:transition-none starting:open:translate-y-4 starting:open:scale-95 starting:open:opacity-0 starting:open:backdrop:bg-black/0"
   aria-label="Compare original and encoded image"
   (click)="onDialogClick($event)"
 >
   <div class="relative">
     <button
       type="button"
-      class="absolute -top-10 right-0 flex items-center justify-center h-8 w-8 rounded-full border-none bg-transparent cursor-pointer stroke-white opacity-80 transition-opacity duration-300 hover:opacity-100 focus-visible:outline-2 focus-visible:outline-offset-2"
+      class="absolute -top-10 right-0 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border-none bg-transparent stroke-white opacity-80 transition-opacity duration-300 hover:opacity-100 focus-visible:outline-2 focus-visible:outline-offset-2"
       aria-label="Close comparison"
       (click)="closeCompare()"
     >

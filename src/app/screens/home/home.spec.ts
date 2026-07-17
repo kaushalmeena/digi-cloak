@@ -25,7 +25,7 @@ describe('Home', () => {
 
   it('links to the lock and unlock screens', () => {
     const links: HTMLAnchorElement[] = Array.from(
-      fixture.nativeElement.querySelectorAll('a')
+      fixture.nativeElement.querySelectorAll('a'),
     );
     expect(links.map((link) => link.getAttribute('href'))).toEqual([
       '/lock',
