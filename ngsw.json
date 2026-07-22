@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1784277139379,
+  "timestamp": 1784743212703,
   "index": "/digi-cloak/index.html",
   "assetGroups": [
     {
@@ -21,7 +21,7 @@
         "/digi-cloak/main-CGJJE5TU.js",
         "/digi-cloak/manifest.webmanifest",
         "/digi-cloak/polyfills-7R4CRVNH.js",
-        "/digi-cloak/styles-2BBANMR4.css",
+        "/digi-cloak/styles-FIJTN4WO.css",
         "/digi-cloak/worker-FFYBHO3I.js"
       ],
       "patterns": []
@@ -66,11 +66,11 @@
     "/digi-cloak/icons/icon-512x512.png": "2323e90d86430d0532a47bcf024db05605c772f5",
     "/digi-cloak/icons/icon-72x72.png": "2e6fe7cc4de750ac06cc55f2e139ccf564307dd7",
     "/digi-cloak/icons/icon-96x96.png": "76ac3bb16125ac4162ed0df1c551e565cead13b3",
-    "/digi-cloak/index.html": "b5fc055677556af3958b4ca1f1576e12b03efdf2",
+    "/digi-cloak/index.html": "d14ff48bc727bbe5cd90180eaeb4275e1f007c95",
     "/digi-cloak/main-CGJJE5TU.js": "b6a6936865ece6fb6a67041ea7b070e8891281c1",
     "/digi-cloak/manifest.webmanifest": "2099cffeaea8227a402f25e3702d3b81f2938555",
     "/digi-cloak/polyfills-7R4CRVNH.js": "f2241e9a25858f895ce299d15f6f22e849e2fd72",
-    "/digi-cloak/styles-2BBANMR4.css": "6262a22b6b1b062939198a775450fe1a86df8a0d",
+    "/digi-cloak/styles-FIJTN4WO.css": "d3066a6bbf4b970404e388dc7604fb1a5a899556",
     "/digi-cloak/worker-FFYBHO3I.js": "891eec7856767b947a5fad8ad3bf91a99ddcb754"
   },
   "navigationUrls": [
