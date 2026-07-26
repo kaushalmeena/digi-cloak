@@ -1,0 +1,100 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # Pull requests run `verify` and `build` only. Nothing is published from a branch.
+  pull_request:
+  # Lets a deploy be re-run from the Actions tab without an empty commit.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  # Deliberately not cancelling: a half-applied Pages deployment leaves the site in an
+  # unknown state, and these runs are short enough that queueing costs little.
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Lint, test, e2e
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm exec ng lint
+
+      # Chrome's sandbox needs unprivileged user namespaces, which recent
+      # Ubuntu runner images restrict via AppArmor; relax it for headless tests.
+      - run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0 || true
+
+      - name: Test
+        run: pnpm exec ng test --watch=false --browsers=ChromeHeadless
+
+      - run: pnpm exec playwright install --with-deps chromium
+
+      - name: E2E
+        run: pnpm exec playwright test
+
+  build:
+    name: Build
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # Must run *before* the build, which is the opposite of the usual ordering: it
+      # resolves the path the site will be served from, and the build bakes that into
+      # asset URLs, the service worker's precache list and the worker's scope.
+      - uses: actions/configure-pages@v5
+        id: pages
+
+      # `base_path` comes back without a trailing slash ("/digi-cloak", or "" for a
+      # user site); Angular's --base-href needs one.
+      - run: pnpm exec ng build --base-href=${{ steps.pages.outputs.base_path }}/
+
+      - name: Add SPA fallback
+        # Pages has no rewrite rules, so a deep link 404s on a cold visit — before the
+        # service worker exists to serve the shell. Using index.html as the 404 page
+        # makes the first visit to any path work.
+        run: cp dist/browser/index.html dist/browser/404.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/browser
+
+  deploy:
+    name: Deploy
+    # Only from main; a pull request stops after `build`.
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
