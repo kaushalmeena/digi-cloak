@@ -1,7 +1,7 @@
 @if (visible()) {
   <div
     data-testid="snackbar"
-    class="fixed right-0 bottom-0 m-5 flex w-[calc(100vw-40px)] origin-center items-center justify-between rounded border-l-4 bg-primary px-3.5 py-2.5 text-primary-foreground shadow-[0_3px_5px_-1px_#00000033,0_6px_10px_#00000024,0_1px_18px_#0000001f] sm:w-auto sm:max-w-md sm:min-w-[344px]"
+    class="fixed right-0 bottom-0 m-5 flex w-[calc(100vw-40px)] origin-center items-center justify-between rounded-sm border-l-4 bg-primary px-3.5 py-2.5 text-primary-foreground shadow-[0_3px_5px_-1px_#00000033,0_6px_10px_#00000024,0_1px_18px_#0000001f] sm:w-auto sm:max-w-md sm:min-w-[344px]"
     [class.border-destructive]="kind() === 'error'"
     [class.border-success]="kind() === 'success'"
     [class.border-transparent]="kind() === 'info'"

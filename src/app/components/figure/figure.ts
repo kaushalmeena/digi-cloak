@@ -19,7 +19,7 @@ import { Component, input } from '@angular/core';
           />
         } @else {
           <svg
-            class="h-[52px] w-[52px] fill-foreground opacity-55"
+            class="size-[52px] fill-foreground opacity-55"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 512 512"
             aria-hidden="true"
