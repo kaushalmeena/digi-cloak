@@ -98,6 +98,12 @@ Your app should now be running on [localhost:4200](http://localhost:4200/).
 
 ### Testing
 
+To lint, check formatting and typecheck together:
+
+```bash
+pnpm check
+```
+
 To run the unit tests:
 
 ```bash
@@ -109,18 +115,6 @@ To run the end-to-end tests (Playwright):
 ```bash
 pnpm exec playwright install chromium   # first time only
 pnpm e2e
-```
-
-To lint the project:
-
-```bash
-pnpm lint
-```
-
-To format the code with Prettier:
-
-```bash
-pnpm format
 ```
 
 ### Building
