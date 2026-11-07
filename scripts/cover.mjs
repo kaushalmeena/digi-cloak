@@ -5,7 +5,7 @@
  * as the app shows it after a message is hidden. Colours match the app's
  * light theme and its default teal accent.
  *
- * Usage: node scripts/generate-og-image.mjs
+ * Usage: node scripts/cover.mjs
  */
 import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';

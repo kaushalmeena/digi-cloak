@@ -1,6 +1,6 @@
 /**
  * Regenerates the favicon and public/icons/icon-*.png from the brand mark.
- * Usage: node scripts/generate-icons.mjs
+ * Usage: node scripts/icons.mjs
  */
 import { mkdir, writeFile } from 'node:fs/promises';
 
