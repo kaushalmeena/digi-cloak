@@ -1,4 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+
+import { Icon } from '../../components/icon/icon';
+import { Intro } from '../../components/intro/intro';
 
 interface FaqAnswerBlock {
   heading?: string;
@@ -23,11 +26,11 @@ const FAQ_ENTRIES: FaqEntry[] = [
     question: 'How does it work?',
     answer: [
       {
-        heading: 'For locking:',
+        heading: 'Hiding:',
         text: 'You need to provide a message, password and image. Your message is encrypted into unreadable ciphertext using AES (Advanced Encryption Standard) encryption with the help of a password. Then ciphertext is hidden in the image using the LSB (Least Significant Bit) steganography technique in such a way that the image is unaffected.',
       },
       {
-        heading: 'For unlocking:',
+        heading: 'Revealing:',
         text: 'You need to provide a password and image (in which the message is hidden). The hidden ciphertext is extracted from the image using the LSB steganography technique. Then ciphertext is decrypted into a readable message using an AES decryption with the help of a password.',
       },
     ],
@@ -76,7 +79,8 @@ const FAQ_ENTRIES: FaqEntry[] = [
 
 @Component({
   selector: 'app-faqs',
-  imports: [],
+  imports: [Icon, Intro],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './faqs.html',
 })
 export class Faqs {
