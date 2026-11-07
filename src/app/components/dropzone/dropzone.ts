@@ -96,7 +96,9 @@ export class Dropzone {
     this.loadError.set('');
     this.linkMode.set(true);
     // Focus once the input has rendered.
-    setTimeout(() => this.linkField()?.nativeElement.focus());
+    setTimeout(() =>
+      this.linkField()?.nativeElement.focus({ preventScroll: true }),
+    );
   }
 
   protected handleCancelLink(): void {

@@ -66,111 +66,119 @@
       </button>
     }
   </div>
-  @if (linkMode()) {
-    <div
-      class="flex h-14 items-center gap-2 px-3"
-      animate.enter="animate-fade-in motion-reduce:animate-none"
-    >
-      <app-icon class="text-muted-foreground" name="link" [size]="18" />
-      <label class="sr-only" [for]="inputId() + '-link'">Image link</label>
-      <input
-        #linkField
-        type="url"
-        inputmode="url"
-        class="field-input min-w-0 flex-1 py-1 text-sm"
-        placeholder="https://example.com/image.png"
-        [id]="inputId() + '-link'"
-        (keydown.enter)="onLinkEnter($event)"
-        (keydown.escape)="handleCancelLink()"
-      />
-      <button
-        type="button"
-        data-testid="load-link"
-        class="btn btn-primary min-h-8 px-3 text-xs"
-        [disabled]="loading()"
-        (click)="handleLoadLink()"
+  <!-- One fixed-height slot: the file row and the link row crossfade in place. -->
+  <div class="grid h-14 grid-cols-[minmax(0,1fr)] grid-rows-[minmax(0,1fr)]">
+    @if (linkMode()) {
+      <div
+        class="col-start-1 row-start-1 flex items-center gap-2 bg-card px-3"
+        animate.enter="animate-fade-in motion-reduce:animate-none"
+        animate.leave="animate-fade-out motion-reduce:animate-none"
       >
-        @if (loading()) {
-          <app-loader [size]="13" />
-        }
-        Load
-      </button>
-      <button
-        type="button"
-        class="btn btn-ghost btn-icon size-8 min-h-8"
-        aria-label="Cancel loading from a link"
-        (click)="handleCancelLink()"
-      >
-        <app-icon name="x" [size]="16" />
-      </button>
-    </div>
-  } @else {
-    <div class="flex h-14 items-center gap-3 px-3">
-      <app-icon class="text-muted-foreground" name="image-up" [size]="18" />
-      <div class="grid min-w-0 flex-1">
-        @if (file(); as chosen) {
-          <div
-            class="col-start-1 row-start-1 min-w-0"
-            animate.enter="animate-fade-in motion-reduce:animate-none"
-            animate.leave="animate-fade-out motion-reduce:animate-none"
-          >
-            <p data-testid="file-info" class="truncate text-sm font-medium">
-              {{ chosen.name }}
-            </p>
-            <p class="truncate text-xs text-muted-foreground tabular-nums">
-              {{ fileMeta() }}
-            </p>
-          </div>
-        } @else {
-          <div
-            class="col-start-1 row-start-1 min-w-0"
-            animate.enter="animate-fade-in motion-reduce:animate-none"
-            animate.leave="animate-fade-out motion-reduce:animate-none"
-          >
-            <p class="truncate text-sm text-muted-foreground">
-              No image selected
-            </p>
-            <p class="truncate text-xs text-muted-foreground">
-              {{ formats() }}
-            </p>
-          </div>
-        }
+        <app-icon class="text-muted-foreground" name="link" [size]="18" />
+        <label class="sr-only" [for]="inputId() + '-link'">Image link</label>
+        <input
+          #linkField
+          type="url"
+          inputmode="url"
+          class="field-input min-w-0 flex-1 py-1 text-sm"
+          placeholder="https://example.com/image.png"
+          [id]="inputId() + '-link'"
+          (keydown.enter)="onLinkEnter($event)"
+          (keydown.escape)="handleCancelLink()"
+        />
+        <button
+          type="button"
+          data-testid="load-link"
+          class="btn btn-primary min-h-8 px-3 text-xs"
+          [disabled]="loading()"
+          (click)="handleLoadLink()"
+        >
+          @if (loading()) {
+            <app-loader [size]="13" />
+          }
+          Load
+        </button>
+        <button
+          type="button"
+          class="btn btn-ghost btn-icon size-8 min-h-8"
+          aria-label="Cancel loading from a link"
+          (click)="handleCancelLink()"
+        >
+          <app-icon name="x" [size]="16" />
+        </button>
       </div>
-      <div class="flex items-center gap-1">
-        @if (canPaste) {
+    } @else {
+      <div
+        class="col-start-1 row-start-1 flex items-center gap-3 bg-card px-3"
+        animate.enter="animate-fade-in motion-reduce:animate-none"
+        animate.leave="animate-fade-out motion-reduce:animate-none"
+      >
+        <app-icon class="text-muted-foreground" name="image-up" [size]="18" />
+        <div class="grid min-w-0 flex-1">
+          @if (file(); as chosen) {
+            <div
+              class="col-start-1 row-start-1 min-w-0"
+              animate.enter="animate-fade-in motion-reduce:animate-none"
+              animate.leave="animate-fade-out motion-reduce:animate-none"
+            >
+              <p data-testid="file-info" class="truncate text-sm font-medium">
+                {{ chosen.name }}
+              </p>
+              <p class="truncate text-xs text-muted-foreground tabular-nums">
+                {{ fileMeta() }}
+              </p>
+            </div>
+          } @else {
+            <div
+              class="col-start-1 row-start-1 min-w-0"
+              animate.enter="animate-fade-in motion-reduce:animate-none"
+              animate.leave="animate-fade-out motion-reduce:animate-none"
+            >
+              <p class="truncate text-sm text-muted-foreground">
+                No image selected
+              </p>
+              <p class="truncate text-xs text-muted-foreground">
+                {{ formats() }}
+              </p>
+            </div>
+          }
+        </div>
+        <div class="flex items-center gap-1">
+          @if (canPaste) {
+            <button
+              type="button"
+              data-testid="paste-image"
+              class="btn btn-ghost btn-icon size-8 min-h-8"
+              aria-label="Paste image from clipboard"
+              title="Paste image from clipboard"
+              [disabled]="loading()"
+              (click)="handlePasteClick()"
+            >
+              <app-icon name="clipboard" [size]="16" />
+            </button>
+          }
           <button
             type="button"
-            data-testid="paste-image"
+            data-testid="link-image"
             class="btn btn-ghost btn-icon size-8 min-h-8"
-            aria-label="Paste image from clipboard"
-            title="Paste image from clipboard"
+            aria-label="Load image from a link"
+            title="Load image from a link"
             [disabled]="loading()"
-            (click)="handlePasteClick()"
+            (click)="handleOpenLink()"
           >
-            <app-icon name="clipboard" [size]="16" />
+            <app-icon name="link" [size]="16" />
           </button>
-        }
-        <button
-          type="button"
-          data-testid="link-image"
-          class="btn btn-ghost btn-icon size-8 min-h-8"
-          aria-label="Load image from a link"
-          title="Load image from a link"
-          [disabled]="loading()"
-          (click)="handleOpenLink()"
-        >
-          <app-icon name="link" [size]="16" />
-        </button>
-        <button
-          type="button"
-          class="btn btn-secondary ml-1 min-h-8 min-w-20 px-3 text-xs"
-          (click)="handleBrowse()"
-        >
-          {{ file() ? 'Replace' : 'Browse' }}
-        </button>
+          <button
+            type="button"
+            class="btn btn-secondary ml-1 min-h-8 min-w-20 px-3 text-xs"
+            (click)="handleBrowse()"
+          >
+            {{ file() ? 'Replace' : 'Browse' }}
+          </button>
+        </div>
       </div>
-    </div>
-  }
+    }
+  </div>
 </div>
 <app-collapse [open]="!!loadError()">
   <p
