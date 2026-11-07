@@ -1,79 +1,108 @@
-<div class="mb-2 flex items-baseline justify-between gap-3">
+<div class="mb-2 flex h-5 items-baseline justify-between gap-3">
   <label class="field-label" [for]="inputId()">{{ label() }}</label>
   @if (file()) {
     <button
       type="button"
       data-testid="remove-image"
       class="cursor-pointer rounded-sm text-xs text-muted-foreground transition-colors duration-150 hover:text-foreground"
+      animate.enter="animate-fade-in motion-reduce:animate-none"
+      animate.leave="animate-fade-out motion-reduce:animate-none"
       (click)="handleRemove()"
     >
       Remove
     </button>
   }
 </div>
+<!-- Empty and filled states share one frame (stage + file row) so choosing an image never changes its height. -->
 <div
-  class="rounded-xl transition-shadow duration-150"
+  class="panel overflow-hidden transition-[box-shadow,border-color] duration-150"
+  [class.border-primary]="dragging()"
   [class.ring-2]="dragging()"
   [class.ring-primary]="dragging()"
   (dragover)="onDragOver($event)"
   (dragleave)="onDragLeave($event)"
   (drop)="onDrop($event)"
 >
-  @if (file()) {
-    <div class="panel overflow-hidden">
-      <div
-        data-testid="image-preview"
-        class="checkerboard flex h-56 items-center justify-center border-b border-border p-3 sm:h-64"
+  <div
+    data-testid="image-preview"
+    class="relative grid h-56 grid-cols-[minmax(0,1fr)] grid-rows-[minmax(0,1fr)] border-b border-border sm:h-64"
+  >
+    <div
+      class="checkerboard absolute inset-0 transition-opacity duration-300"
+      [class.opacity-0]="!preview()"
+      aria-hidden="true"
+    ></div>
+    @if (file()) {
+      @if (preview()) {
+        <img
+          class="relative col-start-1 row-start-1 m-auto max-h-[calc(100%-1.5rem)] max-w-[calc(100%-1.5rem)] rounded-sm object-contain"
+          alt="Selected image"
+          animate.enter="animate-fade-in motion-reduce:animate-none"
+          animate.leave="animate-fade-out motion-reduce:animate-none"
+          [src]="preview()"
+        />
+      }
+    } @else {
+      <button
+        type="button"
+        data-testid="dropzone"
+        class="group relative col-start-1 row-start-1 m-3 flex cursor-pointer flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-input px-4 text-center transition-colors duration-150 hover:border-primary hover:bg-primary-soft/40"
+        [class.border-primary]="dragging()"
+        [class.bg-primary-soft]="dragging()"
+        animate.enter="animate-fade-in motion-reduce:animate-none"
+        animate.leave="animate-fade-out motion-reduce:animate-none"
+        (click)="handleBrowse()"
       >
-        @if (preview()) {
-          <img
-            class="max-h-full max-w-full rounded-sm object-contain transition-opacity duration-200 motion-reduce:transition-none starting:opacity-0"
-            alt="Selected image"
-            [src]="preview()"
-          />
-        }
-      </div>
-      <div class="flex items-center gap-3 px-3 py-2.5">
-        <app-icon class="text-muted-foreground" name="image-up" [size]="18" />
-        <div class="min-w-0 flex-1">
+        <span
+          class="flex size-10 items-center justify-center rounded-full bg-muted text-muted-foreground transition-colors duration-150 group-hover:bg-primary-soft group-hover:text-primary"
+        >
+          <app-icon name="image-up" [size]="20" />
+        </span>
+        <span class="text-sm">
+          <span class="font-medium">Drop an image here</span>
+          <span class="text-muted-foreground">, paste it, or </span>
+          <span class="font-medium text-primary">click to browse</span>
+        </span>
+      </button>
+    }
+  </div>
+  <div class="flex h-14 items-center gap-3 px-3">
+    <app-icon class="text-muted-foreground" name="image-up" [size]="18" />
+    <div class="grid min-w-0 flex-1">
+      @if (file(); as chosen) {
+        <div
+          class="col-start-1 row-start-1 min-w-0"
+          animate.enter="animate-fade-in motion-reduce:animate-none"
+          animate.leave="animate-fade-out motion-reduce:animate-none"
+        >
           <p data-testid="file-info" class="truncate text-sm font-medium">
-            {{ file()?.name }}
+            {{ chosen.name }}
           </p>
-          <p class="text-xs text-muted-foreground tabular-nums">
+          <p class="truncate text-xs text-muted-foreground tabular-nums">
             {{ fileMeta() }}
           </p>
         </div>
-        <button
-          type="button"
-          class="btn btn-secondary min-h-8 px-3 text-xs"
-          (click)="handleBrowse()"
+      } @else {
+        <div
+          class="col-start-1 row-start-1 min-w-0"
+          animate.enter="animate-fade-in motion-reduce:animate-none"
+          animate.leave="animate-fade-out motion-reduce:animate-none"
         >
-          Replace
-        </button>
-      </div>
+          <p class="truncate text-sm text-muted-foreground">
+            No image selected
+          </p>
+          <p class="truncate text-xs text-muted-foreground">{{ formats() }}</p>
+        </div>
+      }
     </div>
-  } @else {
     <button
       type="button"
-      data-testid="dropzone"
-      class="group flex min-h-44 w-full cursor-pointer flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-input bg-card px-4 py-8 text-center transition-colors duration-150 hover:border-primary hover:bg-primary-soft/40"
-      [class.border-primary]="dragging()"
-      [class.bg-primary-soft]="dragging()"
+      class="btn btn-secondary min-h-8 min-w-20 px-3 text-xs"
       (click)="handleBrowse()"
     >
-      <span
-        class="flex size-10 items-center justify-center rounded-full bg-muted text-muted-foreground transition-colors duration-150 group-hover:bg-primary-soft group-hover:text-primary"
-      >
-        <app-icon name="image-up" [size]="20" />
-      </span>
-      <span class="text-sm">
-        <span class="font-medium">Drop an image here</span>
-        <span class="text-muted-foreground">, paste it, or </span>
-        <span class="font-medium text-primary">click to browse</span>
-      </span>
-      <span class="text-xs text-muted-foreground">{{ formats() }}</span>
+      {{ file() ? 'Replace' : 'Browse' }}
     </button>
-  }
+  </div>
 </div>
 <input
   #fileInput

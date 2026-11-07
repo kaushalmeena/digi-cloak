@@ -58,6 +58,26 @@
   --font-mono:
     ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /*
+   * State-change motion, used with Angular's animate.enter / animate.leave.
+   * Short and opacity-led so swaps read as a crossfade, never a page move.
+   */
+  --animate-fade-in: fade-in 240ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-fade-out: fade-out 160ms ease-in both;
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      translate: 0 4px;
+    }
+  }
+
+  @keyframes fade-out {
+    to {
+      opacity: 0;
+    }
+  }
 }
 
 @theme inline {
