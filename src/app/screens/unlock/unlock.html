@@ -1,87 +1,145 @@
-<app-tabs />
-<app-intro
-  class="mt-8"
-  title="Reveal a hidden message"
-  description="Open an image made with Digi-Cloak and enter its password to read the message inside."
-/>
+<div
+  class="grid items-start gap-x-10 gap-y-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]"
+>
+  <div>
+    <app-tabs class="sm:max-w-xs" />
+    <app-intro
+      class="mt-6"
+      title="Reveal a hidden message"
+      description="Open an image made with Digi-Cloak and enter its password to read the message inside."
+    />
 
-<form class="mt-8 flex flex-col gap-6" (submit)="handleSubmit($event)">
-  <app-dropzone
-    inputId="image"
-    label="Image with a hidden message"
-    accept="image/png, image/gif, image/jpeg, image/webp"
-    formats="The PNG saved from Digi-Cloak"
-    [preview]="previewImageSource()"
-    (fileChange)="handleFile($event)"
-  />
+    <form class="mt-8 flex flex-col gap-6" (submit)="handleSubmit($event)">
+      <app-dropzone
+        inputId="image"
+        label="Image with a hidden message"
+        accept="image/png, image/gif, image/jpeg, image/webp"
+        formats="The PNG saved from Digi-Cloak"
+        [preview]="previewImageSource()"
+        (fileChange)="handleFile($event)"
+      />
 
-  <app-password
-    inputId="password"
-    label="Password"
-    placeholder="The password used to hide it"
-    (valueChange)="handlePasswordInput()"
-  />
+      <app-password
+        inputId="password"
+        label="Password"
+        placeholder="The password used to hide it"
+        (valueChange)="handlePasswordInput()"
+      />
 
-  @if (error()) {
-    <app-alert>{{ error() }}</app-alert>
-  }
+      <div>
+        <app-collapse [open]="!!error()">
+          <app-alert data-testid="error" class="mb-4">{{
+            visibleError()
+          }}</app-alert>
+        </app-collapse>
+        <button
+          type="submit"
+          class="btn min-h-11 w-full"
+          [class.btn-primary]="!decodedMessage()"
+          [class.btn-secondary]="decodedMessage()"
+          [disabled]="busy()"
+          [attr.aria-busy]="busy()"
+        >
+          @if (busy()) {
+            <app-loader [size]="16" />
+            Revealing message…
+          } @else {
+            <app-icon name="unlock" [size]="16" />
+            Reveal message
+          }
+        </button>
+      </div>
+    </form>
+  </div>
 
-  <button
-    type="submit"
-    class="btn min-h-11 w-full"
-    [class.btn-primary]="!decodedMessage()"
-    [class.btn-secondary]="decodedMessage()"
-    [disabled]="busy()"
-    [attr.aria-busy]="busy()"
-  >
-    @if (busy()) {
-      <app-loader [size]="16" />
-      Revealing message…
-    } @else {
-      <app-icon name="unlock" [size]="16" />
-      Reveal message
-    }
-  </button>
-</form>
-
-@if (decodedMessage()) {
+  <!-- Output panel: always present at a fixed size, so its states swap in place without shifting the page. -->
   <section
     #result
-    data-testid="result"
-    class="panel mt-8 scroll-mt-20 transition-[opacity,translate] duration-300 ease-out-expo motion-reduce:transition-none starting:translate-y-2 starting:opacity-0"
+    class="panel flex scroll-mt-20 flex-col overflow-hidden lg:sticky lg:top-20 lg:h-[min(calc(100dvh-7rem),46rem)] lg:min-h-120"
     aria-labelledby="result-title"
+    aria-live="polite"
   >
     <div
-      class="flex items-center gap-2.5 border-b border-border py-2 pr-2 pl-4"
+      class="flex h-12 items-center gap-2.5 border-b border-border pr-2 pl-4"
     >
       <span
-        class="flex size-6 items-center justify-center rounded-full bg-success-soft text-success"
+        class="flex size-6 items-center justify-center rounded-full transition-colors duration-300"
+        [class]="
+          decodedMessage()
+            ? 'bg-success-soft text-success'
+            : 'bg-muted text-muted-foreground'
+        "
       >
-        <app-icon name="check" [size]="14" [strokeWidth]="2.5" />
+        <app-icon
+          [name]="decodedMessage() ? 'check' : 'unlock'"
+          [size]="14"
+          [strokeWidth]="decodedMessage() ? 2.5 : 2"
+        />
       </span>
       <h2 id="result-title" class="text-sm font-semibold">Hidden message</h2>
       <button
         type="button"
         data-testid="copy-button"
-        class="btn btn-ghost ml-auto min-h-8 px-2.5"
+        class="btn btn-ghost ml-auto min-h-8 min-w-22 px-2.5"
+        [disabled]="!decodedMessage()"
         (click)="handleCopy()"
       >
         <app-icon [name]="copied() ? 'check' : 'copy'" [size]="15" />
         <span aria-live="polite">{{ copied() ? 'Copied' : 'Copy' }}</span>
       </button>
     </div>
-    <div class="p-4">
-      <app-textbox
-        inputId="message"
-        label="Message"
-        class="[&_label]:sr-only [&>div]:mb-0"
-        [readonly]="true"
-        [rows]="6"
-        [value]="decodedMessage()"
-      />
-      @if (copyError()) {
-        <app-alert class="mt-3">{{ copyError() }}</app-alert>
+
+    <div
+      class="relative grid h-72 min-h-0 grid-cols-[minmax(0,1fr)] grid-rows-[minmax(0,1fr)] sm:h-80 lg:h-auto lg:flex-1"
+    >
+      @if (decodedMessage()) {
+        <div
+          data-testid="result"
+          class="col-start-1 row-start-1 flex min-h-0"
+          animate.enter="animate-fade-in motion-reduce:animate-none"
+          animate.leave="animate-fade-out motion-reduce:animate-none"
+        >
+          <label for="message" class="sr-only">Hidden message</label>
+          <textarea
+            id="message"
+            readonly
+            class="size-full resize-none bg-transparent p-4 text-[15px]/6 whitespace-pre-wrap outline-none"
+            [value]="decodedMessage()"
+          ></textarea>
+        </div>
+      } @else if (busy()) {
+        <div
+          class="col-start-1 row-start-1 m-auto flex flex-col items-center gap-3 text-sm text-muted-foreground"
+          animate.enter="animate-fade-in motion-reduce:animate-none"
+          animate.leave="animate-fade-out motion-reduce:animate-none"
+        >
+          <app-loader [size]="22" />
+          Reading the message from the pixels…
+        </div>
+      } @else {
+        <div
+          class="col-start-1 row-start-1 m-auto flex max-w-64 flex-col items-center gap-2 px-4 text-center"
+          animate.enter="animate-fade-in motion-reduce:animate-none"
+          animate.leave="animate-fade-out motion-reduce:animate-none"
+        >
+          <p class="text-sm font-medium">Nothing revealed yet</p>
+          <p class="text-xs text-pretty text-muted-foreground">
+            Add the image and its password, then choose Reveal message. The
+            message appears here.
+          </p>
+        </div>
       }
     </div>
+
+    <div class="border-t border-border p-4">
+      <app-collapse [open]="!!copyError()">
+        <app-alert data-testid="copy-error" class="mb-3">{{
+          visibleCopyError()
+        }}</app-alert>
+      </app-collapse>
+      <p class="text-xs text-pretty text-muted-foreground">
+        Revealed messages are never stored. Leaving this page clears it.
+      </p>
+    </div>
   </section>
-}
+</div>

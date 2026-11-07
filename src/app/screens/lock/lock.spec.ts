@@ -93,8 +93,12 @@ describe('Lock', () => {
   it('opens the comparison modal once encoded', async () => {
     await chooseImage();
     submit('top secret', 'hunter2');
-    await waitFor(fixture, () =>
-      element.querySelector('[data-testid="compare-button"]'),
+    await waitFor(
+      fixture,
+      () =>
+        !element.querySelector<HTMLButtonElement>(
+          '[data-testid="compare-button"]',
+        )!.disabled,
     );
 
     element
@@ -112,11 +116,11 @@ describe('Lock', () => {
   it('shows an inline error when no image is chosen', async () => {
     submit('top secret', 'hunter2');
     await waitFor(fixture, () =>
-      element.querySelector('[data-testid="alert"]'),
+      element.querySelector('[data-testid="error"]')?.textContent?.trim(),
     );
 
     expect(
-      element.querySelector('[data-testid="alert"]')?.textContent,
+      element.querySelector('[data-testid="error"]')?.textContent,
     ).toContain('Choose an image');
   });
 
@@ -124,7 +128,7 @@ describe('Lock', () => {
     await chooseImage();
     submit('top secret', 'hunter2');
     await waitFor(fixture, () =>
-      element.querySelector('[data-testid="result"]'),
+      element.querySelector('[data-testid="encoded-image"]'),
     );
 
     const message = element.querySelector<HTMLTextAreaElement>('#message')!;
@@ -132,7 +136,11 @@ describe('Lock', () => {
     message.dispatchEvent(new Event('input'));
     fixture.detectChanges();
 
-    expect(element.querySelector('[data-testid="result"]')).toBeNull();
+    expect(element.querySelector('[data-testid="encoded-image"]')).toBeNull();
+    expect(
+      element.querySelector<HTMLButtonElement>('[data-testid="save-button"]')!
+        .disabled,
+    ).toBeTrue();
   });
 
   it('triggers a download with a digicloak filename when Save is clicked', async () => {

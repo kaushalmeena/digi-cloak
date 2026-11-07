@@ -6,18 +6,19 @@ import {
   ElementRef,
   inject,
   Injector,
+  linkedSignal,
   signal,
   viewChild,
 } from '@angular/core';
 
 import { Alert } from '../../components/alert/alert';
+import { Collapse } from '../../components/collapse/collapse';
 import { Dropzone } from '../../components/dropzone/dropzone';
 import { Icon } from '../../components/icon/icon';
 import { Intro } from '../../components/intro/intro';
 import { Loader } from '../../components/loader/loader';
 import { Password } from '../../components/password/password';
 import { Tabs } from '../../components/tabs/tabs';
-import { Textbox } from '../../components/textbox/textbox';
 import { Stegano } from '../../services/stegano';
 import { copyText, getBase64ImageFromBlob } from '../../utils/browser';
 
@@ -36,7 +37,7 @@ export function describeDecodeError(message: string): string {
 
 @Component({
   selector: 'app-unlock',
-  imports: [Alert, Dropzone, Icon, Intro, Loader, Password, Tabs, Textbox],
+  imports: [Alert, Collapse, Dropzone, Icon, Intro, Loader, Password, Tabs],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './unlock.html',
 })
@@ -50,6 +51,15 @@ export class Unlock {
   protected readonly error = signal('');
   protected readonly copyError = signal('');
   protected readonly copied = signal(false);
+  /** Keep the last text while an alert collapses away. */
+  protected readonly visibleError = linkedSignal<string, string>({
+    source: this.error,
+    computation: (error, previous) => error || previous?.value || '',
+  });
+  protected readonly visibleCopyError = linkedSignal<string, string>({
+    source: this.copyError,
+    computation: (error, previous) => error || previous?.value || '',
+  });
 
   private readonly result = viewChild<ElementRef<HTMLElement>>('result');
   private copiedTimeout: number | undefined;

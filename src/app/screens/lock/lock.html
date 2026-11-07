@@ -1,111 +1,176 @@
-<app-tabs />
-<app-intro
-  class="mt-8"
-  title="Hide a message in an image"
-  description="Your message is encrypted with your password, then written into the image's pixels. The picture looks unchanged."
-/>
+<div
+  class="grid items-start gap-x-10 gap-y-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]"
+>
+  <div>
+    <app-tabs class="sm:max-w-xs" />
+    <app-intro
+      class="mt-6"
+      title="Hide a message in an image"
+      description="Your message is encrypted with your password, then written into the image's pixels. The picture looks unchanged."
+    />
 
-<form class="mt-8 flex flex-col gap-6" (submit)="handleSubmit($event)">
-  <app-dropzone
-    inputId="image"
-    label="Image"
-    accept="image/png, image/gif, image/jpeg, image/webp"
-    [preview]="previewImageSource()"
-    [details]="imageDetails()"
-    (fileChange)="handleFile($event)"
-  />
-
-  <app-textbox
-    inputId="message"
-    label="Message"
-    placeholder="Type the secret you want to hide"
-    (valueChange)="handleMessageInput($event)"
-  >
-    @if (capacity(); as cap) {
-      <app-capacity
-        class="mt-2"
-        [used]="messageBytes()"
-        [capacity]="cap"
-        [tooLarge]="!fits()"
+    <form class="mt-8 flex flex-col gap-6" (submit)="handleSubmit($event)">
+      <app-dropzone
+        inputId="image"
+        label="Image"
+        accept="image/png, image/gif, image/jpeg, image/webp"
+        [preview]="previewImageSource()"
+        [details]="imageDetails()"
+        (fileChange)="handleFile($event)"
       />
-    } @else {
-      <p class="mt-2 text-xs text-muted-foreground">
-        Choose an image to see how much text fits.
-      </p>
-    }
-  </app-textbox>
 
-  <app-password
-    inputId="password"
-    label="Password"
-    placeholder="Used to encrypt the message"
-    hint="Anyone with the image and this password can read the message. A lost password can't be recovered."
-    [withStrength]="true"
-    (valueChange)="handlePasswordInput()"
-  />
+      <app-textbox
+        inputId="message"
+        label="Message"
+        placeholder="Type the secret you want to hide"
+        (valueChange)="handleMessageInput($event)"
+      >
+        <!-- Fixed-height row: the hint and the meter crossfade in place. -->
+        <div class="mt-2 grid h-5 items-center">
+          @if (capacity(); as cap) {
+            <app-capacity
+              class="col-start-1 row-start-1"
+              animate.enter="animate-fade-in motion-reduce:animate-none"
+              animate.leave="animate-fade-out motion-reduce:animate-none"
+              [used]="messageBytes()"
+              [capacity]="cap"
+              [tooLarge]="!fits()"
+            />
+          } @else {
+            <p
+              class="col-start-1 row-start-1 text-xs text-muted-foreground"
+              animate.enter="animate-fade-in motion-reduce:animate-none"
+              animate.leave="animate-fade-out motion-reduce:animate-none"
+            >
+              Choose an image to see how much text fits.
+            </p>
+          }
+        </div>
+      </app-textbox>
 
-  @if (error()) {
-    <app-alert>{{ error() }}</app-alert>
-  }
+      <app-password
+        inputId="password"
+        label="Password"
+        placeholder="Used to encrypt the message"
+        hint="Anyone with the image and this password can read the message. A lost password can't be recovered."
+        [withStrength]="true"
+        (valueChange)="handlePasswordInput()"
+      />
 
-  <button
-    type="submit"
-    class="btn min-h-11 w-full"
-    [class.btn-primary]="!encodedImageSource()"
-    [class.btn-secondary]="encodedImageSource()"
-    [disabled]="busy() || !fits()"
-    [attr.aria-busy]="busy()"
-  >
-    @if (busy()) {
-      <app-loader [size]="16" />
-      Hiding message…
-    } @else {
-      <app-icon name="lock" [size]="16" />
-      Hide message
-    }
-  </button>
-</form>
+      <div>
+        <app-collapse [open]="!!error()">
+          <app-alert data-testid="error" class="mb-4">{{
+            visibleError()
+          }}</app-alert>
+        </app-collapse>
+        <button
+          type="submit"
+          class="btn min-h-11 w-full"
+          [class.btn-primary]="!encodedImageSource()"
+          [class.btn-secondary]="encodedImageSource()"
+          [disabled]="busy() || !fits()"
+          [attr.aria-busy]="busy()"
+        >
+          @if (busy()) {
+            <app-loader [size]="16" />
+            Hiding message…
+          } @else {
+            <app-icon name="lock" [size]="16" />
+            Hide message
+          }
+        </button>
+      </div>
+    </form>
+  </div>
 
-@if (encodedImageSource()) {
+  <!-- Output panel: always present at a fixed size, so its states swap in place without shifting the page. -->
   <section
     #result
-    data-testid="result"
-    class="panel mt-8 scroll-mt-20 overflow-hidden transition-[opacity,translate] duration-300 ease-out-expo motion-reduce:transition-none starting:translate-y-2 starting:opacity-0"
+    class="panel flex scroll-mt-20 flex-col overflow-hidden lg:sticky lg:top-20 lg:h-[min(calc(100dvh-7rem),46rem)] lg:min-h-120"
     aria-labelledby="result-title"
+    aria-live="polite"
   >
-    <div class="flex items-center gap-2.5 border-b border-border px-4 py-3">
+    <div class="flex h-12 items-center gap-2.5 border-b border-border px-4">
       <span
-        class="flex size-6 items-center justify-center rounded-full bg-success-soft text-success"
+        class="flex size-6 items-center justify-center rounded-full transition-colors duration-300"
+        [class]="
+          encodedImageSource()
+            ? 'bg-success-soft text-success'
+            : 'bg-muted text-muted-foreground'
+        "
       >
-        <app-icon name="check" [size]="14" [strokeWidth]="2.5" />
+        <app-icon
+          [name]="encodedImageSource() ? 'check' : 'image-up'"
+          [size]="14"
+          [strokeWidth]="encodedImageSource() ? 2.5 : 2"
+        />
       </span>
-      <h2 id="result-title" class="text-sm font-semibold">Message hidden</h2>
-      <span
-        class="ml-auto truncate text-xs text-muted-foreground"
-        [title]="outputName()"
-        >{{ outputName() }}</span
-      >
+      <h2 id="result-title" class="text-sm font-semibold">
+        {{ encodedImageSource() ? 'Message hidden' : 'Result' }}
+      </h2>
+      @if (encodedImageSource()) {
+        <span
+          class="ml-auto truncate text-xs text-muted-foreground"
+          animate.enter="animate-fade-in motion-reduce:animate-none"
+          animate.leave="animate-fade-out motion-reduce:animate-none"
+          [title]="outputName()"
+          >{{ outputName() }}</span
+        >
+      }
     </div>
-    <div class="checkerboard flex h-56 items-center justify-center p-3 sm:h-64">
-      <img
-        data-testid="encoded-image"
-        class="max-h-full max-w-full rounded-sm object-contain"
-        alt="Image with the hidden message"
-        [src]="encodedImageSource()"
-      />
-    </div>
+
     <div
-      class="flex flex-col gap-3 border-t border-border p-4 sm:flex-row sm:items-center"
+      class="relative grid h-72 min-h-0 grid-cols-[minmax(0,1fr)] grid-rows-[minmax(0,1fr)] sm:h-80 lg:h-auto lg:flex-1"
     >
-      <p class="flex-1 text-xs text-pretty text-muted-foreground">
+      <div
+        class="checkerboard absolute inset-0 transition-opacity duration-300"
+        [class.opacity-0]="!encodedImageSource()"
+        aria-hidden="true"
+      ></div>
+      @if (encodedImageSource()) {
+        <img
+          data-testid="encoded-image"
+          class="relative col-start-1 row-start-1 m-auto max-h-[calc(100%-2rem)] max-w-[calc(100%-2rem)] rounded-sm object-contain"
+          alt="Image with the hidden message"
+          animate.enter="animate-fade-in motion-reduce:animate-none"
+          animate.leave="animate-fade-out motion-reduce:animate-none"
+          [src]="encodedImageSource()"
+        />
+      } @else if (busy()) {
+        <div
+          class="col-start-1 row-start-1 m-auto flex flex-col items-center gap-3 text-sm text-muted-foreground"
+          animate.enter="animate-fade-in motion-reduce:animate-none"
+          animate.leave="animate-fade-out motion-reduce:animate-none"
+        >
+          <app-loader [size]="22" />
+          Writing your message into the pixels…
+        </div>
+      } @else {
+        <div
+          class="col-start-1 row-start-1 m-auto flex max-w-64 flex-col items-center gap-2 px-4 text-center"
+          animate.enter="animate-fade-in motion-reduce:animate-none"
+          animate.leave="animate-fade-out motion-reduce:animate-none"
+        >
+          <p class="text-sm font-medium">Nothing hidden yet</p>
+          <p class="text-xs text-pretty text-muted-foreground">
+            Add an image, a message and a password, then choose Hide message.
+            The new image appears here.
+          </p>
+        </div>
+      }
+    </div>
+
+    <div class="flex flex-col gap-3 border-t border-border p-4">
+      <p class="text-xs text-pretty text-muted-foreground">
         Share it as a PNG file. Converting it, or sending it as a photo in a
         chat app, destroys the message.
       </p>
-      <div class="flex gap-2">
+      <div class="grid grid-cols-2 gap-2">
         <button
           type="button"
           data-testid="compare-button"
-          class="btn btn-secondary flex-1"
+          class="btn btn-secondary"
+          [disabled]="!encodedImageSource()"
           (click)="openCompare()"
         >
           <app-icon name="compare" [size]="16" />
@@ -114,7 +179,8 @@
         <button
           type="button"
           data-testid="save-button"
-          class="btn btn-primary flex-1"
+          class="btn btn-primary"
+          [disabled]="!encodedImageSource()"
           (click)="handleSave()"
         >
           <app-icon name="download" [size]="16" />
@@ -123,7 +189,7 @@
       </div>
     </div>
   </section>
-}
+</div>
 
 <!-- Click-to-dismiss on the backdrop only; keyboard users close via Escape (handled through the dialog's cancel event). -->
 <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -->

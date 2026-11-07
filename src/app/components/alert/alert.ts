@@ -9,7 +9,6 @@ import { Icon } from '../icon/icon';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     role: 'alert',
-    'data-testid': 'alert',
     class:
       'flex items-start gap-2.5 rounded-lg bg-destructive-soft px-3 py-2.5 text-sm text-destructive',
   },

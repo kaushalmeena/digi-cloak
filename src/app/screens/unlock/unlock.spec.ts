@@ -75,11 +75,11 @@ describe('Unlock', () => {
   it('shows an inline error for the wrong password', async () => {
     await loadEncodedImage('wrong');
     await waitFor(fixture, () =>
-      element.querySelector('[data-testid="alert"]'),
+      element.querySelector('[data-testid="error"]')?.textContent?.trim(),
     );
 
     expect(
-      element.querySelector('[data-testid="alert"]')?.textContent,
+      element.querySelector('[data-testid="error"]')?.textContent,
     ).toContain('Password is incorrect');
     expect(element.querySelector('[data-testid="result"]')).toBeNull();
   });
@@ -106,7 +106,9 @@ describe('Unlock', () => {
     await waitFor(fixture, () => copyButton().textContent?.includes('Copied'));
 
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith('top secret');
-    expect(element.querySelector('[data-testid="alert"]')).toBeNull();
+    expect(
+      element.querySelector('[data-testid="copy-error"]')?.textContent?.trim(),
+    ).toBe('');
   });
 
   it('shows an inline error when copying fails', async () => {
@@ -123,11 +125,11 @@ describe('Unlock', () => {
       .querySelector<HTMLButtonElement>('[data-testid="copy-button"]')!
       .click();
     await waitFor(fixture, () =>
-      element.querySelector('[data-testid="alert"]'),
+      element.querySelector('[data-testid="copy-error"]')?.textContent?.trim(),
     );
 
     expect(
-      element.querySelector('[data-testid="alert"]')?.textContent,
+      element.querySelector('[data-testid="copy-error"]')?.textContent,
     ).toContain('Clipboard unavailable');
   });
 });

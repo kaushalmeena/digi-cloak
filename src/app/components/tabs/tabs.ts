@@ -14,6 +14,7 @@ interface ModeTab {
   selector: 'app-tabs',
   imports: [RouterLink, RouterLinkActive, Icon],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'block' },
   template: `
     <nav
       aria-label="Mode"

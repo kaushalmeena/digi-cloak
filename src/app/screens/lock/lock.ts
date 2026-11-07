@@ -6,12 +6,14 @@ import {
   ElementRef,
   inject,
   Injector,
+  linkedSignal,
   signal,
   viewChild,
 } from '@angular/core';
 
 import { Alert } from '../../components/alert/alert';
 import { Capacity } from '../../components/capacity/capacity';
+import { Collapse } from '../../components/collapse/collapse';
 import { Compare } from '../../components/compare/compare';
 import { Dropzone } from '../../components/dropzone/dropzone';
 import { Icon } from '../../components/icon/icon';
@@ -46,6 +48,7 @@ const prefersReducedMotion = (): boolean =>
   imports: [
     Alert,
     Capacity,
+    Collapse,
     Compare,
     Dropzone,
     Icon,
@@ -69,6 +72,11 @@ export class Lock {
   protected readonly messageBytes = signal(0);
   protected readonly busy = signal(false);
   protected readonly error = signal('');
+  /** Keeps the last error's text while the alert collapses away. */
+  protected readonly visibleError = linkedSignal<string, string>({
+    source: this.error,
+    computation: (error, previous) => error || previous?.value || '',
+  });
 
   protected readonly capacity = computed(() => {
     const size = this.imageSize();

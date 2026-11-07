@@ -11,12 +11,12 @@ import { Icon } from './components/icon/icon';
   host: { class: 'flex min-h-dvh flex-col' },
   template: `
     <app-header />
-    <main class="mx-auto w-full max-w-2xl flex-1 px-4 pt-8 pb-16 sm:pt-12">
+    <main class="mx-auto w-full max-w-5xl flex-1 px-4 pt-8 pb-16 sm:pt-12">
       <router-outlet />
     </main>
     <footer class="border-t border-border">
       <p
-        class="mx-auto flex w-full max-w-2xl items-center gap-2 px-4 py-5 text-xs text-muted-foreground"
+        class="mx-auto flex w-full max-w-5xl items-center gap-2 px-4 py-5 text-xs text-muted-foreground"
       >
         <app-icon name="shield" [size]="14" />
         Runs entirely in your browser. Images, messages and passwords never

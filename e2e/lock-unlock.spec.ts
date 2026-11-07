@@ -68,7 +68,7 @@ test('shows an error for a wrong password', async ({ page }) => {
   await page.fill('#password', 'not the password');
   await page.getByRole('button', { name: 'Reveal message' }).click();
 
-  await expect(page.getByRole('alert')).toContainText(
+  await expect(page.getByTestId('error')).toContainText(
     'Password is incorrect',
     { timeout: 30_000 },
   );
