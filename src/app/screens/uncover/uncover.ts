@@ -22,8 +22,7 @@ import { Tabs } from '../../components/tabs/tabs';
 import { Handoff } from '../../services/handoff';
 import { Stegano } from '../../services/stegano';
 import { copyText, getBase64ImageFromBlob } from '../../utils/browser';
-
-export const COPIED_RESET_MS = 2000;
+import { COPIED_RESET_MS } from '../../constants';
 
 /** Turns low-level decode errors into what happened and what to do next. */
 export function describeDecodeError(message: string): string {

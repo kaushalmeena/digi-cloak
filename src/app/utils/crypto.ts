@@ -1,5 +1,12 @@
 import AES from 'crypto-js/aes';
 import Utf8 from 'crypto-js/enc-utf8';
+import {
+  GCM_TAG_BYTES,
+  IV_BYTES,
+  PBKDF2_ITERATIONS,
+  SALT_BYTES,
+  V2_PREFIX,
+} from '../constants';
 
 /*
  * v2 payloads are produced with the Web Crypto API:
@@ -9,11 +16,6 @@ import Utf8 from 'crypto-js/enc-utf8';
  * Anything else is treated as a legacy crypto-js (OpenSSL EVP) payload
  * so images encoded by older versions of the app still decode.
  */
-const V2_PREFIX = 'v2$';
-const PBKDF2_ITERATIONS = 600_000;
-const SALT_BYTES = 16;
-const IV_BYTES = 12;
-const GCM_TAG_BYTES = 16;
 
 function toBase64(bytes: Uint8Array): string {
   let binary = '';

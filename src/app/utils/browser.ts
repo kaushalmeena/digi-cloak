@@ -1,3 +1,5 @@
+import { IMAGE_EXTENSIONS } from '../constants';
+
 export const saveImage = (data: string, filename = 'output.png'): void => {
   const anchorEl = document.createElement('a');
   anchorEl.download = filename;
@@ -55,13 +57,6 @@ export const shareFile = async (file: File): Promise<boolean> => {
 export const canReadClipboardImages = (): boolean =>
   typeof navigator.clipboard?.read === 'function';
 
-const EXTENSIONS: Record<string, string> = {
-  'image/png': 'png',
-  'image/jpeg': 'jpg',
-  'image/gif': 'gif',
-  'image/webp': 'webp',
-};
-
 /** First image on the clipboard as a File, or null when there is none. */
 export const readClipboardImage = async (): Promise<File | null> => {
   const items = await navigator.clipboard.read();
@@ -69,7 +64,7 @@ export const readClipboardImage = async (): Promise<File | null> => {
     const type = item.types.find((t) => t.startsWith('image/'));
     if (type) {
       const blob = await item.getType(type);
-      const ext = EXTENSIONS[type] ?? 'png';
+      const ext = IMAGE_EXTENSIONS[type] ?? 'png';
       return new File([blob], `pasted-image.${ext}`, { type });
     }
   }

@@ -13,6 +13,7 @@ import {
 import { Header } from './components/header/header';
 import { Icon } from './components/icon/icon';
 import { Pwa } from './services/pwa';
+import { ROUTE_ENTERING_CLASS, ROUTE_SETTLE_MS } from './constants';
 
 @Component({
   selector: 'app-root',
@@ -128,6 +129,3 @@ export class App {
       });
   }
 }
-
-const ROUTE_ENTERING_CLASS = 'route-entering';
-const ROUTE_SETTLE_MS = 300;

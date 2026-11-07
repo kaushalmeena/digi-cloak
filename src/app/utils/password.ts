@@ -1,16 +1,18 @@
+import {
+  PASSWORD_ALPHABET,
+  STRENGTH_LABELS,
+  STRENGTH_THRESHOLDS,
+} from '../constants';
+
 /** 0 = weak, 1 = fair, 2 = good, 3 = strong */
 export type StrengthLevel = 0 | 1 | 2 | 3;
 
 export interface Strength {
   level: StrengthLevel;
-  label: 'Weak' | 'Fair' | 'Good' | 'Strong';
+  label: (typeof STRENGTH_LABELS)[number];
   /** Rough entropy estimate after penalties */
   bits: number;
 }
-
-const LABELS: Strength['label'][] = ['Weak', 'Fair', 'Good', 'Strong'];
-/** Upper bounds (exclusive) in bits for weak, fair and good. */
-const THRESHOLDS = [36, 60, 80];
 
 const COMMON = [
   'password',
@@ -84,13 +86,10 @@ export function estimateStrength(value: string): Strength {
   }
   bits = Math.max(0, Math.round(bits));
 
-  const index = THRESHOLDS.findIndex((limit) => bits < limit);
+  const index = STRENGTH_THRESHOLDS.findIndex((limit) => bits < limit);
   const level = (index === -1 ? 3 : index) as StrengthLevel;
-  return { level, label: LABELS[level], bits };
+  return { level, label: STRENGTH_LABELS[level], bits };
 }
-
-/** No 0/O, 1/l/I: easy to read aloud or copy by hand. */
-const ALPHABET = 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 
 /** Uniform index below `max` from the CSPRNG, without modulo bias. */
 function randomIndex(max: number): number {
@@ -110,7 +109,7 @@ export function generatePassword(groups = 4, groupLength = 5): string {
   return Array.from({ length: groups }, () =>
     Array.from(
       { length: groupLength },
-      () => ALPHABET[randomIndex(ALPHABET.length)],
+      () => PASSWORD_ALPHABET[randomIndex(PASSWORD_ALPHABET.length)],
     ).join(''),
   ).join('-');
 }

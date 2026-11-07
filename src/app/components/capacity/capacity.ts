@@ -5,9 +5,7 @@ import {
   computed,
   input,
 } from '@angular/core';
-
-/** Above this share of capacity the meter turns amber as an early warning. */
-const WARN_RATIO = 0.85;
+import { CAPACITY_WARN_RATIO } from '../../constants';
 
 /**
  * How much of the image's hiding capacity the message uses, drawn as a strip
@@ -61,7 +59,7 @@ export class Capacity {
     if (this.tooLarge()) {
       return 'danger';
     }
-    return this.percent() / 100 >= WARN_RATIO ? 'warn' : 'ok';
+    return this.percent() / 100 >= CAPACITY_WARN_RATIO ? 'warn' : 'ok';
   });
 
   protected readonly barTone = computed(

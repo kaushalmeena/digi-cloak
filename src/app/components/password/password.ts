@@ -19,6 +19,7 @@ import {
 } from '../../utils/password';
 import { Collapse } from '../collapse/collapse';
 import { Icon } from '../icon/icon';
+import { COPIED_RESET_MS } from '../../constants';
 
 const LEVEL_TEXT: Record<StrengthLevel, string> = {
   0: 'text-destructive',
@@ -32,8 +33,6 @@ const LEVEL_BAR: Record<StrengthLevel, string> = {
   2: 'bg-primary',
   3: 'bg-success',
 };
-
-const COPIED_RESET_MS = 2000;
 
 @Component({
   selector: 'app-password',
