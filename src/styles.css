@@ -175,6 +175,17 @@
   transition: none !important;
 }
 
+/*
+ * While a route renders (see App), skip enter animations so screens appear
+ * at rest; fades then only play for state changes on the page in view.
+ */
+.route-entering .animate-fade-in {
+  /* Zero duration, not `animation: none`: the animation must still end so
+     Angular removes its enter class, or it replays once this lifts. */
+  animation-duration: 0s !important;
+  animation-delay: 0s !important;
+}
+
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;

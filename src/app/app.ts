@@ -1,5 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+  NavigationCancel,
+  NavigationEnd,
+  NavigationError,
+  NavigationStart,
+  Router,
+  RouterLink,
+  RouterOutlet,
+} from '@angular/router';
 
 import { Header } from './components/header/header';
 import { Icon } from './components/icon/icon';
@@ -75,6 +84,10 @@ export class App {
   protected readonly updateReady = this.pwa.updateReady;
   protected readonly repoUrl = 'https://github.com/kaushalmeena/digi-cloak';
 
+  constructor() {
+    this.suppressEnterMotionDuringNavigation();
+  }
+
   protected handleApplyUpdate(): void {
     void this.pwa.applyUpdate();
   }
@@ -82,4 +95,39 @@ export class App {
   protected handleDismissUpdate(): void {
     this.pwa.dismissUpdate();
   }
+
+  /**
+   * Enter animations are for state changes on a page already in view. Angular
+   * also runs them when a screen first renders, which made switching tabs
+   * replay every fade. While a route renders, `route-entering` on <html>
+   * turns them off; it is removed shortly after the navigation settles.
+   */
+  private suppressEnterMotionDuringNavigation(): void {
+    const root = document.documentElement;
+    let settleTimer: ReturnType<typeof setTimeout> | undefined;
+    root.classList.add(ROUTE_ENTERING_CLASS);
+    inject(Router)
+      .events.pipe(takeUntilDestroyed())
+      .subscribe((event) => {
+        if (event instanceof NavigationStart) {
+          clearTimeout(settleTimer);
+          root.classList.add(ROUTE_ENTERING_CLASS);
+        } else if (
+          event instanceof NavigationEnd ||
+          event instanceof NavigationCancel ||
+          event instanceof NavigationError
+        ) {
+          // A short settle window rather than a frame count: some enter
+          // animations start a few frames after the route renders.
+          clearTimeout(settleTimer);
+          settleTimer = setTimeout(
+            () => root.classList.remove(ROUTE_ENTERING_CLASS),
+            ROUTE_SETTLE_MS,
+          );
+        }
+      });
+  }
 }
+
+const ROUTE_ENTERING_CLASS = 'route-entering';
+const ROUTE_SETTLE_MS = 300;
