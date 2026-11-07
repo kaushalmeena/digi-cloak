@@ -51,6 +51,69 @@
   --checker: #1f2325;
 }
 
+/*
+ * Rotating accent. An inline script in index.html sets <html data-accent>
+ * before first paint, picking a different one per visit. Teal (above) is the
+ * fallback. No violet, and no reds or pinks that would read as errors.
+ * `[data-accent] .dark` outranks `.dark`, so each accent also owns its dark
+ * values. Light primaries keep >= 4.5:1 against white text.
+ */
+[data-accent='blue'] {
+  --primary: #1d5fd1;
+  --primary-hover: #184fb0;
+  --primary-foreground: #ffffff;
+  --primary-soft: #e5edfb;
+}
+
+[data-accent='blue'] .dark {
+  --primary: #6ea8ff;
+  --primary-hover: #8dbbff;
+  --primary-foreground: #06142e;
+  --primary-soft: #13233f;
+}
+
+[data-accent='lime'] {
+  --primary: #4d7c0f;
+  --primary-hover: #3f670c;
+  --primary-foreground: #ffffff;
+  --primary-soft: #eef5e1;
+}
+
+[data-accent='lime'] .dark {
+  --primary: #9ccc4a;
+  --primary-hover: #b0d96c;
+  --primary-foreground: #172404;
+  --primary-soft: #1e2a10;
+}
+
+[data-accent='orange'] {
+  --primary: #c2410c;
+  --primary-hover: #a8380a;
+  --primary-foreground: #ffffff;
+  --primary-soft: #fdece4;
+}
+
+[data-accent='orange'] .dark {
+  --primary: #fb8c4b;
+  --primary-hover: #fca06a;
+  --primary-foreground: #2a1003;
+  --primary-soft: #33190c;
+}
+
+[data-accent='graphite'] {
+  --primary: #22272b;
+  --primary-hover: #353b40;
+  --primary-foreground: #ffffff;
+  --primary-soft: #e9ecec;
+}
+
+[data-accent='graphite'] .dark {
+  --primary: #e8ebeb;
+  --primary-hover: #ffffff;
+  --primary-foreground: #16191b;
+  --primary-soft: #24282b;
+}
+
 @theme {
   --font-sans:
     ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,

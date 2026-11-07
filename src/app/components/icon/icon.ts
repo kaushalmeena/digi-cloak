@@ -2,20 +2,30 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 export type IconName =
   | 'alert'
+  | 'arrow-right'
   | 'check'
   | 'chevron-down'
   | 'compare'
+  | 'clipboard'
   | 'copy'
   | 'download'
   | 'eye'
   | 'eye-off'
   | 'github'
+  | 'help'
   | 'image-up'
+  | 'info'
+  | 'install'
+  | 'link'
   | 'lock'
   | 'moon'
+  | 'refresh'
+  | 'share'
   | 'shield'
   | 'sun'
   | 'unlock'
+  | 'wand'
+  | 'wifi-off'
   | 'x';
 
 /**
@@ -116,6 +126,60 @@ export type IconName =
         @case ('unlock') {
           <rect width="18" height="11" x="3" y="11" rx="2" />
           <path d="M7 11V7a5 5 0 0 1 9.9-1" />
+        }
+        @case ('arrow-right') {
+          <path d="M5 12h14" />
+          <path d="m12 5 7 7-7 7" />
+        }
+        @case ('clipboard') {
+          <rect width="8" height="4" x="8" y="2" rx="1" />
+          <path
+            d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M16 4h2a2 2 0 0 1 1.73 1M21 14H11"
+          />
+          <path d="m15 10-4 4 4 4" />
+        }
+        @case ('help') {
+          <circle cx="12" cy="12" r="10" />
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+          <path d="M12 17h.01" />
+        }
+        @case ('info') {
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 16v-4" />
+          <path d="M12 8h.01" />
+        }
+        @case ('install') {
+          <path d="M12 13V7" />
+          <path d="m15 10-3 3-3-3" />
+          <rect width="20" height="14" x="2" y="3" rx="2" />
+          <path d="M12 17v4M8 21h8" />
+        }
+        @case ('link') {
+          <path
+            d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
+          />
+          <path
+            d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
+          />
+        }
+        @case ('refresh') {
+          <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
+          <path d="M21 3v5h-5" />
+        }
+        @case ('share') {
+          <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+          <path d="m16 6-4-4-4 4" />
+          <path d="M12 2v13" />
+        }
+        @case ('wand') {
+          <path
+            d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.71 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72"
+          />
+          <path d="m14 7 3 3M5 6v4M19 14v4M10 2v2M7 8H3M21 16h-4M11 3H9" />
+        }
+        @case ('wifi-off') {
+          <path d="M12 20h.01M8.5 16.43a5 5 0 0 1 7 0M5 12.86a10 10 0 0 1 5.17-2.69M19 12.86a10 10 0 0 0-2-1.52M2 8.82a15 15 0 0 1 4.18-2.64M22 8.82a15 15 0 0 0-11.29-3.76" />
+          <path d="m2 2 20 20" />
         }
         @case ('x') {
           <path d="M18 6 6 18" />
