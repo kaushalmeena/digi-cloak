@@ -2,6 +2,7 @@ import { OnDestroy, Service, signal } from '@angular/core';
 
 const DARK_MODE_CLASS = 'dark';
 const DARK_MODE_STORAGE_KEY = 'darkMode';
+const SWITCHING_CLASS = 'theme-switching';
 
 function fetchStoredDarkMode(): boolean | null {
   const value = localStorage.getItem(DARK_MODE_STORAGE_KEY);
@@ -52,6 +53,13 @@ export class Theme implements OnDestroy {
   }
 
   private setBodyClass(value: boolean): void {
+    const root = document.documentElement;
+    // Suspend transitions so all colours change in the same frame; otherwise
+    // elements with transition-colors visibly lag behind the rest.
+    root.classList.add(SWITCHING_CLASS);
     document.body.classList.toggle(DARK_MODE_CLASS, value);
+    // Force a style flush while transitions are off, then restore them.
+    void root.offsetHeight;
+    root.classList.remove(SWITCHING_CLASS);
   }
 }

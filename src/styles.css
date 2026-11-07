@@ -163,6 +163,18 @@
   --color-checker: var(--checker);
 }
 
+/*
+ * Set for a single frame while the theme switches, so every colour flips at
+ * once instead of each element easing at its own pace (see Theme service).
+ * Unlayered and !important so it beats the transition-* utilities.
+ */
+.theme-switching,
+.theme-switching *,
+.theme-switching *::before,
+.theme-switching *::after {
+  transition: none !important;
+}
+
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
