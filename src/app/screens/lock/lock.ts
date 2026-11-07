@@ -22,8 +22,17 @@ import { Loader } from '../../components/loader/loader';
 import { Password } from '../../components/password/password';
 import { Tabs } from '../../components/tabs/tabs';
 import { Textbox } from '../../components/textbox/textbox';
+import { Router } from '@angular/router';
+
+import { Handoff } from '../../services/handoff';
 import { Stegano } from '../../services/stegano';
-import { getBase64ImageFromBlob, saveImage } from '../../utils/browser';
+import {
+  canShareFiles,
+  dataUrlToFile,
+  getBase64ImageFromBlob,
+  saveImage,
+  shareFile,
+} from '../../utils/browser';
 import { estimateCapacityChars, messageFits } from '../../utils/stegano';
 
 interface ImageSize {
@@ -64,6 +73,13 @@ const prefersReducedMotion = (): boolean =>
 export class Lock {
   private readonly stegano = inject(Stegano);
   private readonly injector = inject(Injector);
+  private readonly router = inject(Router);
+  private readonly handoff = inject(Handoff);
+
+  protected readonly canShare = canShareFiles();
+  /** The chosen image already carries a Digi-Cloak message. */
+  protected readonly hasExistingMessage = signal(false);
+  private currentFile: File | null = null;
 
   protected readonly previewImageSource = signal('');
   protected readonly encodedImageSource = signal('');
@@ -127,6 +143,8 @@ export class Lock {
     this.previewImageSource.set('');
     this.imageSize.set(null);
     this.imageName.set(file?.name ?? '');
+    this.hasExistingMessage.set(false);
+    this.currentFile = file;
     if (!file) {
       return;
     }
@@ -135,6 +153,11 @@ export class Lock {
       .then(async (src) => {
         this.previewImageSource.set(src);
         this.imageSize.set(await readImageSize(src));
+        const found = await this.stegano.detect(src).catch(() => false);
+        // Ignore the answer if another image was chosen meanwhile.
+        if (this.currentFile === file) {
+          this.hasExistingMessage.set(found);
+        }
       })
       .catch(() => {
         this.error.set("That file couldn't be read as an image.");
@@ -181,6 +204,23 @@ export class Lock {
       })
       .finally(() => {
         this.busy.set(false);
+      });
+  }
+
+  protected handleRevealInstead(): void {
+    if (this.currentFile) {
+      this.handoff.give(this.currentFile);
+    }
+    void this.router.navigate(['/unlock']);
+  }
+
+  protected handleShare(): void {
+    dataUrlToFile(this.encodedImageSource(), this.outputName())
+      .then(shareFile)
+      .catch(() => {
+        this.error.set(
+          "Couldn't open the share sheet. Download the PNG instead.",
+        );
       });
   }
 

@@ -1,5 +1,6 @@
 import { decryptMessage, encryptMessage } from '../utils/crypto';
 import {
+  containsHiddenMessage,
   encodePayloadIntoImageData,
   extractPayloadFromImageData,
 } from '../utils/stegano';
@@ -43,12 +44,17 @@ addEventListener('message', async ({ data }: MessageEvent<SteganoRequest>) => {
   try {
     const imageData = await getImageData(data.image);
     if (data.type === 'encode') {
-      const payload = await encryptMessage(data.message ?? '', data.password);
+      const payload = await encryptMessage(
+        data.message ?? '',
+        data.password ?? '',
+      );
       encodePayloadIntoImageData(imageData, payload);
       response.result = await toDataUrl(imageData);
+    } else if (data.type === 'detect') {
+      response.result = String(containsHiddenMessage(imageData));
     } else {
       const payload = extractPayloadFromImageData(imageData);
-      response.result = await decryptMessage(payload, data.password);
+      response.result = await decryptMessage(payload, data.password ?? '');
     }
   } catch (error) {
     response.ok = false;

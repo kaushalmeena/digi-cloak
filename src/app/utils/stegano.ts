@@ -192,6 +192,18 @@ export function extractPayloadFromImageData(imageData: ImageData): string {
   return getMessageContent(length, iterator);
 }
 
+/**
+ * Cheap check for the Digi-Cloak container header and a valid length, with no
+ * password needed. Reads only the first few dozen pixels.
+ */
+export function containsHiddenMessage(imageData: ImageData): boolean {
+  const iterator = getDecodedTextGenerator(imageData);
+  if (getMessageHeader(iterator) !== MESSAGE_HEADER) {
+    return false;
+  }
+  return getMessageLength(iterator) > 0;
+}
+
 /* ---------------------------------------------------------------------------
  * Main-thread canvas wrappers
  * ------------------------------------------------------------------------- */
@@ -256,3 +268,8 @@ export const getDecodedMessage = async (
   const payload = extractPayloadFromImageData(imageData);
   return decryptMessage(payload, password);
 };
+
+export const detectHiddenMessage = async (
+  base64Image: string,
+): Promise<boolean> =>
+  containsHiddenMessage(await getImageDataFromBase64Image(base64Image));

@@ -19,6 +19,7 @@ import { Intro } from '../../components/intro/intro';
 import { Loader } from '../../components/loader/loader';
 import { Password } from '../../components/password/password';
 import { Tabs } from '../../components/tabs/tabs';
+import { Handoff } from '../../services/handoff';
 import { Stegano } from '../../services/stegano';
 import { copyText, getBase64ImageFromBlob } from '../../utils/browser';
 
@@ -62,22 +63,39 @@ export class Unlock {
   });
 
   private readonly result = viewChild<ElementRef<HTMLElement>>('result');
+  private readonly dropzone = viewChild.required(Dropzone);
+  /** The chosen image has no Digi-Cloak message in it at all. */
+  protected readonly noMessageFound = signal(false);
+  private currentFile: File | null = null;
   private copiedTimeout: number | undefined;
 
   constructor() {
     inject(DestroyRef).onDestroy(() => clearTimeout(this.copiedTimeout));
+
+    // An image handed over from Hide ("Reveal it instead") is pre-selected.
+    const handed = inject(Handoff).take();
+    if (handed) {
+      afterNextRender(() => this.dropzone().select(handed));
+    }
   }
 
   protected handleFile(file: File | null): void {
     this.resetResult();
     this.previewImageSource.set('');
+    this.noMessageFound.set(false);
+    this.currentFile = file;
     if (!file) {
       return;
     }
 
     getBase64ImageFromBlob(file)
-      .then((src) => {
+      .then(async (src) => {
         this.previewImageSource.set(src);
+        const found = await this.stegano.detect(src).catch(() => true);
+        // Ignore the answer if another image was chosen meanwhile.
+        if (this.currentFile === file) {
+          this.noMessageFound.set(!found);
+        }
       })
       .catch(() => {
         this.error.set("That file couldn't be read as an image.");

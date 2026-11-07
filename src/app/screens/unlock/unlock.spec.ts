@@ -132,4 +132,19 @@ describe('Unlock', () => {
       element.querySelector('[data-testid="copy-error"]')?.textContent,
     ).toContain('Clipboard unavailable');
   });
+
+  it('warns early when the image holds no message', async () => {
+    const input = element.querySelector<HTMLInputElement>('#image')!;
+    setInputFile(
+      input,
+      dataUrlToFile(createTestImage(), 'plain.png', 'image/png'),
+    );
+    await waitFor(
+      fixture,
+      () =>
+        element.querySelector<HTMLElement>(
+          'app-collapse:has([data-testid="no-message"])',
+        )?.style.gridTemplateRows === '1fr',
+    );
+  });
 });

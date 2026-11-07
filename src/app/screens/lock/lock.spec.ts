@@ -2,11 +2,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
 import {
+  createTestImage,
   createTestImageFile,
+  dataUrlToFile,
   setInputFile,
   waitFor,
 } from '../../testing/fixtures';
-import { getDecodedMessage } from '../../utils/stegano';
+import { getDecodedMessage, getEncodedBase64Image } from '../../utils/stegano';
 import { Lock } from './lock';
 
 describe('Lock', () => {
@@ -160,5 +162,37 @@ describe('Lock', () => {
     expect(clickSpy).toHaveBeenCalled();
     const anchor = clickSpy.calls.mostRecent().object as HTMLAnchorElement;
     expect(anchor.download).toBe('digicloak-test.png');
+  });
+
+  it('flags an image that already holds a message', async () => {
+    const encoded = await getEncodedBase64Image(
+      createTestImage(),
+      'existing',
+      'pw',
+    );
+    const input = element.querySelector<HTMLInputElement>('#image')!;
+    setInputFile(input, dataUrlToFile(encoded, 'old.png', 'image/png'));
+
+    await waitFor(
+      fixture,
+      () =>
+        element.querySelector<HTMLElement>(
+          'app-collapse:has([data-testid="existing-message"])',
+        )?.style.gridTemplateRows === '1fr',
+    );
+    expect(
+      element.querySelector('[data-testid="reveal-instead"]'),
+    ).not.toBeNull();
+  });
+
+  it('does not flag a plain image', async () => {
+    await chooseImage();
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    fixture.detectChanges();
+    expect(
+      element.querySelector<HTMLElement>(
+        'app-collapse:has([data-testid="existing-message"])',
+      )?.style.gridTemplateRows,
+    ).toBe('0fr');
   });
 });

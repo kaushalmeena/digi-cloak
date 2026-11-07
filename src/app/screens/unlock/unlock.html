@@ -10,14 +10,29 @@
     />
 
     <form class="mt-8 flex flex-col gap-6" (submit)="handleSubmit($event)">
-      <app-dropzone
-        inputId="image"
-        label="Image with a hidden message"
-        accept="image/png, image/gif, image/jpeg, image/webp"
-        formats="The PNG saved from Digi-Cloak"
-        [preview]="previewImageSource()"
-        (fileChange)="handleFile($event)"
-      />
+      <div>
+        <app-dropzone
+          inputId="image"
+          label="Image with a hidden message"
+          accept="image/png, image/gif, image/jpeg, image/webp"
+          formats="The PNG saved from Digi-Cloak"
+          [preview]="previewImageSource()"
+          (fileChange)="handleFile($event)"
+        />
+        <app-collapse [open]="noMessageFound()">
+          <div
+            data-testid="no-message"
+            class="mt-3 flex items-start gap-2.5 rounded-lg bg-muted px-3 py-2.5 text-sm"
+          >
+            <app-icon class="mt-0.5 text-warning" name="alert" [size]="16" />
+            <span
+              >No hidden message found in this image. It may have been converted
+              or compressed after the message was hidden, or it wasn't made with
+              Digi-Cloak.</span
+            >
+          </div>
+        </app-collapse>
+      </div>
 
       <app-password
         inputId="password"
