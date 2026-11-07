@@ -1,9 +1,9 @@
 import AES from 'crypto-js/aes';
 import Utf8 from 'crypto-js/enc-utf8';
 import {
-  GCM_TAG_BYTES,
+  TAG_BYTES,
   IV_BYTES,
-  PBKDF2_ITERATIONS,
+  KDF_ROUNDS,
   SALT_BYTES,
   V2_PREFIX,
 } from '../constants';
@@ -49,7 +49,7 @@ async function deriveKey(
     {
       name: 'PBKDF2',
       salt: salt as BufferSource,
-      iterations: PBKDF2_ITERATIONS,
+      iterations: KDF_ROUNDS,
       hash: 'SHA-256',
     },
     material,
@@ -126,6 +126,6 @@ export function encryptedPayloadLength(messageBytes: number): number {
     3 + // "$" separators
     base64(SALT_BYTES) +
     base64(IV_BYTES) +
-    base64(messageBytes + GCM_TAG_BYTES)
+    base64(messageBytes + TAG_BYTES)
   );
 }

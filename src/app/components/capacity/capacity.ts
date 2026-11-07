@@ -5,7 +5,7 @@ import {
   computed,
   input,
 } from '@angular/core';
-import { CAPACITY_WARN_RATIO } from '../../constants';
+import { CAPACITY_WARN_AT } from '../../constants';
 
 /**
  * How much of the image's hiding capacity the message uses, drawn as a strip
@@ -59,7 +59,7 @@ export class Capacity {
     if (this.tooLarge()) {
       return 'danger';
     }
-    return this.percent() / 100 >= CAPACITY_WARN_RATIO ? 'warn' : 'ok';
+    return this.percent() / 100 >= CAPACITY_WARN_AT ? 'warn' : 'ok';
   });
 
   protected readonly barTone = computed(

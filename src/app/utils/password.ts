@@ -1,7 +1,7 @@
 import {
-  PASSWORD_ALPHABET,
+  PASSWORD_CHARSET,
   STRENGTH_LABELS,
-  STRENGTH_THRESHOLDS,
+  STRENGTH_LIMITS,
 } from '../constants';
 
 /** 0 = weak, 1 = fair, 2 = good, 3 = strong */
@@ -86,7 +86,7 @@ export function estimateStrength(value: string): Strength {
   }
   bits = Math.max(0, Math.round(bits));
 
-  const index = STRENGTH_THRESHOLDS.findIndex((limit) => bits < limit);
+  const index = STRENGTH_LIMITS.findIndex((limit) => bits < limit);
   const level = (index === -1 ? 3 : index) as StrengthLevel;
   return { level, label: STRENGTH_LABELS[level], bits };
 }
@@ -109,7 +109,7 @@ export function generatePassword(groups = 4, groupLength = 5): string {
   return Array.from({ length: groups }, () =>
     Array.from(
       { length: groupLength },
-      () => PASSWORD_ALPHABET[randomIndex(PASSWORD_ALPHABET.length)],
+      () => PASSWORD_CHARSET[randomIndex(PASSWORD_CHARSET.length)],
     ).join(''),
   ).join('-');
 }

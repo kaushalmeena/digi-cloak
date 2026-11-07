@@ -3,14 +3,14 @@
  * ------------------------------------------------------------------------ */
 
 /** On <html> while a route renders; see styles.css and App. */
-export const ROUTE_ENTERING_CLASS = 'route-entering';
+export const ROUTE_ENTER_CLASS = 'route-entering';
 /** How long after navigation enter animations stay suppressed. */
 export const ROUTE_SETTLE_MS = 300;
 
-export const DARK_MODE_CLASS = 'dark';
-export const DARK_MODE_STORAGE_KEY = 'darkMode';
+export const THEME_DARK_CLASS = 'dark';
+export const THEME_STORAGE_KEY = 'darkMode';
 /** On <html> for one frame while the theme switches; see styles.css. */
-export const THEME_SWITCHING_CLASS = 'theme-switching';
+export const THEME_SWAP_CLASS = 'theme-switching';
 
 /* ---------------------------------------------------------------------------
  * UI timing and thresholds
@@ -20,7 +20,7 @@ export const THEME_SWITCHING_CLASS = 'theme-switching';
 export const COPIED_RESET_MS = 2000;
 
 /** Above this share of capacity the meter turns amber as an early warning. */
-export const CAPACITY_WARN_RATIO = 0.85;
+export const CAPACITY_WARN_AT = 0.85;
 
 /* ---------------------------------------------------------------------------
  * Passwords
@@ -28,10 +28,10 @@ export const CAPACITY_WARN_RATIO = 0.85;
 
 export const STRENGTH_LABELS = ['Weak', 'Fair', 'Good', 'Strong'] as const;
 /** Upper bounds (exclusive) in bits for weak, fair and good. */
-export const STRENGTH_THRESHOLDS = [36, 60, 80];
+export const STRENGTH_LIMITS = [36, 60, 80];
 
 /** No 0/O, 1/l/I: easy to read aloud or copy by hand. */
-export const PASSWORD_ALPHABET =
+export const PASSWORD_CHARSET =
   'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 
 /* ---------------------------------------------------------------------------
@@ -66,7 +66,8 @@ export const BITS_PER_PIXEL = 3;
  * ------------------------------------------------------------------------ */
 
 export const V2_PREFIX = 'v2$';
-export const PBKDF2_ITERATIONS = 600_000;
+/** PBKDF2 iteration count. */
+export const KDF_ROUNDS = 600_000;
 export const SALT_BYTES = 16;
 export const IV_BYTES = 12;
-export const GCM_TAG_BYTES = 16;
+export const TAG_BYTES = 16;

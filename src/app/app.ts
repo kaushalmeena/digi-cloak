@@ -13,7 +13,7 @@ import {
 import { Header } from './components/header/header';
 import { Icon } from './components/icon/icon';
 import { Pwa } from './services/pwa';
-import { ROUTE_ENTERING_CLASS, ROUTE_SETTLE_MS } from './constants';
+import { ROUTE_ENTER_CLASS, ROUTE_SETTLE_MS } from './constants';
 
 @Component({
   selector: 'app-root',
@@ -106,13 +106,13 @@ export class App {
   private suppressEnterMotionDuringNavigation(): void {
     const root = document.documentElement;
     let settleTimer: ReturnType<typeof setTimeout> | undefined;
-    root.classList.add(ROUTE_ENTERING_CLASS);
+    root.classList.add(ROUTE_ENTER_CLASS);
     inject(Router)
       .events.pipe(takeUntilDestroyed())
       .subscribe((event) => {
         if (event instanceof NavigationStart) {
           clearTimeout(settleTimer);
-          root.classList.add(ROUTE_ENTERING_CLASS);
+          root.classList.add(ROUTE_ENTER_CLASS);
         } else if (
           event instanceof NavigationEnd ||
           event instanceof NavigationCancel ||
@@ -122,7 +122,7 @@ export class App {
           // animations start a few frames after the route renders.
           clearTimeout(settleTimer);
           settleTimer = setTimeout(
-            () => root.classList.remove(ROUTE_ENTERING_CLASS),
+            () => root.classList.remove(ROUTE_ENTER_CLASS),
             ROUTE_SETTLE_MS,
           );
         }
