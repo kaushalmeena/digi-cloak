@@ -20,22 +20,27 @@ await writeFile('public/favicon.svg', `${markSvg({ size: 32 })}\n`);
 console.log('favicon.svg');
 
 await mkdir('public/icons', { recursive: true });
+// Shrinking one reused page's viewport to small sizes made headless Chrome
+// paint stale, tiled slices into the capture. Each render gets a fresh page at
+// a fixed viewport larger than any icon; the screenshot crops to the icon.
+const VIEWPORT = { width: 512, height: 512 };
+
 const browser = await launchBrowser();
 try {
-  const page = await browser.newPage();
   for (const size of SIZES) {
-    await page.setViewportSize({ width: size, height: size });
+    const page = await browser.newPage({ viewport: VIEWPORT });
     await page.setContent(iconHtml(size), { waitUntil: 'load' });
     await page.screenshot({
       path: `public/icons/icon-${size}x${size}.png`,
       clip: { x: 0, y: 0, width: size, height: size },
     });
+    await page.close();
     console.log(`icon-${size}x${size}.png`);
   }
 
   // favicon.ico for browsers without SVG favicons: one 32px PNG wrapped in an
   // ICO container (ICO allows PNG payloads), so no extra tooling is needed.
-  await page.setViewportSize({ width: 32, height: 32 });
+  const page = await browser.newPage({ viewport: VIEWPORT });
   await page.setContent(
     `<!doctype html><body style="margin:0">${markSvg({ size: 32 })}</body>`,
     { waitUntil: 'load' },
