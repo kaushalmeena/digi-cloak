@@ -4,7 +4,22 @@ import {
   encodePayloadIntoImageData,
   extractPayloadFromImageData,
 } from '../utils/stegano';
-import type { SteganoRequest, SteganoResponse } from './messages';
+
+/* Message shapes shared with the Stegano service (type-only import there). */
+export interface SteganoRequest {
+  id: number;
+  type: 'encode' | 'decode' | 'detect';
+  image: string;
+  message?: string;
+  password?: string;
+}
+
+export interface SteganoResponse {
+  id: number;
+  ok: boolean;
+  result?: string;
+  error?: string;
+}
 
 async function getImageData(base64Image: string): Promise<ImageData> {
   let bitmap: ImageBitmap;

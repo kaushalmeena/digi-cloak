@@ -5,7 +5,10 @@ import {
   getDecodedMessage,
   getEncodedBase64Image,
 } from '../utils/stegano';
-import type { SteganoRequest, SteganoResponse } from '../workers/messages';
+import type {
+  SteganoRequest,
+  SteganoResponse,
+} from '../workers/stegano.worker';
 
 interface PendingRequest {
   resolve: (result: string) => void;
