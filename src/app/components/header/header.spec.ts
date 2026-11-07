@@ -38,11 +38,7 @@ describe('Header', () => {
     const links: HTMLAnchorElement[] = Array.from(
       fixture.nativeElement.querySelectorAll('a[data-testid="nav-link"]'),
     );
-    expect(links.map((link) => link.textContent?.trim())).toEqual([
-      'Lock',
-      'Unlock',
-      'FAQs',
-    ]);
+    expect(links.map((link) => link.textContent?.trim())).toEqual(['FAQ']);
   });
 
   it('delegates toggleDarkMode to the Theme service', () => {
@@ -54,11 +50,13 @@ describe('Header', () => {
   });
 
   it('re-renders when the theme signal changes', () => {
+    const toggle = (): HTMLElement =>
+      fixture.nativeElement.querySelector('[data-testid="theme-toggle"]');
+    expect(toggle().getAttribute('aria-label')).toBe('Switch to dark theme');
+
     darkMode.set(true);
     fixture.detectChanges();
-    expect(
-      fixture.nativeElement.querySelectorAll('[data-testid="theme-toggle"] svg')
-        .length,
-    ).toBe(1);
+    expect(toggle().getAttribute('aria-label')).toBe('Switch to light theme');
+    expect(toggle().querySelectorAll('svg').length).toBe(1);
   });
 });

@@ -1,26 +1,23 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  {
-    path: '',
-    title: 'Digi-Cloak - Hide Secrets in Images',
-    loadComponent: () => import('./screens/home/home').then((m) => m.Home),
-  },
+  // The tool is the home page: land straight on the Hide mode.
+  { path: '', pathMatch: 'full', redirectTo: 'lock' },
   {
     path: 'lock',
-    title: 'Lock a Secret - Digi-Cloak',
+    title: 'Hide a Message in an Image - Digi-Cloak',
     loadComponent: () => import('./screens/lock/lock').then((m) => m.Lock),
   },
   {
     path: 'unlock',
-    title: 'Unlock a Secret - Digi-Cloak',
+    title: 'Reveal a Hidden Message - Digi-Cloak',
     loadComponent: () =>
       import('./screens/unlock/unlock').then((m) => m.Unlock),
   },
   {
     path: 'faqs',
-    title: 'FAQs - Digi-Cloak',
+    title: 'FAQ - Digi-Cloak',
     loadComponent: () => import('./screens/faqs/faqs').then((m) => m.Faqs),
   },
-  { path: '**', redirectTo: '' },
+  { path: '**', redirectTo: 'lock' },
 ];

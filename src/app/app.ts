@@ -1,18 +1,28 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 import { Header } from './components/header/header';
+import { Icon } from './components/icon/icon';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Header],
+  imports: [RouterOutlet, Header, Icon],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'flex min-h-dvh flex-col' },
   template: `
     <app-header />
-    <main
-      class="mx-auto box-border min-h-[calc(100vh-60px)] w-3/4 px-4 pt-[30px] pb-[60px] max-[720px]:w-full"
-    >
+    <main class="mx-auto w-full max-w-2xl flex-1 px-4 pt-8 pb-16 sm:pt-12">
       <router-outlet />
     </main>
+    <footer class="border-t border-border">
+      <p
+        class="mx-auto flex w-full max-w-2xl items-center gap-2 px-4 py-5 text-xs text-muted-foreground"
+      >
+        <app-icon name="shield" [size]="14" />
+        Runs entirely in your browser. Images, messages and passwords never
+        leave your device.
+      </p>
+    </footer>
   `,
 })
 export class App {}
