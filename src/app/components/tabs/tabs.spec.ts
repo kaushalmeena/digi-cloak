@@ -17,12 +17,12 @@ describe('Tabs', () => {
       fixture.nativeElement.querySelectorAll('[data-testid="mode-tab"]'),
     );
     expect(tabs.map((tab) => tab.textContent?.trim())).toEqual([
-      'Hide',
-      'Reveal',
+      'Conceal',
+      'Uncover',
     ]);
     expect(tabs.map((tab) => tab.getAttribute('href'))).toEqual([
-      '/lock',
-      '/unlock',
+      '/conceal',
+      '/uncover',
     ]);
   });
 });

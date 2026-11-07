@@ -53,7 +53,7 @@ const prefersReducedMotion = (): boolean =>
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 @Component({
-  selector: 'app-lock',
+  selector: 'app-conceal',
   imports: [
     Alert,
     Capacity,
@@ -68,9 +68,9 @@ const prefersReducedMotion = (): boolean =>
     Textbox,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './lock.html',
+  templateUrl: './conceal.html',
 })
-export class Lock {
+export class Conceal {
   private readonly stegano = inject(Stegano);
   private readonly injector = inject(Injector);
   private readonly router = inject(Router);
@@ -177,7 +177,7 @@ export class Lock {
     event.preventDefault();
 
     if (!this.previewImageSource()) {
-      this.error.set('Choose an image to hide the message in.');
+      this.error.set('Choose an image to conceal the message in.');
       return;
     }
     if (!this.fits()) {
@@ -207,11 +207,11 @@ export class Lock {
       });
   }
 
-  protected handleRevealInstead(): void {
+  protected handleUncoverInstead(): void {
     if (this.currentFile) {
       this.handoff.give(this.currentFile);
     }
-    void this.router.navigate(['/unlock']);
+    void this.router.navigate(['/uncover']);
   }
 
   protected handleShare(): void {

@@ -8,7 +8,7 @@ import {
   waitFor,
 } from '../../testing/fixtures';
 import { getEncodedBase64Image } from '../../utils/stegano';
-import { describeDecodeError, Unlock } from './unlock';
+import { describeDecodeError, Uncover } from './uncover';
 
 async function createEncodedImageFile(
   message: string,
@@ -22,17 +22,17 @@ async function createEncodedImageFile(
   return dataUrlToFile(encoded, 'encoded.png', 'image/png');
 }
 
-describe('Unlock', () => {
-  let fixture: ComponentFixture<Unlock>;
+describe('Uncover', () => {
+  let fixture: ComponentFixture<Uncover>;
   let element: HTMLElement;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Unlock],
+      imports: [Uncover],
       providers: [provideRouter([])],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Unlock);
+    fixture = TestBed.createComponent(Uncover);
     element = fixture.nativeElement;
     fixture.detectChanges();
   });

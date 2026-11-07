@@ -37,7 +37,7 @@ interface ModeTab {
 })
 export class Tabs {
   protected readonly tabs: ModeTab[] = [
-    { link: '/lock', title: 'Hide', icon: 'lock' },
-    { link: '/unlock', title: 'Reveal', icon: 'unlock' },
+    { link: '/conceal', title: 'Conceal', icon: 'lock' },
+    { link: '/uncover', title: 'Uncover', icon: 'unlock' },
   ];
 }

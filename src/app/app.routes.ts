@@ -1,23 +1,27 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  // The tool is the home page: land straight on the Hide mode.
-  { path: '', pathMatch: 'full', redirectTo: 'lock' },
+  // The tool is the home page: land straight on the Conceal mode.
+  { path: '', pathMatch: 'full', redirectTo: 'conceal' },
   {
-    path: 'lock',
-    title: 'Hide a Message in an Image - Digi-Cloak',
-    loadComponent: () => import('./screens/lock/lock').then((m) => m.Lock),
+    path: 'conceal',
+    title: 'Conceal a Message in an Image - Digi-Cloak',
+    loadComponent: () =>
+      import('./screens/conceal/conceal').then((m) => m.Conceal),
   },
   {
-    path: 'unlock',
-    title: 'Reveal a Hidden Message - Digi-Cloak',
+    path: 'uncover',
+    title: 'Uncover a Hidden Message - Digi-Cloak',
     loadComponent: () =>
-      import('./screens/unlock/unlock').then((m) => m.Unlock),
+      import('./screens/uncover/uncover').then((m) => m.Uncover),
   },
   {
     path: 'faqs',
     title: 'FAQ - Digi-Cloak',
     loadComponent: () => import('./screens/faqs/faqs').then((m) => m.Faqs),
   },
-  { path: '**', redirectTo: 'lock' },
+  // Old links from before the rename keep working.
+  { path: 'lock', redirectTo: 'conceal' },
+  { path: 'unlock', redirectTo: 'uncover' },
+  { path: '**', redirectTo: 'conceal' },
 ];

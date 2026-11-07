@@ -5,7 +5,7 @@
     <app-tabs class="sm:max-w-xs" />
     <app-intro
       class="mt-6"
-      title="Hide a message in an image"
+      title="Conceal a message in an image"
       description="Your message is encrypted with your password, then written into the image's pixels. The picture looks unchanged."
     />
 
@@ -26,16 +26,16 @@
           >
             <app-icon class="text-primary" name="info" [size]="16" />
             <span class="min-w-0 flex-1"
-              >This image already holds a hidden message. Hiding a new one
+              >This image already holds a hidden message. Concealing a new one
               replaces it.</span
             >
             <button
               type="button"
-              data-testid="reveal-instead"
+              data-testid="uncover-instead"
               class="btn btn-secondary min-h-8 px-3 text-xs"
-              (click)="handleRevealInstead()"
+              (click)="handleUncoverInstead()"
             >
-              Reveal it instead
+              Uncover it instead
               <app-icon name="arrow-right" [size]="14" />
             </button>
           </div>
@@ -45,7 +45,7 @@
       <app-textbox
         inputId="message"
         label="Message"
-        placeholder="Type the secret you want to hide"
+        placeholder="Type the secret you want to conceal"
         (valueChange)="handleMessageInput($event)"
       >
         <!-- Fixed-height row: the hint and the meter crossfade in place. -->
@@ -97,10 +97,10 @@
         >
           @if (busy()) {
             <app-loader [size]="16" />
-            Hiding message…
+            Concealing message…
           } @else {
             <app-icon name="lock" [size]="16" />
-            Hide message
+            Conceal message
           }
         </button>
       </div>
@@ -130,7 +130,7 @@
         />
       </span>
       <h2 id="result-title" class="text-sm font-semibold">
-        {{ encodedImageSource() ? 'Message hidden' : 'Result' }}
+        {{ encodedImageSource() ? 'Message concealed' : 'Result' }}
       </h2>
       @if (encodedImageSource()) {
         <span
@@ -175,9 +175,9 @@
           animate.enter="animate-fade-in motion-reduce:animate-none"
           animate.leave="animate-fade-out motion-reduce:animate-none"
         >
-          <p class="text-sm font-medium">Nothing hidden yet</p>
+          <p class="text-sm font-medium">Nothing concealed yet</p>
           <p class="text-xs text-pretty text-muted-foreground">
-            Add an image, a message and a password, then choose Hide message.
+            Add an image, a message and a password, then choose Conceal message.
             The new image appears here.
           </p>
         </div>

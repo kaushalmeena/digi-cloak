@@ -5,7 +5,7 @@
     <app-tabs class="sm:max-w-xs" />
     <app-intro
       class="mt-6"
-      title="Reveal a hidden message"
+      title="Uncover a hidden message"
       description="Open an image made with Digi-Cloak and enter its password to read the message inside."
     />
 
@@ -37,7 +37,7 @@
       <app-password
         inputId="password"
         label="Password"
-        placeholder="The password used to hide it"
+        placeholder="The password used to conceal it"
         (valueChange)="handlePasswordInput()"
       />
 
@@ -57,10 +57,10 @@
         >
           @if (busy()) {
             <app-loader [size]="16" />
-            Revealing message…
+            Uncovering message…
           } @else {
             <app-icon name="unlock" [size]="16" />
-            Reveal message
+            Uncover message
           }
         </button>
       </div>
@@ -137,9 +137,9 @@
           animate.enter="animate-fade-in motion-reduce:animate-none"
           animate.leave="animate-fade-out motion-reduce:animate-none"
         >
-          <p class="text-sm font-medium">Nothing revealed yet</p>
+          <p class="text-sm font-medium">Nothing uncovered yet</p>
           <p class="text-xs text-pretty text-muted-foreground">
-            Add the image and its password, then choose Reveal message. The
+            Add the image and its password, then choose Uncover message. The
             message appears here.
           </p>
         </div>
@@ -153,7 +153,7 @@
         }}</app-alert>
       </app-collapse>
       <p class="text-xs text-pretty text-muted-foreground">
-        Revealed messages are never stored. Leaving this page clears it.
+        Uncovered messages are never stored. Leaving this page clears it.
       </p>
     </div>
   </section>

@@ -9,19 +9,19 @@ import {
   waitFor,
 } from '../../testing/fixtures';
 import { getDecodedMessage, getEncodedBase64Image } from '../../utils/stegano';
-import { Lock } from './lock';
+import { Conceal } from './conceal';
 
-describe('Lock', () => {
-  let fixture: ComponentFixture<Lock>;
+describe('Conceal', () => {
+  let fixture: ComponentFixture<Conceal>;
   let element: HTMLElement;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Lock],
+      imports: [Conceal],
       providers: [provideRouter([])],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Lock);
+    fixture = TestBed.createComponent(Conceal);
     element = fixture.nativeElement;
     fixture.detectChanges();
   });
@@ -181,7 +181,7 @@ describe('Lock', () => {
         )?.style.gridTemplateRows === '1fr',
     );
     expect(
-      element.querySelector('[data-testid="reveal-instead"]'),
+      element.querySelector('[data-testid="uncover-instead"]'),
     ).not.toBeNull();
   });
 

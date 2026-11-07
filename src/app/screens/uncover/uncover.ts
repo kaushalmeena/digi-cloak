@@ -37,12 +37,12 @@ export function describeDecodeError(message: string): string {
 }
 
 @Component({
-  selector: 'app-unlock',
+  selector: 'app-uncover',
   imports: [Alert, Collapse, Dropzone, Icon, Intro, Loader, Password, Tabs],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './unlock.html',
+  templateUrl: './uncover.html',
 })
-export class Unlock {
+export class Uncover {
   private readonly stegano = inject(Stegano);
   private readonly injector = inject(Injector);
 
@@ -72,7 +72,7 @@ export class Unlock {
   constructor() {
     inject(DestroyRef).onDestroy(() => clearTimeout(this.copiedTimeout));
 
-    // An image handed over from Hide ("Reveal it instead") is pre-selected.
+    // An image handed over from Conceal ("Uncover it instead") is pre-selected.
     const handed = inject(Handoff).take();
     if (handed) {
       afterNextRender(() => this.dropzone().select(handed));

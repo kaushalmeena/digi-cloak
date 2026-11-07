@@ -1,7 +1,7 @@
 import { Service } from '@angular/core';
 
 /**
- * Carries an image from one mode to the other (e.g. "Reveal it instead"),
+ * Carries an image from one mode to the other (e.g. "Uncover it instead"),
  * so the person never has to choose the same file twice.
  */
 @Service()
