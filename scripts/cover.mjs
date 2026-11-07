@@ -1,5 +1,5 @@
 /**
- * Regenerates src/assets/og_image.png (1200x630 social share card).
+ * Regenerates public/og_image.png (1200x630 social share card).
  *
  * Plain copy on the left; on the right, the product itself: the result panel
  * as the app shows it after a message is hidden. Colours match the app's
@@ -13,7 +13,7 @@ import { join } from 'node:path';
 import { INK, PAPER, launchBrowser, markSvg } from './brand.mjs';
 
 const ROOT = new URL('..', import.meta.url).pathname;
-const OUT = join(ROOT, 'src/assets/og_image.png');
+const OUT = join(ROOT, 'public/og_image.png');
 
 const ACCENT = '#0e7468';
 const MUTED = '#5d666b';

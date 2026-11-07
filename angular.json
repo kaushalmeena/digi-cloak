@@ -29,7 +29,6 @@
             "assets": [
               "src/favicon.ico",
               "src/sitemap.xml",
-              "src/assets",
               {
                 "glob": "**/*",
                 "input": "public"
@@ -98,8 +97,7 @@
             "tsConfig": "tsconfig.spec.json",
             "webWorkerTsConfig": "tsconfig.worker.json",
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+              "src/favicon.ico"
             ],
             "styles": [
               "src/styles.css"
