@@ -1,51 +1,60 @@
-@for (faq of faqs; track faq.question; let i = $index) {
-  <section
-    data-testid="faq"
-    class="my-2.5 text-lg"
-    [attr.data-expanded]="isExpanded(i)"
-  >
-    <h2 class="m-0">
-      <button
-        type="button"
-        data-testid="faq-toggle"
-        class="flex w-full cursor-pointer items-center justify-between gap-2 border-none bg-transparent py-2 text-left text-2xl font-bold text-inherit"
-        [id]="'faq-question-' + i"
-        [attr.aria-controls]="'faq-answer-' + i"
-        [attr.aria-expanded]="isExpanded(i)"
-        (click)="toggle(i)"
-      >
-        {{ faq.question }}
-        <svg
-          class="shrink-0 fill-current transition-transform duration-300 motion-reduce:transition-none"
-          [class.rotate-180]="isExpanded(i)"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
+<div class="max-w-2xl">
+  <app-intro
+    title="Frequently asked questions"
+    description="How Digi-Cloak hides a message, what stays private, and what can break it."
+  />
+
+  <div class="panel mt-8 divide-y divide-border">
+    @for (faq of faqs; track faq.question; let i = $index) {
+      <section data-testid="faq" [attr.data-expanded]="isExpanded(i)">
+        <h2>
+          <button
+            type="button"
+            data-testid="faq-toggle"
+            class="flex w-full cursor-pointer items-center justify-between gap-4 px-4 py-3.5 text-left text-[15px] font-medium transition-colors duration-150 hover:bg-muted/60"
+            [id]="'faq-question-' + i"
+            [attr.aria-controls]="'faq-answer-' + i"
+            [attr.aria-expanded]="isExpanded(i)"
+            (click)="toggle(i)"
+          >
+            {{ faq.question }}
+            <app-icon
+              class="text-muted-foreground transition-transform duration-200 motion-reduce:transition-none"
+              name="chevron-down"
+              [class.rotate-180]="isExpanded(i)"
+              [size]="18"
+            />
+          </button>
+        </h2>
+        <div
+          class="grid transition-[grid-template-rows,opacity] duration-200 ease-out motion-reduce:transition-none"
+          [class]="
+            isExpanded(i)
+              ? 'grid-rows-[1fr] opacity-100'
+              : 'grid-rows-[0fr] opacity-0'
+          "
+          [id]="'faq-answer-' + i"
+          role="region"
+          [attr.aria-labelledby]="'faq-question-' + i"
         >
-          <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z" />
-        </svg>
-      </button>
-    </h2>
-    <div
-      class="grid transition-[grid-template-rows,opacity] duration-300 ease-in-out motion-reduce:transition-none"
-      [class]="
-        isExpanded(i)
-          ? 'grid-rows-[1fr] opacity-100'
-          : 'grid-rows-[0fr] opacity-0'
-      "
-      [id]="'faq-answer-' + i"
-      role="region"
-      [attr.aria-labelledby]="'faq-question-' + i"
-    >
-      <div class="min-h-0 overflow-hidden">
-        @for (block of faq.answer; track block.text) {
-          @if (block.heading) {
-            <h4 class="my-4 font-bold">{{ block.heading }}</h4>
-          }
-          <p class="my-2">{{ block.text }}</p>
-        }
-      </div>
-    </div>
-  </section>
-}
+          <div
+            class="min-h-0 overflow-hidden px-4 text-sm/6 text-muted-foreground"
+          >
+            <div class="max-w-[65ch] pb-4">
+              @for (block of faq.answer; track block.text) {
+                <p class="mt-2 first:mt-0">
+                  @if (block.heading) {
+                    <strong class="font-medium text-foreground">{{
+                      block.heading
+                    }}</strong>
+                  }
+                  {{ block.text }}
+                </p>
+              }
+            </div>
+          </div>
+        </div>
+      </section>
+    }
+  </div>
+</div>

@@ -1,39 +1,198 @@
-<div class="mt-4 mb-2.5 flex items-baseline justify-between">
-  <label class="text-base" [for]="inputId()">{{ label() }}</label>
+<div class="mb-2 flex h-5 items-baseline justify-between gap-3">
+  <label class="field-label" [for]="inputId()">{{ label() }}</label>
+  @if (file()) {
+    <button
+      type="button"
+      data-testid="remove-image"
+      class="cursor-pointer rounded-sm text-xs text-muted-foreground transition-colors duration-150 hover:text-foreground"
+      animate.enter="animate-fade-in motion-reduce:animate-none"
+      animate.leave="animate-fade-out motion-reduce:animate-none"
+      (click)="handleRemove()"
+    >
+      Remove
+    </button>
+  }
 </div>
-<button
-  type="button"
-  data-testid="dropzone"
-  class="flex min-h-[120px] w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-[3px] border-2 border-dashed bg-muted px-4 py-3 text-sm text-foreground focus-visible:outline-2 focus-visible:outline-offset-2"
-  [class]="dragging() ? 'border-foreground/60' : 'border-border'"
-  (click)="fileInput.click()"
+<!-- Empty and filled states share one frame (stage + file row) so choosing an image never changes its height. -->
+<div
+  class="panel overflow-hidden transition-[box-shadow,border-color] duration-150"
+  [class.border-primary]="dragging()"
+  [class.ring-2]="dragging()"
+  [class.ring-primary]="dragging()"
   (dragover)="onDragOver($event)"
-  (dragleave)="onDragLeave()"
+  (dragleave)="onDragLeave($event)"
   (drop)="onDrop($event)"
 >
-  @if (file()) {
-    <span
-      data-testid="file-info"
-      class="font-medium break-all transition-opacity duration-300 motion-reduce:transition-none starting:opacity-0"
-      >{{ fileInfo() }}</span
-    >
-    <span class="opacity-55">Click, drop, or paste to replace</span>
-  } @else {
-    <svg
-      class="size-8 fill-foreground opacity-55"
-      viewBox="0 0 24 24"
+  <div
+    data-testid="image-preview"
+    class="relative grid h-56 grid-cols-[minmax(0,1fr)] grid-rows-[minmax(0,1fr)] border-b border-border sm:h-64"
+  >
+    <div
+      class="checkerboard absolute inset-0 transition-opacity duration-300"
+      [class.opacity-0]="!preview()"
       aria-hidden="true"
-    >
-      <path
-        d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"
-      />
-    </svg>
-    <span>Drag &amp; drop an image, paste, or click to browse</span>
-  }
-</button>
+    ></div>
+    @if (file()) {
+      @if (preview()) {
+        <img
+          class="relative col-start-1 row-start-1 m-auto max-h-[calc(100%-1.5rem)] max-w-[calc(100%-1.5rem)] rounded-sm object-contain"
+          alt="Selected image"
+          animate.enter="animate-fade-in motion-reduce:animate-none"
+          animate.leave="animate-fade-out motion-reduce:animate-none"
+          [src]="preview()"
+        />
+      }
+    } @else {
+      <button
+        type="button"
+        data-testid="dropzone"
+        class="group relative col-start-1 row-start-1 m-3 flex cursor-pointer flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-input px-4 text-center transition-colors duration-150 hover:border-primary hover:bg-primary-soft/40"
+        [class.border-primary]="dragging()"
+        [class.bg-primary-soft]="dragging()"
+        animate.enter="animate-fade-in motion-reduce:animate-none"
+        animate.leave="animate-fade-out motion-reduce:animate-none"
+        (click)="handleBrowse()"
+      >
+        <span
+          class="flex size-10 items-center justify-center rounded-full bg-muted text-muted-foreground transition-colors duration-150 group-hover:bg-primary-soft group-hover:text-primary"
+        >
+          <app-icon name="image-up" [size]="20" />
+        </span>
+        <span class="text-sm">
+          <span class="font-medium">Drop an image here</span>
+          <span class="text-muted-foreground">, paste it, or </span>
+          <span class="font-medium text-primary">click to browse</span>
+        </span>
+      </button>
+    }
+  </div>
+  <!-- One fixed-height slot: the file row and the link row crossfade in place. -->
+  <div class="grid h-14 grid-cols-[minmax(0,1fr)] grid-rows-[minmax(0,1fr)]">
+    @if (linkMode()) {
+      <div
+        class="col-start-1 row-start-1 flex items-center gap-2 bg-card px-3"
+        animate.enter="animate-fade-in motion-reduce:animate-none"
+        animate.leave="animate-fade-out motion-reduce:animate-none"
+      >
+        <app-icon class="text-muted-foreground" name="link" [size]="18" />
+        <label class="sr-only" [for]="inputId() + '-link'">Image link</label>
+        <input
+          #linkField
+          type="url"
+          inputmode="url"
+          class="field-input min-w-0 flex-1 py-1 text-sm"
+          placeholder="https://example.com/image.png"
+          [id]="inputId() + '-link'"
+          (keydown.enter)="onLinkEnter($event)"
+          (keydown.escape)="handleCancelLink()"
+        />
+        <button
+          type="button"
+          data-testid="load-link"
+          class="btn btn-primary min-h-8 px-3 text-xs"
+          [disabled]="loading()"
+          (click)="handleLoadLink()"
+        >
+          @if (loading()) {
+            <app-loader [size]="13" />
+          }
+          Load
+        </button>
+        <button
+          type="button"
+          class="btn btn-ghost btn-icon size-8 min-h-8"
+          aria-label="Cancel loading from a link"
+          (click)="handleCancelLink()"
+        >
+          <app-icon name="x" [size]="16" />
+        </button>
+      </div>
+    } @else {
+      <div
+        class="col-start-1 row-start-1 flex items-center gap-3 bg-card px-3"
+        animate.enter="animate-fade-in motion-reduce:animate-none"
+        animate.leave="animate-fade-out motion-reduce:animate-none"
+      >
+        <app-icon class="text-muted-foreground" name="image-up" [size]="18" />
+        <div class="grid min-w-0 flex-1">
+          @if (file(); as chosen) {
+            <div
+              class="col-start-1 row-start-1 min-w-0"
+              animate.enter="animate-fade-in motion-reduce:animate-none"
+              animate.leave="animate-fade-out motion-reduce:animate-none"
+            >
+              <p data-testid="file-info" class="truncate text-sm font-medium">
+                {{ chosen.name }}
+              </p>
+              <p class="truncate text-xs text-muted-foreground tabular-nums">
+                {{ fileMeta() }}
+              </p>
+            </div>
+          } @else {
+            <div
+              class="col-start-1 row-start-1 min-w-0"
+              animate.enter="animate-fade-in motion-reduce:animate-none"
+              animate.leave="animate-fade-out motion-reduce:animate-none"
+            >
+              <p class="truncate text-sm text-muted-foreground">
+                No image selected
+              </p>
+              <p class="truncate text-xs text-muted-foreground">
+                {{ formats() }}
+              </p>
+            </div>
+          }
+        </div>
+        <div class="flex items-center gap-1">
+          @if (canPaste) {
+            <button
+              type="button"
+              data-testid="paste-image"
+              class="btn btn-ghost btn-icon size-8 min-h-8"
+              aria-label="Paste image from clipboard"
+              title="Paste image from clipboard"
+              [disabled]="loading()"
+              (click)="handlePasteClick()"
+            >
+              <app-icon name="clipboard" [size]="16" />
+            </button>
+          }
+          <button
+            type="button"
+            data-testid="link-image"
+            class="btn btn-ghost btn-icon size-8 min-h-8"
+            aria-label="Load image from a link"
+            title="Load image from a link"
+            [disabled]="loading()"
+            (click)="handleOpenLink()"
+          >
+            <app-icon name="link" [size]="16" />
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary ml-1 min-h-8 min-w-20 px-3 text-xs"
+            (click)="handleBrowse()"
+          >
+            {{ file() ? 'Replace' : 'Browse' }}
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+<app-collapse [open]="!!loadError()">
+  <p
+    data-testid="load-error"
+    class="flex items-start gap-1.5 pt-2 text-xs text-destructive"
+  >
+    <app-icon class="mt-px" name="alert" [size]="13" />
+    {{ visibleLoadError() }}
+  </p>
+</app-collapse>
 <input
   #fileInput
-  class="hidden"
+  class="sr-only"
+  tabindex="-1"
   [id]="inputId()"
   name="image"
   type="file"

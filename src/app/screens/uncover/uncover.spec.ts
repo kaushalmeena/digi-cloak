@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
 import {
   createTestImage,
@@ -7,7 +8,7 @@ import {
   waitFor,
 } from '../../testing/fixtures';
 import { getEncodedBase64Image } from '../../utils/stegano';
-import { Unlock } from './unlock';
+import { describeDecodeError, Uncover } from './uncover';
 
 async function createEncodedImageFile(
   message: string,
@@ -21,16 +22,17 @@ async function createEncodedImageFile(
   return dataUrlToFile(encoded, 'encoded.png', 'image/png');
 }
 
-describe('Unlock', () => {
-  let fixture: ComponentFixture<Unlock>;
+describe('Uncover', () => {
+  let fixture: ComponentFixture<Uncover>;
   let element: HTMLElement;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Unlock],
+      imports: [Uncover],
+      providers: [provideRouter([])],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Unlock);
+    fixture = TestBed.createComponent(Uncover);
     element = fixture.nativeElement;
     fixture.detectChanges();
   });
@@ -40,7 +42,7 @@ describe('Unlock', () => {
     const input = element.querySelector<HTMLInputElement>('#image')!;
     setInputFile(input, file);
     await waitFor(fixture, () =>
-      element.querySelector('img[alt="Preview-Image"]'),
+      element.querySelector('img[alt="Selected image"]'),
     );
 
     element.querySelector<HTMLInputElement>('#password')!.value = password;
@@ -57,10 +59,10 @@ describe('Unlock', () => {
     await loadEncodedImage('hunter2');
     await waitFor(
       fixture,
-      () => element.querySelector<HTMLTextAreaElement>('#message')!.value,
+      () => element.querySelector<HTMLTextAreaElement>('#message')?.value,
     );
 
-    expect(element.querySelector<HTMLTextAreaElement>('#message')!.value).toBe(
+    expect(element.querySelector<HTMLTextAreaElement>('#message')?.value).toBe(
       'top secret',
     );
 
@@ -70,60 +72,79 @@ describe('Unlock', () => {
     expect(copyButton.disabled).toBeFalse();
   });
 
-  it('shows an error in the snackbar for the wrong password', async () => {
+  it('shows an inline error for the wrong password', async () => {
     await loadEncodedImage('wrong');
     await waitFor(fixture, () =>
-      element.querySelector('[data-testid="snackbar"]'),
+      element.querySelector('[data-testid="error"]')?.textContent?.trim(),
     );
 
     expect(
-      element.querySelector('[data-testid="snackbar"]')?.textContent,
+      element.querySelector('[data-testid="error"]')?.textContent,
     ).toContain('Password is incorrect');
-    expect(element.querySelector<HTMLTextAreaElement>('#message')!.value).toBe(
-      '',
+    expect(element.querySelector('[data-testid="result"]')).toBeNull();
+  });
+
+  it('explains when the image holds no message', () => {
+    expect(describeDecodeError('Message not found in the image')).toContain(
+      'No hidden message found',
     );
   });
 
-  it('copies the decoded message and notifies via the snackbar', async () => {
+  it('copies the decoded message and confirms on the button', async () => {
     spyOn(navigator.clipboard, 'writeText').and.resolveTo();
     await loadEncodedImage('hunter2');
     await waitFor(
       fixture,
-      () => element.querySelector<HTMLTextAreaElement>('#message')!.value,
+      () => element.querySelector<HTMLTextAreaElement>('#message')?.value,
     );
 
     element
       .querySelector<HTMLButtonElement>('[data-testid="copy-button"]')!
       .click();
-    await waitFor(fixture, () =>
-      element.querySelector('[data-testid="snackbar"]'),
-    );
+    const copyButton = (): HTMLButtonElement =>
+      element.querySelector<HTMLButtonElement>('[data-testid="copy-button"]')!;
+    await waitFor(fixture, () => copyButton().textContent?.includes('Copied'));
 
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith('top secret');
     expect(
-      element.querySelector('[data-testid="snackbar"]')?.textContent,
-    ).toContain('Copied to clipboard');
+      element.querySelector('[data-testid="copy-error"]')?.textContent?.trim(),
+    ).toBe('');
   });
 
-  it('shows an error in the snackbar when copying fails', async () => {
+  it('shows an inline error when copying fails', async () => {
     spyOn(navigator.clipboard, 'writeText').and.rejectWith(
       new Error('Clipboard unavailable'),
     );
     await loadEncodedImage('hunter2');
     await waitFor(
       fixture,
-      () => element.querySelector<HTMLTextAreaElement>('#message')!.value,
+      () => element.querySelector<HTMLTextAreaElement>('#message')?.value,
     );
 
     element
       .querySelector<HTMLButtonElement>('[data-testid="copy-button"]')!
       .click();
     await waitFor(fixture, () =>
-      element.querySelector('[data-testid="snackbar"]'),
+      element.querySelector('[data-testid="copy-error"]')?.textContent?.trim(),
     );
 
     expect(
-      element.querySelector('[data-testid="snackbar"]')?.textContent,
+      element.querySelector('[data-testid="copy-error"]')?.textContent,
     ).toContain('Clipboard unavailable');
+  });
+
+  it('warns early when the image holds no message', async () => {
+    const input = element.querySelector<HTMLInputElement>('#image')!;
+    setInputFile(
+      input,
+      dataUrlToFile(createTestImage(), 'plain.png', 'image/png'),
+    );
+    await waitFor(
+      fixture,
+      () =>
+        element.querySelector<HTMLElement>(
+          'app-collapse:has([data-testid="no-message"])',
+        )?.style.gridTemplateRows === '1fr',
+    );
   });
 });

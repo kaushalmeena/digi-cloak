@@ -1,10 +1,16 @@
-import { Component, input, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  signal,
+} from '@angular/core';
 
 @Component({
   selector: 'app-compare',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div
-      class="relative h-[min(75vh,700px)] w-full overflow-hidden rounded-[3px] bg-background select-none"
+      class="checkerboard relative h-[min(70vh,640px)] w-full overflow-hidden select-none"
     >
       <img
         class="absolute inset-0 size-full object-contain"
@@ -18,27 +24,26 @@ import { Component, input, signal } from '@angular/core';
         [style.clip-path]="'inset(0 0 0 ' + position() + '%)'"
       />
       <div
-        class="pointer-events-none absolute inset-y-0 w-px bg-foreground/70"
+        class="pointer-events-none absolute inset-y-0 w-0.5 -translate-x-1/2 bg-white shadow-[0_0_0_1px_rgb(16_22_26/0.25)]"
         [style.left.%]="position()"
         aria-hidden="true"
       >
         <div
-          class="absolute top-1/2 left-1/2 flex size-10 -translate-1/2 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-[0_2px_6px_#00000066]"
+          class="absolute top-1/2 left-1/2 flex h-8 w-5 -translate-1/2 items-center justify-center gap-0.5 rounded-full bg-white shadow-[0_1px_4px_rgb(16_22_26/0.3)]"
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M8 7l-5 5 5 5V7zm8 0v10l5-5-5-5z" />
-          </svg>
+          <span class="h-3 w-px bg-zinc-400"></span>
+          <span class="h-3 w-px bg-zinc-400"></span>
         </div>
       </div>
       <span
-        class="pointer-events-none absolute bottom-0.5 left-0.5 bg-primary/80 px-3 py-1.5 text-sm text-primary-foreground"
+        class="pointer-events-none absolute top-3 left-3 rounded-md bg-card/90 px-2 py-1 text-xs font-medium shadow-sm"
         aria-hidden="true"
         >Original</span
       >
       <span
-        class="pointer-events-none absolute right-0.5 bottom-0.5 bg-primary/80 px-3 py-1.5 text-sm text-primary-foreground"
+        class="pointer-events-none absolute top-3 right-3 rounded-md bg-card/90 px-2 py-1 text-xs font-medium shadow-sm"
         aria-hidden="true"
-        >Encoded</span
+        >With message</span
       >
       <input
         type="range"

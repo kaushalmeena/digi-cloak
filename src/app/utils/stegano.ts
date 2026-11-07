@@ -3,18 +3,13 @@ import {
   encryptMessage,
   encryptedPayloadLength,
 } from './crypto';
-
-/*
- * Container format embedded in the image: "digicloak:<payload length>:<payload>",
- * written one bit at a time into the least significant bit of each R/G/B byte
- * (3 bits per pixel). This layout predates the v2 crypto format and must not
- * change, or previously encoded images become unreadable.
- */
-const MESSAGE_BORDER = ':';
-const MESSAGE_HEADER = 'digicloak';
-const MESSAGE_FORMAT = `${MESSAGE_HEADER}${MESSAGE_BORDER}<L>${MESSAGE_BORDER}<M>`;
-const BITS_PER_CHAR = 8;
-const BITS_PER_PIXEL = 3;
+import {
+  BITS_PER_CHAR,
+  BITS_PER_PIXEL,
+  MESSAGE_BORDER,
+  MESSAGE_FORMAT,
+  MESSAGE_HEADER,
+} from '../constants';
 
 /* ---------------------------------------------------------------------------
  * Capacity estimation
@@ -192,6 +187,18 @@ export function extractPayloadFromImageData(imageData: ImageData): string {
   return getMessageContent(length, iterator);
 }
 
+/**
+ * Cheap check for the Digi-Cloak container header and a valid length, with no
+ * password needed. Reads only the first few dozen pixels.
+ */
+export function containsHiddenMessage(imageData: ImageData): boolean {
+  const iterator = getDecodedTextGenerator(imageData);
+  if (getMessageHeader(iterator) !== MESSAGE_HEADER) {
+    return false;
+  }
+  return getMessageLength(iterator) > 0;
+}
+
 /* ---------------------------------------------------------------------------
  * Main-thread canvas wrappers
  * ------------------------------------------------------------------------- */
@@ -256,3 +263,8 @@ export const getDecodedMessage = async (
   const payload = extractPayloadFromImageData(imageData);
   return decryptMessage(payload, password);
 };
+
+export const detectHiddenMessage = async (
+  base64Image: string,
+): Promise<boolean> =>
+  containsHiddenMessage(await getImageDataFromBase64Image(base64Image));

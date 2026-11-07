@@ -5,6 +5,29 @@
     <title>Digi-Cloak</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      // Pick the accent before first paint so it never flashes. One accent per
+      // tab session; each new visit gets a different one than the last.
+      (function () {
+        var accents = ['teal', 'blue', 'lime', 'orange', 'graphite'];
+        var accent = 'teal';
+        try {
+          accent = sessionStorage.getItem('accent') || '';
+          if (accents.indexOf(accent) === -1) {
+            var last = localStorage.getItem('lastAccent');
+            var options = accents.filter(function (a) {
+              return a !== last;
+            });
+            accent = options[Math.floor(Math.random() * options.length)];
+            sessionStorage.setItem('accent', accent);
+            localStorage.setItem('lastAccent', accent);
+          }
+        } catch (e) {
+          accent = accents[Math.floor(Math.random() * accents.length)];
+        }
+        document.documentElement.setAttribute('data-accent', accent);
+      })();
+    </script>
     <link rel="canonical" href="https://kaushalmeena.github.io/digi-cloak/" />
     <meta
       key="description"
@@ -56,7 +79,17 @@
     />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
-    <meta name="theme-color" content="#394b59" />
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png" />
+    <meta
+      name="theme-color"
+      content="#f6f7f7"
+      media="(prefers-color-scheme: light)"
+    />
+    <meta
+      name="theme-color"
+      content="#0f1112"
+      media="(prefers-color-scheme: dark)"
+    />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",

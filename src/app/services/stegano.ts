@@ -1,7 +1,14 @@
 import { Service } from '@angular/core';
 
-import { getDecodedMessage, getEncodedBase64Image } from '../utils/stegano';
-import type { SteganoRequest, SteganoResponse } from '../workers/messages';
+import {
+  detectHiddenMessage,
+  getDecodedMessage,
+  getEncodedBase64Image,
+} from '../utils/stegano';
+import type {
+  SteganoRequest,
+  SteganoResponse,
+} from '../workers/stegano.worker';
 
 interface PendingRequest {
   resolve: (result: string) => void;
@@ -31,6 +38,14 @@ export class Stegano {
       return getDecodedMessage(image, password);
     }
     return this.request({ type: 'decode', image, password });
+  }
+
+  /** Whether the image carries a Digi-Cloak message (no password needed). */
+  async detect(image: string): Promise<boolean> {
+    if (!this.worker) {
+      return detectHiddenMessage(image);
+    }
+    return (await this.request({ type: 'detect', image })) === 'true';
   }
 
   private request(payload: Omit<SteganoRequest, 'id'>): Promise<string> {

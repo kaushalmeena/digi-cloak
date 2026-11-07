@@ -34,11 +34,11 @@ share looks like nothing more than a picture.
 
 1. **Encrypt** — your message is scrambled with AES using a secret password only
    you know.
-2. **Hide** — the encrypted bytes are woven into an image's pixels via LSB
+2. **Conceal** — the encrypted bytes are woven into an image's pixels via LSB
    steganography, invisible to the eye.
 3. **Share** — send the image anywhere; without your password it is just a
    picture.
-4. **Reveal** — drop the image back in, enter the password, and the secret
+4. **Uncover** — drop the image back in, enter the password, and the secret
    reappears.
 
 > Everything runs **100% in your browser** — no uploads, no servers, no tracking.

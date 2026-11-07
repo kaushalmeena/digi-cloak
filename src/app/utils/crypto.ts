@@ -1,5 +1,12 @@
 import AES from 'crypto-js/aes';
 import Utf8 from 'crypto-js/enc-utf8';
+import {
+  TAG_BYTES,
+  IV_BYTES,
+  KDF_ROUNDS,
+  SALT_BYTES,
+  V2_PREFIX,
+} from '../constants';
 
 /*
  * v2 payloads are produced with the Web Crypto API:
@@ -9,11 +16,6 @@ import Utf8 from 'crypto-js/enc-utf8';
  * Anything else is treated as a legacy crypto-js (OpenSSL EVP) payload
  * so images encoded by older versions of the app still decode.
  */
-const V2_PREFIX = 'v2$';
-const PBKDF2_ITERATIONS = 600_000;
-const SALT_BYTES = 16;
-const IV_BYTES = 12;
-const GCM_TAG_BYTES = 16;
 
 function toBase64(bytes: Uint8Array): string {
   let binary = '';
@@ -47,7 +49,7 @@ async function deriveKey(
     {
       name: 'PBKDF2',
       salt: salt as BufferSource,
-      iterations: PBKDF2_ITERATIONS,
+      iterations: KDF_ROUNDS,
       hash: 'SHA-256',
     },
     material,
@@ -124,6 +126,6 @@ export function encryptedPayloadLength(messageBytes: number): number {
     3 + // "$" separators
     base64(SALT_BYTES) +
     base64(IV_BYTES) +
-    base64(messageBytes + GCM_TAG_BYTES)
+    base64(messageBytes + TAG_BYTES)
   );
 }

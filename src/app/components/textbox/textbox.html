@@ -1,14 +1,17 @@
-<div class="mt-4 mb-2.5 flex items-baseline justify-between">
-  <label class="text-base" [for]="inputId()">{{ label() }}</label>
-  <ng-content />
+<div class="mb-2 flex items-baseline justify-between gap-3">
+  <label class="field-label" [for]="inputId()">{{ label() }}</label>
+  <ng-content select="[aside]" />
 </div>
 <textarea
-  class="min-h-[30px] w-full appearance-none rounded-[3px] bg-muted px-2.5 text-sm leading-[30px] text-foreground caret-foreground shadow-[inset_0_0_0_1px_#10161a26,inset_0_1px_1px_#10161a33] outline-none focus-visible:outline-2 focus-visible:outline-offset-2"
+  class="field-input block resize-y"
+  [class.font-mono]="monospace()"
   [id]="inputId()"
   [attr.name]="name()"
+  [attr.placeholder]="placeholder() || null"
   [rows]="rows()"
   [readOnly]="readonly()"
   [required]="!readonly()"
   [value]="value()"
   (input)="onInput($event)"
 ></textarea>
+<ng-content />

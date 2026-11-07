@@ -1,0 +1,160 @@
+<div
+  class="grid items-start gap-x-10 gap-y-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]"
+>
+  <div>
+    <app-tabs class="sm:max-w-xs" />
+    <app-intro
+      class="mt-6"
+      title="Uncover a hidden message"
+      description="Open an image made with Digi-Cloak and enter its password to read the message inside."
+    />
+
+    <form class="mt-8 flex flex-col gap-6" (submit)="handleSubmit($event)">
+      <div>
+        <app-dropzone
+          inputId="image"
+          label="Image with a hidden message"
+          accept="image/png, image/gif, image/jpeg, image/webp"
+          formats="The PNG saved from Digi-Cloak"
+          [preview]="previewImageSource()"
+          (fileChange)="handleFile($event)"
+        />
+        <app-collapse [open]="noMessageFound()">
+          <div
+            data-testid="no-message"
+            class="mt-3 flex items-start gap-2.5 rounded-lg bg-muted px-3 py-2.5 text-sm"
+          >
+            <app-icon class="mt-0.5 text-warning" name="alert" [size]="16" />
+            <span
+              >No hidden message found in this image. It may have been converted
+              or compressed after the message was hidden, or it wasn't made with
+              Digi-Cloak.</span
+            >
+          </div>
+        </app-collapse>
+      </div>
+
+      <app-password
+        inputId="password"
+        label="Password"
+        placeholder="The password used to conceal it"
+        (valueChange)="handlePasswordInput()"
+      />
+
+      <div>
+        <app-collapse [open]="!!error()">
+          <app-alert data-testid="error" class="mb-4">{{
+            visibleError()
+          }}</app-alert>
+        </app-collapse>
+        <button
+          type="submit"
+          class="btn min-h-11 w-full"
+          [class.btn-primary]="!decodedMessage()"
+          [class.btn-secondary]="decodedMessage()"
+          [disabled]="busy()"
+          [attr.aria-busy]="busy()"
+        >
+          @if (busy()) {
+            <app-loader [size]="16" />
+            Uncovering message…
+          } @else {
+            <app-icon name="unlock" [size]="16" />
+            Uncover message
+          }
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Output panel: always present at a fixed size, so its states swap in place without shifting the page. -->
+  <section
+    #result
+    class="panel flex scroll-mt-20 flex-col overflow-hidden lg:sticky lg:top-20 lg:h-[min(calc(100dvh-7rem),46rem)] lg:min-h-120"
+    aria-labelledby="result-title"
+    aria-live="polite"
+  >
+    <div
+      class="flex h-12 items-center gap-2.5 border-b border-border pr-2 pl-4"
+    >
+      <span
+        class="flex size-6 items-center justify-center rounded-full transition-colors duration-300"
+        [class]="
+          decodedMessage()
+            ? 'bg-success-soft text-success'
+            : 'bg-muted text-muted-foreground'
+        "
+      >
+        <app-icon
+          [name]="decodedMessage() ? 'check' : 'unlock'"
+          [size]="14"
+          [strokeWidth]="decodedMessage() ? 2.5 : 2"
+        />
+      </span>
+      <h2 id="result-title" class="text-sm font-semibold">Hidden message</h2>
+      <button
+        type="button"
+        data-testid="copy-button"
+        class="btn btn-ghost ml-auto min-h-8 min-w-22 px-2.5"
+        [disabled]="!decodedMessage()"
+        (click)="handleCopy()"
+      >
+        <app-icon [name]="copied() ? 'check' : 'copy'" [size]="15" />
+        <span aria-live="polite">{{ copied() ? 'Copied' : 'Copy' }}</span>
+      </button>
+    </div>
+
+    <div
+      class="relative grid h-72 min-h-0 grid-cols-[minmax(0,1fr)] grid-rows-[minmax(0,1fr)] sm:h-80 lg:h-auto lg:flex-1"
+    >
+      @if (decodedMessage()) {
+        <div
+          data-testid="result"
+          class="col-start-1 row-start-1 flex min-h-0"
+          animate.enter="animate-fade-in motion-reduce:animate-none"
+          animate.leave="animate-fade-out motion-reduce:animate-none"
+        >
+          <label for="message" class="sr-only">Hidden message</label>
+          <textarea
+            id="message"
+            readonly
+            class="size-full resize-none bg-transparent p-4 text-[15px]/6 whitespace-pre-wrap outline-none"
+            [value]="decodedMessage()"
+          ></textarea>
+        </div>
+      } @else if (busy()) {
+        <div
+          class="col-start-1 row-start-1 m-auto flex flex-col items-center gap-3 text-sm text-muted-foreground"
+          animate.enter="animate-fade-in motion-reduce:animate-none"
+          animate.leave="animate-fade-out motion-reduce:animate-none"
+        >
+          <app-loader [size]="22" />
+          Reading the message from the pixels…
+        </div>
+      } @else {
+        <div
+          class="col-start-1 row-start-1 m-auto flex max-w-64 flex-col items-center gap-2 px-4 text-center"
+          animate.enter="animate-fade-in motion-reduce:animate-none"
+          animate.leave="animate-fade-out motion-reduce:animate-none"
+        >
+          <p class="text-sm font-medium">Nothing uncovered yet</p>
+          <p class="text-xs text-pretty text-muted-foreground">
+            Add the image and its password, then choose Uncover message. The
+            message appears here.
+          </p>
+        </div>
+      }
+    </div>
+
+    <div class="border-t border-border p-4">
+      <app-collapse [open]="!!copyError()">
+        <app-alert data-testid="copy-error" class="mb-3">{{
+          visibleCopyError()
+        }}</app-alert>
+      </app-collapse>
+      <p class="text-xs text-pretty text-muted-foreground">
+        Uncovered messages are never stored. Leaving this page clears it.
+      </p>
+    </div>
+  </section>
+</div>

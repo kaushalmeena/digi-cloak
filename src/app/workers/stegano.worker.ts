@@ -1,9 +1,25 @@
 import { decryptMessage, encryptMessage } from '../utils/crypto';
 import {
+  containsHiddenMessage,
   encodePayloadIntoImageData,
   extractPayloadFromImageData,
 } from '../utils/stegano';
-import type { SteganoRequest, SteganoResponse } from './messages';
+
+/* Message shapes shared with the Stegano service (type-only import there). */
+export interface SteganoRequest {
+  id: number;
+  type: 'encode' | 'decode' | 'detect';
+  image: string;
+  message?: string;
+  password?: string;
+}
+
+export interface SteganoResponse {
+  id: number;
+  ok: boolean;
+  result?: string;
+  error?: string;
+}
 
 async function getImageData(base64Image: string): Promise<ImageData> {
   let bitmap: ImageBitmap;
@@ -43,12 +59,17 @@ addEventListener('message', async ({ data }: MessageEvent<SteganoRequest>) => {
   try {
     const imageData = await getImageData(data.image);
     if (data.type === 'encode') {
-      const payload = await encryptMessage(data.message ?? '', data.password);
+      const payload = await encryptMessage(
+        data.message ?? '',
+        data.password ?? '',
+      );
       encodePayloadIntoImageData(imageData, payload);
       response.result = await toDataUrl(imageData);
+    } else if (data.type === 'detect') {
+      response.result = String(containsHiddenMessage(imageData));
     } else {
       const payload = extractPayloadFromImageData(imageData);
-      response.result = await decryptMessage(payload, data.password);
+      response.result = await decryptMessage(payload, data.password ?? '');
     }
   } catch (error) {
     response.ok = false;

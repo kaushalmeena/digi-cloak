@@ -55,6 +55,6 @@
     }
   ],
   "description": "Hide secrets in plain sight securely in images with AES encryption and LSB steganography.",
-  "theme_color": "#394b59",
-  "background_color": "#30404d"
+  "theme_color": "#16191b",
+  "background_color": "#16191b"
 }

@@ -1,26 +1,27 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
+  // The tool is the home page: land straight on the Conceal mode.
+  { path: '', pathMatch: 'full', redirectTo: 'conceal' },
   {
-    path: '',
-    title: 'Digi-Cloak - Hide Secrets in Images',
-    loadComponent: () => import('./screens/home/home').then((m) => m.Home),
-  },
-  {
-    path: 'lock',
-    title: 'Lock a Secret - Digi-Cloak',
-    loadComponent: () => import('./screens/lock/lock').then((m) => m.Lock),
-  },
-  {
-    path: 'unlock',
-    title: 'Unlock a Secret - Digi-Cloak',
+    path: 'conceal',
+    title: 'Conceal a Message in an Image - Digi-Cloak',
     loadComponent: () =>
-      import('./screens/unlock/unlock').then((m) => m.Unlock),
+      import('./screens/conceal/conceal').then((m) => m.Conceal),
+  },
+  {
+    path: 'uncover',
+    title: 'Uncover a Hidden Message - Digi-Cloak',
+    loadComponent: () =>
+      import('./screens/uncover/uncover').then((m) => m.Uncover),
   },
   {
     path: 'faqs',
-    title: 'FAQs - Digi-Cloak',
+    title: 'FAQ - Digi-Cloak',
     loadComponent: () => import('./screens/faqs/faqs').then((m) => m.Faqs),
   },
-  { path: '**', redirectTo: '' },
+  // Old links from before the rename keep working.
+  { path: 'lock', redirectTo: 'conceal' },
+  { path: 'unlock', redirectTo: 'uncover' },
+  { path: '**', redirectTo: 'conceal' },
 ];
