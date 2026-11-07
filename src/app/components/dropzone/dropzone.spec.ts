@@ -45,7 +45,7 @@ describe('Dropzone', () => {
   it('emits the file on drop', () => {
     const dataTransfer = new DataTransfer();
     dataTransfer.items.add(createTestImageFile());
-    const drop = new DragEvent('drop', { dataTransfer });
+    const drop = new DragEvent('drop', { dataTransfer, bubbles: true });
 
     element.querySelector('[data-testid="dropzone"]')!.dispatchEvent(drop);
     fixture.detectChanges();
@@ -73,11 +73,30 @@ describe('Dropzone', () => {
     dataTransfer.items.add(
       new File(['plain'], 'notes.txt', { type: 'text/plain' }),
     );
-    const drop = new DragEvent('drop', { dataTransfer });
+    const drop = new DragEvent('drop', { dataTransfer, bubbles: true });
 
     element.querySelector('[data-testid="dropzone"]')!.dispatchEvent(drop);
     fixture.detectChanges();
 
     expect(received.length).toBe(0);
+  });
+
+  it('shows the supplied preview and removes the file on request', () => {
+    const input = element.querySelector<HTMLInputElement>('#image')!;
+    setInputFile(input, createTestImageFile());
+    fixture.componentRef.setInput('preview', 'data:image/png;base64,AAAA');
+    fixture.detectChanges();
+
+    expect(
+      element.querySelector<HTMLImageElement>('img[alt="Selected image"]')?.src,
+    ).toContain('data:image/png');
+
+    element
+      .querySelector<HTMLButtonElement>('[data-testid="remove-image"]')!
+      .click();
+    fixture.detectChanges();
+
+    expect(received.at(-1)).toBeNull();
+    expect(element.querySelector('[data-testid="dropzone"]')).not.toBeNull();
   });
 });

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
 import {
   createTestImageFile,
@@ -15,6 +16,7 @@ describe('Lock', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [Lock],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(Lock);
@@ -26,7 +28,7 @@ describe('Lock', () => {
     const input = element.querySelector<HTMLInputElement>('#image')!;
     setInputFile(input, createTestImageFile());
     await waitFor(fixture, () =>
-      element.querySelector('img[alt="Preview-Image"]'),
+      element.querySelector('img[alt="Selected image"]'),
     );
   }
 
@@ -46,7 +48,7 @@ describe('Lock', () => {
     await chooseImage();
 
     const img = element.querySelector<HTMLImageElement>(
-      'img[alt="Preview-Image"]',
+      'img[alt="Selected image"]',
     );
     expect(img?.src).toMatch(/^data:image\/png;base64,/);
 
@@ -64,18 +66,18 @@ describe('Lock', () => {
     const input = element.querySelector<HTMLInputElement>('#image')!;
     setInputFile(input, null);
     fixture.detectChanges();
-    expect(element.querySelector('img[alt="Preview-Image"]')).toBeNull();
+    expect(element.querySelector('img[alt="Selected image"]')).toBeNull();
   });
 
   it('encodes the message into the image on submit', async () => {
     await chooseImage();
     submit('top secret', 'hunter2');
     await waitFor(fixture, () =>
-      element.querySelector('img[alt="Output-Image"]'),
+      element.querySelector('[data-testid="encoded-image"]'),
     );
 
     const outputImg = element.querySelector<HTMLImageElement>(
-      'img[alt="Output-Image"]',
+      '[data-testid="encoded-image"]',
     )!;
     expect(outputImg.src).toMatch(/^data:image\/png;base64,/);
 
@@ -91,12 +93,8 @@ describe('Lock', () => {
   it('opens the comparison modal once encoded', async () => {
     await chooseImage();
     submit('top secret', 'hunter2');
-    await waitFor(
-      fixture,
-      () =>
-        !element.querySelector<HTMLButtonElement>(
-          '[data-testid="compare-button"]',
-        )!.disabled,
+    await waitFor(fixture, () =>
+      element.querySelector('[data-testid="compare-button"]'),
     );
 
     element
@@ -111,15 +109,30 @@ describe('Lock', () => {
     ).not.toBeNull();
   });
 
-  it('shows an error in the snackbar when no image is chosen', async () => {
+  it('shows an inline error when no image is chosen', async () => {
     submit('top secret', 'hunter2');
     await waitFor(fixture, () =>
-      element.querySelector('[data-testid="snackbar"]'),
+      element.querySelector('[data-testid="alert"]'),
     );
 
     expect(
-      element.querySelector('[data-testid="snackbar"]')?.textContent,
-    ).toContain('Please choose an image first');
+      element.querySelector('[data-testid="alert"]')?.textContent,
+    ).toContain('Choose an image');
+  });
+
+  it('clears a finished result when the message is edited', async () => {
+    await chooseImage();
+    submit('top secret', 'hunter2');
+    await waitFor(fixture, () =>
+      element.querySelector('[data-testid="result"]'),
+    );
+
+    const message = element.querySelector<HTMLTextAreaElement>('#message')!;
+    message.value = 'top secret, edited';
+    message.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+
+    expect(element.querySelector('[data-testid="result"]')).toBeNull();
   });
 
   it('triggers a download with a digicloak filename when Save is clicked', async () => {
@@ -128,7 +141,7 @@ describe('Lock', () => {
     await chooseImage();
     submit('top secret', 'hunter2');
     await waitFor(fixture, () =>
-      element.querySelector('img[alt="Output-Image"]'),
+      element.querySelector('[data-testid="encoded-image"]'),
     );
 
     const saveButton = element.querySelector<HTMLButtonElement>(
