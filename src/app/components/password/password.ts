@@ -1,4 +1,13 @@
-import { Component, computed, input, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  output,
+  signal,
+} from '@angular/core';
+
+import { Icon } from '../icon/icon';
 
 interface Strength {
   label: string;
@@ -17,12 +26,18 @@ function scorePassword(value: string): number {
 
 @Component({
   selector: 'app-password',
+  imports: [Icon],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'block' },
   templateUrl: './password.html',
 })
 export class Password {
   readonly inputId = input.required<string>();
   readonly label = input.required<string>();
   readonly withStrength = input(false);
+  readonly placeholder = input('');
+  readonly hint = input('');
+  readonly valueChange = output<string>();
 
   protected readonly revealed = signal(false);
   protected readonly value = signal('');
@@ -36,7 +51,7 @@ export class Password {
       return { label: 'Weak', colorClass: 'text-destructive' };
     }
     if (score <= 3) {
-      return { label: 'Fair', colorClass: 'opacity-70' };
+      return { label: 'Fair', colorClass: 'text-warning' };
     }
     return { label: 'Strong', colorClass: 'text-success' };
   });
@@ -46,6 +61,8 @@ export class Password {
   }
 
   protected onInput(event: Event): void {
-    this.value.set((event.target as HTMLInputElement).value);
+    const value = (event.target as HTMLInputElement).value;
+    this.value.set(value);
+    this.valueChange.emit(value);
   }
 }

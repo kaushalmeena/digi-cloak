@@ -1,116 +1,158 @@
-<div class="flex gap-5 max-[992px]:flex-col">
-  <form class="basis-1/2" (submit)="handleSubmit($event)">
-    <app-dropzone
-      inputId="image"
-      label="Image"
-      accept="image/png, image/gif, image/jpeg, image/webp"
-      (fileChange)="handleFile($event)"
-    />
-    <app-password inputId="password" label="Password" [withStrength]="true" />
-    <app-textbox
-      inputId="message"
-      label="Message"
-      (valueChange)="handleMessageInput($event)"
-    >
-      @if (capacity(); as cap) {
-        <span
-          data-testid="capacity-meter"
-          class="text-xs transition duration-300 motion-reduce:transition-none starting:opacity-0"
-          [class.opacity-70]="fits()"
-          [class.text-destructive]="!fits()"
-          [attr.title]="
-            fits()
-              ? 'Characters used / approximate image capacity'
-              : 'Message too large for this image'
-          "
-        >
-          {{ messageBytes() }} / ~{{ cap }}
-        </span>
-      }
-    </app-textbox>
-    <div class="mt-[36px] flex flex-wrap items-center justify-center gap-2.5">
-      <button
-        type="submit"
-        class="inline-flex min-h-[50px] min-w-[150px] cursor-pointer items-center justify-center rounded-[3px] bg-primary px-4 text-lg text-primary-foreground transition-[opacity,scale] duration-300 hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 enabled:active:scale-[98%] disabled:cursor-not-allowed disabled:opacity-55 max-md:w-full"
-        [disabled]="busy() || !fits()"
-        [attr.aria-busy]="busy()"
+<app-tabs />
+<app-intro
+  class="mt-8"
+  title="Hide a message in an image"
+  description="Your message is encrypted with your password, then written into the image's pixels. The picture looks unchanged."
+/>
+
+<form class="mt-8 flex flex-col gap-6" (submit)="handleSubmit($event)">
+  <app-dropzone
+    inputId="image"
+    label="Image"
+    accept="image/png, image/gif, image/jpeg, image/webp"
+    [preview]="previewImageSource()"
+    [details]="imageDetails()"
+    (fileChange)="handleFile($event)"
+  />
+
+  <app-textbox
+    inputId="message"
+    label="Message"
+    placeholder="Type the secret you want to hide"
+    (valueChange)="handleMessageInput($event)"
+  >
+    @if (capacity(); as cap) {
+      <app-capacity
+        class="mt-2"
+        [used]="messageBytes()"
+        [capacity]="cap"
+        [tooLarge]="!fits()"
+      />
+    } @else {
+      <p class="mt-2 text-xs text-muted-foreground">
+        Choose an image to see how much text fits.
+      </p>
+    }
+  </app-textbox>
+
+  <app-password
+    inputId="password"
+    label="Password"
+    placeholder="Used to encrypt the message"
+    hint="Anyone with the image and this password can read the message. A lost password can't be recovered."
+    [withStrength]="true"
+    (valueChange)="handlePasswordInput()"
+  />
+
+  @if (error()) {
+    <app-alert>{{ error() }}</app-alert>
+  }
+
+  <button
+    type="submit"
+    class="btn min-h-11 w-full"
+    [class.btn-primary]="!encodedImageSource()"
+    [class.btn-secondary]="encodedImageSource()"
+    [disabled]="busy() || !fits()"
+    [attr.aria-busy]="busy()"
+  >
+    @if (busy()) {
+      <app-loader [size]="16" />
+      Hiding message…
+    } @else {
+      <app-icon name="lock" [size]="16" />
+      Hide message
+    }
+  </button>
+</form>
+
+@if (encodedImageSource()) {
+  <section
+    #result
+    data-testid="result"
+    class="panel mt-8 scroll-mt-20 overflow-hidden transition-[opacity,translate] duration-300 ease-out-expo motion-reduce:transition-none starting:translate-y-2 starting:opacity-0"
+    aria-labelledby="result-title"
+  >
+    <div class="flex items-center gap-2.5 border-b border-border px-4 py-3">
+      <span
+        class="flex size-6 items-center justify-center rounded-full bg-success-soft text-success"
       >
-        @if (busy()) {
-          <app-loader [size]="22" />
-        } @else {
-          Lock
-        }
-      </button>
-      <button
-        type="button"
-        data-testid="save-button"
-        class="inline-flex min-h-[50px] min-w-[150px] cursor-pointer items-center justify-center rounded-[3px] bg-secondary px-4 text-lg text-secondary-foreground ring-1 ring-border transition-[opacity,scale] duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 enabled:hover:opacity-70 enabled:active:scale-[98%] disabled:cursor-not-allowed disabled:opacity-55 disabled:outline-none max-md:w-full"
-        [disabled]="!encodedImageSource() || busy()"
-        (click)="handleSave()"
+        <app-icon name="check" [size]="14" [strokeWidth]="2.5" />
+      </span>
+      <h2 id="result-title" class="text-sm font-semibold">Message hidden</h2>
+      <span
+        class="ml-auto truncate text-xs text-muted-foreground"
+        [title]="outputName()"
+        >{{ outputName() }}</span
       >
-        Save
-      </button>
-      <button
-        type="button"
-        data-testid="compare-button"
-        class="inline-flex min-h-[50px] min-w-[150px] cursor-pointer items-center justify-center rounded-[3px] bg-secondary px-4 text-lg text-secondary-foreground ring-1 ring-border transition-[opacity,scale] duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 enabled:hover:opacity-70 enabled:active:scale-[98%] disabled:cursor-not-allowed disabled:opacity-55 disabled:outline-none max-md:w-full"
-        [disabled]="!encodedImageSource() || busy()"
-        (click)="openCompare()"
-      >
-        Compare
-      </button>
     </div>
-  </form>
-  <div class="basis-1/2">
-    <app-figure
-      label="Preview Image"
-      alt="Preview-Image"
-      [source]="previewImageSource()"
-    />
-    <app-figure
-      label="Encoded Image"
-      alt="Output-Image"
-      [source]="encodedImageSource()"
-    />
-    <p class="mt-4 text-center text-xs opacity-70">
-      The encoded image is saved as PNG. Re-compressing or converting it (for
-      example to JPEG) will destroy the hidden message.
-    </p>
-  </div>
-</div>
+    <div class="checkerboard flex h-56 items-center justify-center p-3 sm:h-64">
+      <img
+        data-testid="encoded-image"
+        class="max-h-full max-w-full rounded-sm object-contain"
+        alt="Image with the hidden message"
+        [src]="encodedImageSource()"
+      />
+    </div>
+    <div
+      class="flex flex-col gap-3 border-t border-border p-4 sm:flex-row sm:items-center"
+    >
+      <p class="flex-1 text-xs text-pretty text-muted-foreground">
+        Share it as a PNG file. Converting it, or sending it as a photo in a
+        chat app, destroys the message.
+      </p>
+      <div class="flex gap-2">
+        <button
+          type="button"
+          data-testid="compare-button"
+          class="btn btn-secondary flex-1"
+          (click)="openCompare()"
+        >
+          <app-icon name="compare" [size]="16" />
+          Compare
+        </button>
+        <button
+          type="button"
+          data-testid="save-button"
+          class="btn btn-primary flex-1"
+          (click)="handleSave()"
+        >
+          <app-icon name="download" [size]="16" />
+          Download PNG
+        </button>
+      </div>
+    </div>
+  </section>
+}
+
 <!-- Click-to-dismiss on the backdrop only; keyboard users close via Escape (handled through the dialog's cancel event). -->
 <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -->
 <dialog
   #compareDialog
-  class="m-auto w-[min(94vw,1100px)] translate-y-4 scale-95 overflow-visible bg-transparent p-0 opacity-0 transition-[opacity,scale,translate,overlay,display] transition-discrete duration-300 ease-out backdrop:bg-black/0 backdrop:transition-[background-color,overlay,display] backdrop:transition-discrete backdrop:duration-300 open:translate-y-0 open:scale-100 open:opacity-100 open:backdrop:bg-black/60 motion-reduce:transition-none motion-reduce:backdrop:transition-none starting:open:translate-y-4 starting:open:scale-95 starting:open:opacity-0 starting:open:backdrop:bg-black/0"
-  aria-label="Compare original and encoded image"
+  class="m-auto w-[min(94vw,1000px)] translate-y-4 scale-95 overflow-hidden rounded-xl border border-border bg-card p-0 text-foreground opacity-0 shadow-2xl transition-[opacity,scale,translate,overlay,display] transition-discrete duration-200 ease-out backdrop:bg-black/0 backdrop:transition-[background-color,overlay,display] backdrop:transition-discrete backdrop:duration-200 open:translate-y-0 open:scale-100 open:opacity-100 open:backdrop:bg-black/50 motion-reduce:transition-none motion-reduce:backdrop:transition-none starting:open:translate-y-4 starting:open:scale-95 starting:open:opacity-0 starting:open:backdrop:bg-black/0"
+  aria-labelledby="compare-title"
   (click)="onDialogClick($event)"
 >
-  <div class="relative">
+  <div class="flex items-center gap-3 border-b border-border py-2 pr-2 pl-4">
+    <h2 id="compare-title" class="text-sm font-semibold">
+      Original vs. with message
+    </h2>
+    <span class="text-xs text-muted-foreground max-sm:hidden"
+      >Drag across the image to compare</span
+    >
     <button
       type="button"
-      class="absolute -top-10 right-0 flex size-8 cursor-pointer items-center justify-center rounded-full border-none bg-transparent stroke-white opacity-80 transition-opacity duration-300 hover:opacity-100 focus-visible:outline-2 focus-visible:outline-offset-2"
+      class="btn btn-ghost btn-icon ml-auto"
       aria-label="Close comparison"
       (click)="closeCompare()"
     >
-      <svg
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        stroke-width="2"
-        fill="none"
-        aria-hidden="true"
-      >
-        <line x1="18" y1="6" x2="6" y2="18" />
-        <line x1="6" y1="6" x2="18" y2="18" />
-      </svg>
+      <app-icon name="x" [size]="18" />
     </button>
-    @if (encodedImageSource()) {
-      <app-compare
-        [before]="previewImageSource()"
-        [after]="encodedImageSource()"
-      />
-    }
   </div>
+  @if (encodedImageSource()) {
+    <app-compare
+      [before]="previewImageSource()"
+      [after]="encodedImageSource()"
+    />
+  }
 </dialog>
-<app-snackbar />

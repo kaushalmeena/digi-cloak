@@ -1,39 +1,84 @@
-<div class="mt-4 mb-2.5 flex items-baseline justify-between">
-  <label class="text-base" [for]="inputId()">{{ label() }}</label>
+<div class="mb-2 flex items-baseline justify-between gap-3">
+  <label class="field-label" [for]="inputId()">{{ label() }}</label>
+  @if (file()) {
+    <button
+      type="button"
+      data-testid="remove-image"
+      class="cursor-pointer rounded-sm text-xs text-muted-foreground transition-colors duration-150 hover:text-foreground"
+      (click)="handleRemove()"
+    >
+      Remove
+    </button>
+  }
 </div>
-<button
-  type="button"
-  data-testid="dropzone"
-  class="flex min-h-[120px] w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-[3px] border-2 border-dashed bg-muted px-4 py-3 text-sm text-foreground focus-visible:outline-2 focus-visible:outline-offset-2"
-  [class]="dragging() ? 'border-foreground/60' : 'border-border'"
-  (click)="fileInput.click()"
+<div
+  class="rounded-xl transition-shadow duration-150"
+  [class.ring-2]="dragging()"
+  [class.ring-primary]="dragging()"
   (dragover)="onDragOver($event)"
-  (dragleave)="onDragLeave()"
+  (dragleave)="onDragLeave($event)"
   (drop)="onDrop($event)"
 >
   @if (file()) {
-    <span
-      data-testid="file-info"
-      class="font-medium break-all transition-opacity duration-300 motion-reduce:transition-none starting:opacity-0"
-      >{{ fileInfo() }}</span
-    >
-    <span class="opacity-55">Click, drop, or paste to replace</span>
+    <div class="panel overflow-hidden">
+      <div
+        data-testid="image-preview"
+        class="checkerboard flex h-56 items-center justify-center border-b border-border p-3 sm:h-64"
+      >
+        @if (preview()) {
+          <img
+            class="max-h-full max-w-full rounded-sm object-contain transition-opacity duration-200 motion-reduce:transition-none starting:opacity-0"
+            alt="Selected image"
+            [src]="preview()"
+          />
+        }
+      </div>
+      <div class="flex items-center gap-3 px-3 py-2.5">
+        <app-icon class="text-muted-foreground" name="image-up" [size]="18" />
+        <div class="min-w-0 flex-1">
+          <p data-testid="file-info" class="truncate text-sm font-medium">
+            {{ file()?.name }}
+          </p>
+          <p class="text-xs text-muted-foreground tabular-nums">
+            {{ fileMeta() }}
+          </p>
+        </div>
+        <button
+          type="button"
+          class="btn btn-secondary min-h-8 px-3 text-xs"
+          (click)="handleBrowse()"
+        >
+          Replace
+        </button>
+      </div>
+    </div>
   } @else {
-    <svg
-      class="size-8 fill-foreground opacity-55"
-      viewBox="0 0 24 24"
-      aria-hidden="true"
+    <button
+      type="button"
+      data-testid="dropzone"
+      class="group flex min-h-44 w-full cursor-pointer flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-input bg-card px-4 py-8 text-center transition-colors duration-150 hover:border-primary hover:bg-primary-soft/40"
+      [class.border-primary]="dragging()"
+      [class.bg-primary-soft]="dragging()"
+      (click)="handleBrowse()"
     >
-      <path
-        d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"
-      />
-    </svg>
-    <span>Drag &amp; drop an image, paste, or click to browse</span>
+      <span
+        class="flex size-10 items-center justify-center rounded-full bg-muted text-muted-foreground transition-colors duration-150 group-hover:bg-primary-soft group-hover:text-primary"
+      >
+        <app-icon name="image-up" [size]="20" />
+      </span>
+      <span class="text-sm">
+        <span class="font-medium">Drop an image here</span>
+        <span class="text-muted-foreground">, paste it, or </span>
+        <span class="font-medium text-primary">click to browse</span>
+      </span>
+      <span class="text-xs text-muted-foreground">{{ formats() }}</span>
+    </button>
   }
-</button>
+</div>
 <input
   #fileInput
-  class="hidden"
+  class="sr-only"
+  tabindex="-1"
   [id]="inputId()"
   name="image"
   type="file"

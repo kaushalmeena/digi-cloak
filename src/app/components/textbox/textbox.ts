@@ -1,15 +1,24 @@
-import { Component, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+} from '@angular/core';
 
 @Component({
   selector: 'app-textbox',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'block' },
   templateUrl: './textbox.html',
 })
 export class Textbox {
   readonly inputId = input.required<string>();
   readonly label = input.required<string>();
   readonly name = input('message');
-  readonly rows = input(7);
+  readonly placeholder = input('');
+  readonly rows = input(5);
   readonly readonly = input(false);
+  readonly monospace = input(false);
   readonly value = input('');
   readonly valueChange = output<string>();
 

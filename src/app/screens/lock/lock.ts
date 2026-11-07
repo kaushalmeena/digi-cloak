@@ -1,18 +1,24 @@
 import {
+  afterNextRender,
+  ChangeDetectionStrategy,
   Component,
   computed,
   ElementRef,
   inject,
+  Injector,
   signal,
   viewChild,
 } from '@angular/core';
 
-import { Dropzone } from '../../components/dropzone/dropzone';
-import { Figure } from '../../components/figure/figure';
-import { Loader } from '../../components/loader/loader';
+import { Alert } from '../../components/alert/alert';
+import { Capacity } from '../../components/capacity/capacity';
 import { Compare } from '../../components/compare/compare';
+import { Dropzone } from '../../components/dropzone/dropzone';
+import { Icon } from '../../components/icon/icon';
+import { Intro } from '../../components/intro/intro';
+import { Loader } from '../../components/loader/loader';
 import { Password } from '../../components/password/password';
-import { Snackbar } from '../../components/snackbar/snackbar';
+import { Tabs } from '../../components/tabs/tabs';
 import { Textbox } from '../../components/textbox/textbox';
 import { Stegano } from '../../services/stegano';
 import { getBase64ImageFromBlob, saveImage } from '../../utils/browser';
@@ -32,13 +38,29 @@ function readImageSize(src: string): Promise<ImageSize> {
   });
 }
 
+const prefersReducedMotion = (): boolean =>
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 @Component({
   selector: 'app-lock',
-  imports: [Compare, Dropzone, Figure, Loader, Password, Snackbar, Textbox],
+  imports: [
+    Alert,
+    Capacity,
+    Compare,
+    Dropzone,
+    Icon,
+    Intro,
+    Loader,
+    Password,
+    Tabs,
+    Textbox,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './lock.html',
 })
 export class Lock {
   private readonly stegano = inject(Stegano);
+  private readonly injector = inject(Injector);
 
   protected readonly previewImageSource = signal('');
   protected readonly encodedImageSource = signal('');
@@ -46,6 +68,7 @@ export class Lock {
   protected readonly imageSize = signal<ImageSize | null>(null);
   protected readonly messageBytes = signal(0);
   protected readonly busy = signal(false);
+  protected readonly error = signal('');
 
   protected readonly capacity = computed(() => {
     const size = this.imageSize();
@@ -59,9 +82,19 @@ export class Lock {
       : true;
   });
 
-  private readonly snackbar = viewChild.required(Snackbar);
+  protected readonly imageDetails = computed(() => {
+    const size = this.imageSize();
+    return size ? `${size.width} × ${size.height} px` : '';
+  });
+
+  protected readonly outputName = computed(() => {
+    const stem = this.imageName().replace(/\.[^.]+$/, '') || 'output';
+    return `digicloak-${stem}.png`;
+  });
+
   private readonly compareDialog =
     viewChild.required<ElementRef<HTMLDialogElement>>('compareDialog');
+  private readonly result = viewChild<ElementRef<HTMLElement>>('result');
 
   protected openCompare(): void {
     this.compareDialog().nativeElement.showModal();
@@ -82,38 +115,44 @@ export class Lock {
   }
 
   protected handleFile(file: File | null): void {
-    this.encodedImageSource.set('');
+    this.resetResult();
+    this.previewImageSource.set('');
+    this.imageSize.set(null);
+    this.imageName.set(file?.name ?? '');
     if (!file) {
-      this.previewImageSource.set('');
-      this.imageName.set('');
-      this.imageSize.set(null);
       return;
     }
 
-    this.imageName.set(file.name);
     getBase64ImageFromBlob(file)
       .then(async (src) => {
         this.previewImageSource.set(src);
         this.imageSize.set(await readImageSize(src));
       })
-      .catch((err) => {
-        this.snackbar().show(err.message);
+      .catch(() => {
+        this.error.set("That file couldn't be read as an image.");
       });
   }
 
   protected handleMessageInput(value: string): void {
+    this.resetResult();
     this.messageBytes.set(new TextEncoder().encode(value).length);
+  }
+
+  protected handlePasswordInput(): void {
+    this.resetResult();
   }
 
   protected handleSubmit(event: Event): void {
     event.preventDefault();
 
     if (!this.previewImageSource()) {
-      this.snackbar().show('Please choose an image first');
+      this.error.set('Choose an image to hide the message in.');
       return;
     }
     if (!this.fits()) {
-      this.snackbar().show('Message length is too large to hide in image');
+      this.error.set(
+        'This message is too long for the image. Shorten it or use a larger image.',
+      );
       return;
     }
 
@@ -121,14 +160,16 @@ export class Lock {
     const message = target['message'].value as string;
     const password = target['password'].value as string;
 
+    this.error.set('');
     this.busy.set(true);
     this.stegano
       .encode(this.previewImageSource(), message, password)
       .then((src) => {
         this.encodedImageSource.set(src);
+        this.revealResult();
       })
-      .catch((err) => {
-        this.snackbar().show(err.message);
+      .catch((err: Error) => {
+        this.error.set(err.message);
       })
       .finally(() => {
         this.busy.set(false);
@@ -136,7 +177,24 @@ export class Lock {
   }
 
   protected handleSave(): void {
-    const stem = this.imageName().replace(/\.[^.]+$/, '') || 'output';
-    saveImage(this.encodedImageSource(), `digicloak-${stem}.png`);
+    saveImage(this.encodedImageSource(), this.outputName());
+  }
+
+  /** Any edit makes a finished result stale, so it is cleared rather than kept. */
+  private resetResult(): void {
+    this.encodedImageSource.set('');
+    this.error.set('');
+  }
+
+  private revealResult(): void {
+    afterNextRender(
+      () => {
+        this.result()?.nativeElement.scrollIntoView({
+          behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+          block: 'nearest',
+        });
+      },
+      { injector: this.injector },
+    );
   }
 }
