@@ -1,145 +1,92 @@
 /**
  * Regenerates src/assets/og_image.png (1200x630 social share card).
  *
- * A single Playwright render of a hand-built, brand-matched card: branding on
- * the left, and a hero illustration on the right showing an encrypted message
- * (ciphertext) being hidden inside an image behind a padlock.
+ * Plain copy on the left; on the right, the product itself: the result panel
+ * as the app shows it after a message is hidden. Colours match the app's
+ * light theme and its default teal accent.
  *
  * Usage: node scripts/generate-og-image.mjs
  */
 import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { chromium } from '@playwright/test';
+
+import { INK, PAPER, launchBrowser, markSvg } from './brand.mjs';
 
 const ROOT = new URL('..', import.meta.url).pathname;
 const OUT = join(ROOT, 'src/assets/og_image.png');
 
-const BACKGROUND = '#30404d';
-const BACKDROP = '#182026';
-const CARD = '#394b59';
-const FOREGROUND = '#f5f8fa';
-const LOCK_PATH =
-  'M400 256H152V152.9c0-39.6 31.7-72.5 71.3-72.9 40-.4 72.7 32.1 72.7 72v16c0 13.3 10.7 24 24 24h32c13.3 0 24-10.7 24-24v-16C376 68 307.5-.3 223.5 0 139.5.3 72 69.5 72 153.5V256H48c-26.5 0-48 21.5-48 48v160c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V304c0-26.5-21.5-48-48-48zM264 408c0 22.1-17.9 40-40 40s-40-17.9-40-40v-48c0-22.1 17.9-40 40-40s40 17.9 40 40v48z';
+const ACCENT = '#0e7468';
+const MUTED = '#5d666b';
+const BORDER = '#e1e5e6';
+const SUCCESS = '#1d7a4a';
+const SUCCESS_SOFT = '#e5f3eb';
+const CHECKER = '#e9ecec';
 
-// Deterministic pseudo-random hex so the "ciphertext" looks real but stable.
-function cipherText(chars) {
-  const hex = '0123456789abcdef';
-  let out = '';
-  let seed = 0x9e3779b9;
-  for (let i = 0; i < chars; i += 1) {
-    seed = (seed * 1664525 + 1013904223) >>> 0;
-    out += hex[(seed >>> 8) & 0xf];
-    if (i % 2 === 1 && i % 24 !== 23) out += ' ';
-    if (i % 24 === 23) out += '\n';
-  }
-  return out;
-}
+const ICON = (paths, size = 18, color = 'currentColor') =>
+  `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${paths}</svg>`;
+const CHECK = '<path d="M20 6 9 17l-5-5"/>';
+const DOWNLOAD =
+  '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/>';
+const SPLIT =
+  '<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M12 3v18"/>';
+const SHIELD =
+  '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>';
 
 function cardHtml() {
   return `<!doctype html><html><head><meta charset="utf-8"><style>
     * { margin: 0; box-sizing: border-box; }
     body {
-      width: 1200px; height: 630px; overflow: hidden;
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      color: ${FOREGROUND};
-      background:
-        radial-gradient(1100px 700px at 80% -10%, rgba(37,117,252,0.30), transparent 60%),
-        radial-gradient(900px 700px at -10% 120%, rgba(106,17,203,0.24), transparent 55%),
-        linear-gradient(135deg, ${BACKGROUND} 0%, ${BACKDROP} 100%);
+      width: 1200px; height: 630px; overflow: hidden; background: ${PAPER};
+      color: ${INK};
+      font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
     }
-    .stage { display: flex; align-items: center; height: 100%; padding: 0 70px; gap: 36px; }
-    .left { width: 48%; flex-shrink: 0; }
-    .brand { display: flex; align-items: center; gap: 18px; margin-bottom: 28px; }
-    .mark {
-      width: 74px; height: 74px; border-radius: 18px; background: ${CARD};
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06);
-    }
-    .wordmark { font-size: 40px; font-weight: 700; letter-spacing: -0.5px; }
-    h1 { font-size: 60px; line-height: 1.04; font-weight: 800; letter-spacing: -1.5px; }
-    h1 .accent {
-      background: linear-gradient(90deg, #8ab4ff, #b98bff);
-      -webkit-background-clip: text; background-clip: text; color: transparent;
-    }
-    p.tag { margin-top: 22px; font-size: 23px; line-height: 1.5; color: rgba(245,248,250,0.72); max-width: 480px; }
-    .chips { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
-    .chip {
-      font-size: 18px; font-weight: 600; padding: 10px 18px; border-radius: 999px;
-      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
-      color: rgba(245,248,250,0.9);
-    }
-    .url { margin-top: 40px; font-size: 18px; color: rgba(245,248,250,0.5); letter-spacing: 0.3px; }
+    .stage { display: grid; grid-template-columns: 1fr 460px; gap: 56px; align-items: center; height: 100%; padding: 0 80px; }
+    .brand { display: flex; align-items: center; gap: 14px; font-size: 28px; font-weight: 650; letter-spacing: -0.4px; }
+    h1 { margin-top: 44px; font-size: 64px; line-height: 1.04; font-weight: 700; letter-spacing: -2px; }
+    p.tag { margin-top: 22px; font-size: 24px; line-height: 1.45; color: ${MUTED}; max-width: 520px; }
+    .facts { display: flex; gap: 10px; margin-top: 36px; }
+    .fact { display: flex; align-items: center; white-space: nowrap; gap: 8px; font-size: 17px; font-weight: 550; padding: 9px 14px; border: 1px solid ${BORDER}; border-radius: 999px; background: #fff; }
+    .fact svg { color: ${ACCENT}; }
 
-    .right { flex: 1; display: flex; align-items: center; justify-content: center; }
-    .art { position: relative; transform: perspective(1600px) rotateY(-11deg) rotateX(3deg); }
-    .photo {
-      width: 430px; height: 340px; border-radius: 22px; position: relative; overflow: hidden;
-      background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 28%, #6a11cb 72%, #2575fc 100%);
-      box-shadow: 0 40px 90px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(255,255,255,0.14);
-    }
-    /* Encrypted payload woven into the lower pixels of the image. */
-    .cipher {
-      position: absolute; inset: 0; padding: 20px; display: flex; align-items: flex-end;
-      font-family: 'SFMono-Regular', Menlo, Consolas, monospace;
-      font-size: 15px; line-height: 1.5; letter-spacing: 1px;
-      color: rgba(255,255,255,0.92); white-space: pre; word-break: break-all;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.4);
-      -webkit-mask-image: linear-gradient(to top, #000 8%, transparent 62%);
-      mask-image: linear-gradient(to top, #000 8%, transparent 62%);
-      mix-blend-mode: overlay;
-    }
-    /* Faint pixel grid to signal per-pixel LSB embedding. */
-    .grid {
-      position: absolute; inset: 0;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.09) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.09) 1px, transparent 1px);
-      background-size: 26px 26px;
-      -webkit-mask-image: linear-gradient(135deg, transparent 45%, #000 100%);
-      mask-image: linear-gradient(135deg, transparent 45%, #000 100%);
-    }
-    .badge {
-      position: absolute; right: -34px; bottom: -30px;
-      width: 118px; height: 118px; border-radius: 30px;
-      background: rgba(24,32,38,0.55); backdrop-filter: blur(6px);
-      border: 1px solid rgba(255,255,255,0.22);
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 24px 50px rgba(0,0,0,0.5);
-    }
+    .panel { background: #fff; border: 1px solid ${BORDER}; border-radius: 18px; overflow: hidden; box-shadow: 0 30px 60px rgb(16 22 26 / 0.10), 0 2px 4px rgb(16 22 26 / 0.04); }
+    .head { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid ${BORDER}; font-size: 19px; font-weight: 650; }
+    .ok { width: 30px; height: 30px; border-radius: 999px; display: grid; place-items: center; background: ${SUCCESS_SOFT}; color: ${SUCCESS}; }
+    .file { margin-left: auto; font-size: 15px; font-weight: 450; color: ${MUTED}; }
+    .stagearea { height: 270px; display: grid; place-items: center; background-color: #fff;
+      background-image: conic-gradient(${CHECKER} 25%, transparent 0 50%, ${CHECKER} 0 75%, transparent 0); background-size: 20px 20px; }
+    .photo { width: 330px; height: 214px; border-radius: 6px; background:
+      radial-gradient(120px 90px at 72% 30%, #fde3b0, transparent 70%),
+      linear-gradient(180deg, #8fc3d9 0%, #c9e2e8 52%, #6f9a74 53%, #4f7a57 100%); }
+    .foot { display: flex; gap: 12px; padding: 18px 20px; border-top: 1px solid ${BORDER}; }
+    .btn { display: flex; align-items: center; justify-content: center; gap: 10px; height: 50px; border-radius: 10px; font-size: 18px; font-weight: 600; }
+    .secondary { padding: 0 20px; border: 1px solid #d3d9da; }
+    .primary { flex: 1; background: ${ACCENT}; color: #fff; }
   </style></head><body>
     <div class="stage">
-      <div class="left">
-        <div class="brand">
-          <div class="mark">
-            <svg width="40" height="40" viewBox="0 0 448 512"><path fill="${FOREGROUND}" d="${LOCK_PATH}"/></svg>
-          </div>
-          <span class="wordmark">Digi-Cloak</span>
+      <div>
+        <div class="brand">${markSvg({ size: 48 })}Digi-Cloak</div>
+        <h1>Hide a message<br>inside an image</h1>
+        <p class="tag">Encrypt text with a password and write it into a picture's pixels. Free, and it runs in your browser.</p>
+        <div class="facts">
+          <span class="fact">${ICON(SHIELD)}Nothing uploaded</span>
+          <span class="fact">AES-256-GCM</span>
+          <span class="fact">LSB steganography</span>
         </div>
-        <h1>Hide secrets<br>in <span class="accent">plain sight</span>.</h1>
-        <p class="tag">Encrypt a message and hide it inside an image — right in your browser.</p>
-        <div class="chips">
-          <span class="chip">AES-256 encryption</span>
-          <span class="chip">LSB steganography</span>
-          <span class="chip">100% private</span>
-        </div>
-        <div class="url">kaushalmeena.github.io/digi-cloak</div>
       </div>
-      <div class="right">
-        <div class="art">
-          <div class="photo">
-            <div class="grid"></div>
-            <div class="cipher">${cipherText(120)}</div>
-          </div>
-          <div class="badge">
-            <svg width="58" height="58" viewBox="0 0 448 512"><path fill="${FOREGROUND}" d="${LOCK_PATH}"/></svg>
-          </div>
+      <div class="panel">
+        <div class="head"><span class="ok">${ICON(CHECK, 16)}</span>Message hidden<span class="file">digicloak-lake.png</span></div>
+        <div class="stagearea"><div class="photo"></div></div>
+        <div class="foot">
+          <span class="btn secondary">${ICON(SPLIT)}Compare</span>
+          <span class="btn primary">${ICON(DOWNLOAD)}Download PNG</span>
         </div>
       </div>
     </div>
   </body></html>`;
 }
 
-const browser = await chromium.launch();
+const browser = await launchBrowser();
 try {
   const page = await browser.newPage({
     viewport: { width: 1200, height: 630 },

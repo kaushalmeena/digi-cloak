@@ -1,40 +1,61 @@
 /**
- * Regenerates public/icons/icon-*.png from the Digi-Cloak padlock SVG.
+ * Regenerates the favicon and public/icons/icon-*.png from the brand mark.
  * Usage: node scripts/generate-icons.mjs
  */
-import { mkdir } from 'node:fs/promises';
-import { chromium } from '@playwright/test';
+import { mkdir, writeFile } from 'node:fs/promises';
+
+import { INK, launchBrowser, markSvg } from './brand.mjs';
 
 const SIZES = [72, 96, 128, 144, 152, 192, 384, 512];
-const BACKGROUND = '#394b59';
-const FOREGROUND = '#f5f8fa';
-const LOCK_PATH =
-  'M400 256H152V152.9c0-39.6 31.7-72.5 71.3-72.9 40-.4 72.7 32.1 72.7 72v16c0 13.3 10.7 24 24 24h32c13.3 0 24-10.7 24-24v-16C376 68 307.5-.3 223.5 0 139.5.3 72 69.5 72 153.5V256H48c-26.5 0-48 21.5-48 48v160c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V304c0-26.5-21.5-48-48-48zM264 408c0 22.1-17.9 40-40 40s-40-17.9-40-40v-48c0-22.1 17.9-40 40-40s40 17.9 40 40v48z';
 
 function iconHtml(size) {
-  // Keep the glyph inside the maskable safe zone (~80% of the icon).
-  return `<!doctype html><body style="margin:0">
-    <div style="width:${size}px;height:${size}px;background:${BACKGROUND};display:flex;align-items:center;justify-content:center">
-      <svg width="55%" height="55%" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
-        <path fill="${FOREGROUND}" d="${LOCK_PATH}"/>
-      </svg>
-    </div>
+  // Full-bleed ink tile with the glyph inside the maskable safe zone (~80%),
+  // so platforms can crop it to a circle or squircle without clipping.
+  return `<!doctype html><body style="margin:0;background:${INK}">
+    ${markSvg({ size, glyph: 0.46, radius: 0 })}
   </body>`;
 }
 
+await writeFile('public/favicon.svg', `${markSvg({ size: 32 })}\n`);
+console.log('favicon.svg');
+
 await mkdir('public/icons', { recursive: true });
+const browser = await launchBrowser();
+try {
+  const page = await browser.newPage();
+  for (const size of SIZES) {
+    await page.setViewportSize({ width: size, height: size });
+    await page.setContent(iconHtml(size), { waitUntil: 'load' });
+    await page.screenshot({
+      path: `public/icons/icon-${size}x${size}.png`,
+      clip: { x: 0, y: 0, width: size, height: size },
+    });
+    console.log(`icon-${size}x${size}.png`);
+  }
 
-const browser = await chromium.launch();
-const page = await browser.newPage();
-
-for (const size of SIZES) {
-  await page.setViewportSize({ width: size, height: size });
-  await page.setContent(iconHtml(size));
-  await page.screenshot({
-    path: `public/icons/icon-${size}x${size}.png`,
-    clip: { x: 0, y: 0, width: size, height: size },
+  // favicon.ico for browsers without SVG favicons: one 32px PNG wrapped in an
+  // ICO container (ICO allows PNG payloads), so no extra tooling is needed.
+  await page.setViewportSize({ width: 32, height: 32 });
+  await page.setContent(
+    `<!doctype html><body style="margin:0">${markSvg({ size: 32 })}</body>`,
+    { waitUntil: 'load' },
+  );
+  const png = await page.screenshot({
+    clip: { x: 0, y: 0, width: 32, height: 32 },
+    omitBackground: true,
   });
-  console.log(`icon-${size}x${size}.png`);
+  const header = Buffer.alloc(22);
+  header.writeUInt16LE(0, 0); // reserved
+  header.writeUInt16LE(1, 2); // type: icon
+  header.writeUInt16LE(1, 4); // image count
+  header.writeUInt8(32, 6); // width
+  header.writeUInt8(32, 7); // height
+  header.writeUInt16LE(1, 10); // colour planes
+  header.writeUInt16LE(32, 12); // bits per pixel
+  header.writeUInt32LE(png.length, 14); // payload size
+  header.writeUInt32LE(22, 18); // payload offset
+  await writeFile('src/favicon.ico', Buffer.concat([header, png]));
+  console.log('favicon.ico');
+} finally {
+  await browser.close();
 }
-
-await browser.close();
