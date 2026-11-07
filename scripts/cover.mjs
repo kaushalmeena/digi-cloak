@@ -1,9 +1,10 @@
 /**
  * Regenerates public/og_image.png (1200x630 social share card).
  *
- * Plain copy on the left; on the right, the product itself: the result panel
- * as the app shows it after a message is hidden. Colours match the app's
- * light theme and its default teal accent.
+ * Plain copy on the left. On the right, the idea itself: a zoomed-in patch of
+ * image pixels (sky over a field), with a run of accent pixels carrying the
+ * bits of a hidden message in reading order. Colours match the app's light
+ * theme and its default teal accent.
  *
  * Usage: node scripts/cover.mjs
  */
@@ -18,69 +19,114 @@ const OUT = join(ROOT, 'public/og_image.png');
 const ACCENT = '#0e7468';
 const MUTED = '#5d666b';
 const BORDER = '#e1e5e6';
-const SUCCESS = '#1d7a4a';
-const SUCCESS_SOFT = '#e5f3eb';
-const CHECKER = '#e9ecec';
 
 const ICON = (paths, size = 18, color = 'currentColor') =>
   `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${paths}</svg>`;
-const CHECK = '<path d="M20 6 9 17l-5-5"/>';
-const DOWNLOAD =
-  '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/>';
-const SPLIT =
-  '<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M12 3v18"/>';
 const SHIELD =
   '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>';
+
+/* Pixel field ------------------------------------------------------------ */
+
+const CELL = 46;
+const GAP = 6;
+const COLS = 12;
+const ROWS = 13;
+/** Where the pixel field starts; it bleeds off the top, right and bottom. */
+const FIELD = { left: 660, top: -22 };
+/** Row index of the horizon: sky above, field below. */
+const HORIZON = 6;
+/** "h" and "i" in 8-bit ASCII, one byte per row, one bit per pixel. */
+const BYTES = ['01101000', '01101001'];
+/** First pixel of the run, as [row, column]; each byte starts a new row. */
+const RUN_START = [4, 2];
+
+/** Small seeded PRNG so every render is identical. */
+function random(seed) {
+  let state = seed;
+  return () => {
+    state = (state * 1664525 + 1013904223) % 4294967296;
+    return state / 4294967296;
+  };
+}
+
+const mix = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
+const hex = (rgb) =>
+  `#${rgb.map((v) => v.toString(16).padStart(2, '0')).join('')}`;
+
+function pixelColour(row, col, noise) {
+  const sky = mix([214, 232, 238], [168, 205, 219], row / (HORIZON - 1));
+  const field = mix(
+    [150, 184, 152],
+    [96, 138, 104],
+    (row - HORIZON) / (ROWS - HORIZON - 1),
+  );
+  const base = row < HORIZON ? sky : field;
+  // A soft sun glow in the upper right, plus per-pixel grain.
+  const sun = Math.max(0, 1 - Math.hypot(col - 9, row - 1.5) / 3.2);
+  const warm = mix(base, [250, 232, 196], row < HORIZON ? sun * 0.8 : 0);
+  const grain = (noise - 0.5) * 14;
+  return hex(
+    warm.map((v) => Math.max(0, Math.min(255, Math.round(v + grain)))),
+  );
+}
+
+function fieldHtml() {
+  const next = random(7);
+  const run = new Map();
+  const [startRow, startCol] = RUN_START;
+  BYTES.forEach((byte, line) => {
+    [...byte].forEach((bit, i) => {
+      run.set(`${startRow + line}:${startCol + i}`, bit);
+    });
+  });
+
+  let cells = '';
+  for (let row = 0; row < ROWS; row++) {
+    for (let col = 0; col < COLS; col++) {
+      const x = FIELD.left + col * (CELL + GAP);
+      const y = FIELD.top + row * (CELL + GAP);
+      const noise = next();
+      const bit = run.get(`${row}:${col}`);
+      cells += bit
+        ? `<div class="px bit" style="left:${x}px;top:${y}px">${bit}</div>`
+        : `<div class="px" style="left:${x}px;top:${y}px;background:${pixelColour(row, col, noise)}"></div>`;
+    }
+  }
+  return `<div class="field">${cells}</div>`;
+}
 
 function cardHtml() {
   return `<!doctype html><html><head><meta charset="utf-8"><style>
     * { margin: 0; box-sizing: border-box; }
     body {
-      width: 1200px; height: 630px; overflow: hidden; background: ${PAPER};
+      position: relative; width: 1200px; height: 630px; overflow: hidden; background: ${PAPER};
       color: ${INK};
       font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
       -webkit-font-smoothing: antialiased;
     }
-    .stage { display: grid; grid-template-columns: 1fr 460px; gap: 56px; align-items: center; height: 100%; padding: 0 80px; }
+    .field { position: absolute; inset: 0;
+      -webkit-mask-image: linear-gradient(90deg, transparent 640px, #000 790px); }
+    .px { position: absolute; width: ${CELL}px; height: ${CELL}px; border-radius: 8px; }
+    .bit { display: grid; place-items: center; background: ${ACCENT}; color: #fff;
+      font: 600 20px ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
+      box-shadow: 0 6px 14px rgb(14 116 104 / 0.28); }
+    .copy { position: relative; display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 0 80px; max-width: 700px; }
     .brand { display: flex; align-items: center; gap: 14px; font-size: 28px; font-weight: 650; letter-spacing: -0.4px; }
     h1 { margin-top: 44px; font-size: 64px; line-height: 1.04; font-weight: 700; letter-spacing: -2px; }
     p.tag { margin-top: 22px; font-size: 24px; line-height: 1.45; color: ${MUTED}; max-width: 520px; }
     .facts { display: flex; gap: 10px; margin-top: 36px; }
     .fact { display: flex; align-items: center; white-space: nowrap; gap: 8px; font-size: 17px; font-weight: 550; padding: 9px 14px; border: 1px solid ${BORDER}; border-radius: 999px; background: #fff; }
     .fact svg { color: ${ACCENT}; }
-
-    .panel { background: #fff; border: 1px solid ${BORDER}; border-radius: 18px; overflow: hidden; box-shadow: 0 30px 60px rgb(16 22 26 / 0.10), 0 2px 4px rgb(16 22 26 / 0.04); }
-    .head { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid ${BORDER}; font-size: 19px; font-weight: 650; }
-    .ok { width: 30px; height: 30px; border-radius: 999px; display: grid; place-items: center; background: ${SUCCESS_SOFT}; color: ${SUCCESS}; }
-    .file { margin-left: auto; font-size: 15px; font-weight: 450; color: ${MUTED}; }
-    .stagearea { height: 270px; display: grid; place-items: center; background-color: #fff;
-      background-image: conic-gradient(${CHECKER} 25%, transparent 0 50%, ${CHECKER} 0 75%, transparent 0); background-size: 20px 20px; }
-    .photo { width: 330px; height: 214px; border-radius: 6px; background:
-      radial-gradient(120px 90px at 72% 30%, #fde3b0, transparent 70%),
-      linear-gradient(180deg, #8fc3d9 0%, #c9e2e8 52%, #6f9a74 53%, #4f7a57 100%); }
-    .foot { display: flex; gap: 12px; padding: 18px 20px; border-top: 1px solid ${BORDER}; }
-    .btn { display: flex; align-items: center; justify-content: center; gap: 10px; height: 50px; border-radius: 10px; font-size: 18px; font-weight: 600; }
-    .secondary { padding: 0 20px; border: 1px solid #d3d9da; }
-    .primary { flex: 1; background: ${ACCENT}; color: #fff; }
   </style></head><body>
-    <div class="stage">
-      <div>
-        <div class="brand">${markSvg({ size: 48 })}Digi-Cloak</div>
-        <h1>Hide a message<br>inside an image</h1>
-        <p class="tag">Encrypt text with a password and write it into a picture's pixels. Free, and it runs in your browser.</p>
-        <div class="facts">
-          <span class="fact">${ICON(SHIELD)}Nothing uploaded</span>
-          <span class="fact">AES-256-GCM</span>
-          <span class="fact">LSB steganography</span>
-        </div>
-      </div>
-      <div class="panel">
-        <div class="head"><span class="ok">${ICON(CHECK, 16)}</span>Message hidden<span class="file">digicloak-lake.png</span></div>
-        <div class="stagearea"><div class="photo"></div></div>
-        <div class="foot">
-          <span class="btn secondary">${ICON(SPLIT)}Compare</span>
-          <span class="btn primary">${ICON(DOWNLOAD)}Download PNG</span>
-        </div>
+    ${fieldHtml()}
+    <div class="copy">
+      <div class="brand">${markSvg({ size: 48 })}Digi-Cloak</div>
+      <h1>Hide a message<br>inside an image</h1>
+      <p class="tag">Encrypt text with a password and write it into a picture's pixels. Free, and it runs in your browser.</p>
+      <div class="facts">
+        <span class="fact">${ICON(SHIELD)}Nothing uploaded</span>
+        <span class="fact">AES-256-GCM</span>
+        <span class="fact">LSB steganography</span>
       </div>
     </div>
   </body></html>`;
