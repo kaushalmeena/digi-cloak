@@ -54,6 +54,7 @@
         placeholder="Used to encrypt the message"
         hint="Anyone with the image and this password can read the message. A lost password can't be recovered."
         [withStrength]="true"
+        [withGenerator]="true"
         (valueChange)="handlePasswordInput()"
       />
 

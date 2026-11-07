@@ -53,4 +53,26 @@ describe('Password', () => {
     type('Correct-Horse-Battery-42');
     expect(element.textContent).toContain('Strong password');
   });
+
+  it('generates a strong password, reveals it and offers to copy it', async () => {
+    await create(true);
+    fixture.componentRef.setInput('withGenerator', true);
+    fixture.detectChanges();
+    const emitted: string[] = [];
+    fixture.componentInstance.valueChange.subscribe((v) => emitted.push(v));
+
+    element
+      .querySelector<HTMLButtonElement>('[data-testid="generate-password"]')!
+      .click();
+    fixture.detectChanges();
+
+    const input = element.querySelector<HTMLInputElement>('#password')!;
+    expect(input.value).toMatch(/^[A-Za-z0-9]{5}(-[A-Za-z0-9]{5}){3}$/);
+    expect(input.type).toBe('text');
+    expect(emitted).toEqual([input.value]);
+    expect(element.textContent).toContain('Strong password');
+    expect(
+      element.querySelector('[data-testid="copy-password"]'),
+    ).not.toBeNull();
+  });
 });
