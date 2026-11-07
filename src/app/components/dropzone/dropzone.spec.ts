@@ -99,4 +99,32 @@ describe('Dropzone', () => {
     expect(received.at(-1)).toBeNull();
     expect(element.querySelector('[data-testid="dropzone"]')).not.toBeNull();
   });
+
+  it('selects a file handed over programmatically', () => {
+    fixture.componentInstance.select(createTestImageFile());
+    fixture.detectChanges();
+    expect(received.at(-1)?.name).toBe('test.png');
+    expect(
+      element.querySelector('[data-testid="file-info"]')?.textContent,
+    ).toContain('test.png');
+  });
+
+  it('explains an invalid link without submitting anything', async () => {
+    element
+      .querySelector<HTMLButtonElement>('[data-testid="link-image"]')!
+      .click();
+    fixture.detectChanges();
+    const field = element.querySelector<HTMLInputElement>('#image-link')!;
+    field.value = 'not a link';
+    element
+      .querySelector<HTMLButtonElement>('[data-testid="load-link"]')!
+      .click();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
+
+    expect(
+      element.querySelector('[data-testid="load-error"]')?.textContent,
+    ).toContain('https://');
+    expect(received.length).toBe(0);
+  });
 });
