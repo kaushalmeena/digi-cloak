@@ -5,129 +5,239 @@
 
 /*
  * Design tokens, shadcn/ui naming convention.
- * Raw values flip with the theme; they are exposed to Tailwind below
- * via @theme inline (bg-background, text-foreground, bg-card, ...).
+ * Restrained product palette: cool neutrals, one teal accent for the primary
+ * action and selection, and state colours used only where they carry meaning.
+ * Raw values flip with the theme; @theme inline exposes them to Tailwind.
  */
 :root {
-  --background: #ebf1f5;
-  --foreground: #182026;
+  color-scheme: light;
+  --background: #f6f7f7;
+  --foreground: #16191b;
   --card: #ffffff;
-  --card-foreground: #182026;
-  --primary: #323232;
-  --primary-foreground: #f5f8fa;
-  --secondary: #f5f8fa;
-  --secondary-foreground: #182026;
-  --accent: #ebf1f5;
-  --accent-foreground: #182026;
-  --muted: #e1e8ed;
-  --muted-foreground: #182026;
-  --disabled: #ced9e080;
-  --border: #10161a66;
-  --destructive: #d64545;
-  --success: #3f9142;
+  --muted: #eef0f0;
+  --muted-foreground: #5d666b;
+  --border: #e1e5e6;
+  --input: #d3d9da;
+  --primary: #0e7468;
+  --primary-hover: #0b6359;
+  --primary-foreground: #ffffff;
+  --primary-soft: #e2f1ee;
+  --destructive: #c2362f;
+  --destructive-soft: #fbeceb;
+  --warning: #9a5a06;
+  --success: #1d7a4a;
+  --success-soft: #e5f3eb;
+  --checker: #e9ecec;
 }
 
 .dark {
-  --background: #30404d;
-  --foreground: #f5f8fa;
-  --card: #394b59;
-  --card-foreground: #f5f8fa;
-  --primary: #fafafa;
-  --primary-foreground: #182026;
-  --secondary: #394b59;
-  --secondary-foreground: #f5f8fa;
-  --accent: #30404d;
-  --accent-foreground: #f5f8fa;
-  --muted: #293742;
-  --muted-foreground: #f5f8fa;
-  --disabled: #394b5980;
-  --border: #10161a66;
-  --destructive: #e57878;
-  --success: #5cb85f;
+  color-scheme: dark;
+  --background: #0f1112;
+  --foreground: #e8ebeb;
+  --card: #16191b;
+  --muted: #1c2022;
+  --muted-foreground: #98a1a5;
+  --border: #262b2d;
+  --input: #343a3c;
+  --primary: #3cc4b0;
+  --primary-hover: #5fd1c0;
+  --primary-foreground: #06201c;
+  --primary-soft: #11302b;
+  --destructive: #f0716a;
+  --destructive-soft: #2f1716;
+  --warning: #e0a03d;
+  --success: #4cc38a;
+  --success-soft: #12291d;
+  --checker: #1f2325;
 }
 
 @theme {
-  --animate-snackbar-in: snackbar-in 150ms cubic-bezier(0, 0, 0.2, 1);
-  --animate-snackbar-out: snackbar-out 200ms cubic-bezier(0.4, 0, 1, 1) forwards;
-  --animate-menu-in: menu-in 200ms ease;
-  --animate-menu-out: menu-out 150ms ease forwards;
-
-  @keyframes snackbar-in {
-    from {
-      transform: scale(0.8);
-      opacity: 0;
-    }
-    to {
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
-
-  @keyframes snackbar-out {
-    to {
-      transform: scale(0.9);
-      opacity: 0;
-    }
-  }
-
-  @keyframes menu-in {
-    from {
-      max-height: 0;
-      transform: translateY(-8px);
-      opacity: 0;
-    }
-    to {
-      max-height: 160px;
-      transform: none;
-      opacity: 1;
-    }
-  }
-
-  @keyframes menu-out {
-    from {
-      max-height: 160px;
-    }
-    to {
-      max-height: 0;
-      transform: translateY(-8px);
-      opacity: 0;
-    }
-  }
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  --font-mono:
+    ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-  --color-disabled: var(--disabled);
   --color-border: var(--border);
+  --color-input: var(--input);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-soft: var(--primary-soft);
   --color-destructive: var(--destructive);
+  --color-destructive-soft: var(--destructive-soft);
+  --color-warning: var(--warning);
   --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-checker: var(--checker);
 }
 
 @layer base {
-  html,
-  body {
-    height: 100%;
+  html {
+    -webkit-text-size-adjust: 100%;
+    scrollbar-color: var(--input) transparent;
   }
 
   body {
+    min-height: 100dvh;
     background-color: var(--background);
     color: var(--foreground);
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background-color: var(--primary-soft);
+    color: var(--foreground);
+  }
+
+  input,
+  textarea {
+    caret-color: var(--primary);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
   }
 
   a {
     color: inherit;
     text-decoration: none;
+  }
+}
+
+/*
+ * The one component vocabulary: a button pair, a field, a panel.
+ * Kept as classes so every screen shares the same shapes and states.
+ */
+@layer components {
+  .btn {
+    display: inline-flex;
+    min-height: 2.5rem;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 0.5rem;
+    padding-inline: 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+    transition:
+      background-color 150ms ease,
+      border-color 150ms ease,
+      color 150ms ease,
+      scale 100ms ease;
+  }
+
+  .btn:enabled:active {
+    scale: 0.98;
+  }
+
+  .btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  .btn-primary {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  .btn-primary:enabled:hover {
+    background-color: var(--primary-hover);
+  }
+
+  .btn-secondary {
+    border: 1px solid var(--input);
+    background-color: var(--card);
+    color: var(--foreground);
+  }
+
+  .btn-secondary:enabled:hover {
+    background-color: var(--muted);
+  }
+
+  .btn-ghost {
+    color: var(--muted-foreground);
+  }
+
+  .btn-ghost:enabled:hover,
+  a.btn-ghost:hover {
+    background-color: var(--muted);
+    color: var(--foreground);
+  }
+
+  .btn-icon {
+    min-height: 2.25rem;
+    width: 2.25rem;
+    padding-inline: 0;
+  }
+
+  .field-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--foreground);
+  }
+
+  .field-input {
+    width: 100%;
+    border: 1px solid var(--input);
+    border-radius: 0.5rem;
+    background-color: var(--card);
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9375rem;
+    line-height: 1.5rem;
+    color: var(--foreground);
+    transition:
+      border-color 150ms ease,
+      box-shadow 150ms ease;
+  }
+
+  .field-input::placeholder {
+    color: var(--muted-foreground);
+  }
+
+  .field-input:hover {
+    border-color: color-mix(in oklab, var(--input), var(--foreground) 20%);
+  }
+
+  .field-input:focus-visible {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary) 22%, transparent);
+  }
+
+  .field-input[readonly] {
+    background-color: var(--muted);
+  }
+
+  .panel {
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    background-color: var(--card);
+    box-shadow: 0 1px 2px rgb(16 22 26 / 0.04);
+  }
+
+  /* Transparent-pixel backdrop behind image previews */
+  .checkerboard {
+    background-color: var(--card);
+    background-image: conic-gradient(
+      var(--checker) 25%,
+      transparent 0 50%,
+      var(--checker) 0 75%,
+      transparent 0
+    );
+    background-size: 16px 16px;
   }
 }
