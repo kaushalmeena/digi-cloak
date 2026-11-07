@@ -1,6 +1,4 @@
-<header
-  class="sticky top-0 z-10 border-b border-border bg-background/85 backdrop-blur-md"
->
+<header class="border-b border-border bg-background/85 backdrop-blur-md">
   <div class="mx-auto flex h-14 w-full max-w-5xl items-center gap-1 px-4">
     <a
       routerLink="/"
@@ -13,23 +11,45 @@
       </span>
       Digi-Cloak
     </a>
-    <nav aria-label="Main">
-      <ul class="flex items-center">
-        @for (item of navItems; track item.link) {
-          <li>
-            <a
-              data-testid="nav-link"
-              class="btn btn-ghost min-h-9 px-3"
-              [routerLink]="item.link"
-              routerLinkActive="text-foreground!"
-              ariaCurrentWhenActive="page"
-            >
-              {{ item.title }}
-            </a>
-          </li>
-        }
-      </ul>
-    </nav>
+
+    @if (offline()) {
+      <span
+        data-testid="offline-badge"
+        class="mr-1 flex h-7 items-center gap-1.5 rounded-full bg-muted px-2.5 text-xs text-muted-foreground"
+        title="You're offline. Digi-Cloak keeps working: everything runs on your device."
+        animate.enter="animate-fade-in motion-reduce:animate-none"
+        animate.leave="animate-fade-out motion-reduce:animate-none"
+      >
+        <app-icon name="wifi-off" [size]="13" />
+        Offline
+      </span>
+    }
+
+    @if (canInstall()) {
+      <button
+        type="button"
+        data-testid="install-button"
+        class="btn btn-ghost btn-icon"
+        aria-label="Install app"
+        title="Install app"
+        animate.enter="animate-fade-in motion-reduce:animate-none"
+        animate.leave="animate-fade-out motion-reduce:animate-none"
+        (click)="handleInstall()"
+      >
+        <app-icon name="install" [size]="18" />
+      </button>
+    }
+    <a
+      data-testid="nav-link"
+      class="btn btn-ghost btn-icon"
+      routerLink="/faqs"
+      routerLinkActive="bg-muted text-foreground!"
+      ariaCurrentWhenActive="page"
+      aria-label="Help and FAQ"
+      title="Help and FAQ"
+    >
+      <app-icon name="help" [size]="18" />
+    </a>
     <button
       type="button"
       data-testid="theme-toggle"
